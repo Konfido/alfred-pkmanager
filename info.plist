@@ -19,6 +19,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>2766465F-6260-4ADD-BE86-0FCF44283C71</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6432274D-3360-46EF-A830-32D1B77A92CA</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>37466BB2-A090-4712-AA83-89F367D8CBA5</key>
 		<array>
 			<dict>
@@ -102,7 +115,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>PKManager</string>
+	<string>A PKManager</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -119,7 +132,7 @@
 				<key>filetext</key>
 				<string>---
 title: {var:node}
-categaries: []
+synonyms: []
 tags: []
 typora-root-url: ..
 typora-copy-images-to: ../images
@@ -243,9 +256,83 @@ updated: {date:yyyy-MM-dd HH:mm:ss}
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>TT=$(osascript &lt;&lt;EOF
+tell application "System Events"
+	tell front window of application "Typora" to activate
+	keystroke "a" using command down
+	delay 0.1
+	keystroke "c" using command down
+	delay 0.1
+	get the clipboard
+end tell
+EOF
+)
+dateTime=$(date +'%Y-%m-%d %T')
+
+
+updatedText=$(echo $TT | tr '\r' '\n'| sed "s/\(updated: \).*/\1$dateTime/")
+
+echo $updatedText &gt; ~/Desktop/text.txt
+
+
+osascript &lt;&lt;BBB
+tell application "System Events"
+	set the clipboard to "$updatedText"
+	keystroke "v" using command down
+end tell
+BBB</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>5</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>6432274D-3360-46EF-A830-32D1B77A92CA</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>nt</string>
+				<key>subtext</key>
+				<string></string>
+				<key>text</key>
+				<string>Refresh updated time</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>2766465F-6260-4ADD-BE86-0FCF44283C71</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
-	<string>- v0.1: Create or open a node (inter-link, backlink) with ease 
+	<string>Handle your personal knowledge management with ease!
+
+- Create or open a node (inter-link, backlink)
+- Refresh updated time in meta-data
+
+
+
 
 
 
@@ -262,6 +349,15 @@ Icons made by &lt;a href="https://www.flaticon.com/authors/freepik" title="Freep
 			<key>ypos</key>
 			<integer>200</integer>
 		</dict>
+		<key>2766465F-6260-4ADD-BE86-0FCF44283C71</key>
+		<dict>
+			<key>note</key>
+			<string>Refresh updated time</string>
+			<key>xpos</key>
+			<integer>30</integer>
+			<key>ypos</key>
+			<integer>290</integer>
+		</dict>
 		<key>37466BB2-A090-4712-AA83-89F367D8CBA5</key>
 		<dict>
 			<key>xpos</key>
@@ -275,6 +371,13 @@ Icons made by &lt;a href="https://www.flaticon.com/authors/freepik" title="Freep
 			<integer>25</integer>
 			<key>ypos</key>
 			<integer>85</integer>
+		</dict>
+		<key>6432274D-3360-46EF-A830-32D1B77A92CA</key>
+		<dict>
+			<key>xpos</key>
+			<integer>230</integer>
+			<key>ypos</key>
+			<integer>290</integer>
 		</dict>
 		<key>B774F4C7-56C1-4EAD-80E1-97A08F01B476</key>
 		<dict>

@@ -11,17 +11,23 @@ import json
 from PKM import Items
 from PKM import Utils as U
 
+
+if not U.getEnv("MARKDOWN_PATH"):
+    U.show(("Error!", "Please first set the environment variables of \"MARKDOWN_PATH\"."))
+
 # Load Env variables
 query = U.getArgv(1)
 
-l = Items()
 
-l.addItem({
-    "title": "Debug",
-    "subtitle":"{0}".format(query)
-})
-l.write()
 
+
+mode, keywords, tags = U.parsedArg()
+
+
+U.show(mode, keywords, tags)
 
 
 exit(0)
+
+
+l = Items()

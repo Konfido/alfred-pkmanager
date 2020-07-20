@@ -68,6 +68,21 @@
 				<false/>
 			</dict>
 		</array>
+		<key>4AE76153-7623-49D1-9851-0D3F2D3D3798</key>
+		<array/>
+		<key>80B10ECE-CC52-4707-BB91-E0E4A16645ED</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>4AE76153-7623-49D1-9851-0D3F2D3D3798</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>C7154953-6853-409B-967C-CDFC17AB7C49</key>
 		<array>
 			<dict>
@@ -98,7 +113,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>B774F4C7-56C1-4EAD-80E1-97A08F01B476</string>
+				<string>2BEABD41-C15C-4012-837A-9A1CEE28C1F0</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -128,7 +143,7 @@
 				<key>createintermediatefolders</key>
 				<false/>
 				<key>filename</key>
-				<string>{var:wiki_nodes_path}{var:node}.md</string>
+				<string>{var:NODES_PATH}{var:node}.md</string>
 				<key>filetext</key>
 				<string>---
 title: {var:node}
@@ -162,9 +177,9 @@ updated: {date:yyyy-MM-dd HH:mm:ss}
 				<key>keyword</key>
 				<string>n</string>
 				<key>subtext</key>
-				<string>Press ⌘ to insert a relative path link to this link.</string>
+				<string>Press ⌘ to insert a relative Markdown link of this node.</string>
 				<key>text</key>
-				<string>Create a new WiKi node for {query}</string>
+				<string>Open/Create a WiKi node for {query}</string>
 				<key>withspace</key>
 				<true/>
 			</dict>
@@ -174,21 +189,6 @@ updated: {date:yyyy-MM-dd HH:mm:ss}
 			<string>45D8F9E6-A0E7-496E-9250-EEC5D5CB0286</string>
 			<key>version</key>
 			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>openwith</key>
-				<string>/Applications/Typora.app</string>
-				<key>sourcefile</key>
-				<string>{var:wiki_nodes_path}{var:node}.md</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.openfile</string>
-			<key>uid</key>
-			<string>B774F4C7-56C1-4EAD-80E1-97A08F01B476</string>
-			<key>version</key>
-			<integer>3</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -264,6 +264,56 @@ updated: {date:yyyy-MM-dd HH:mm:ss}
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
+				<string>if [ -f '{query}' ];then
+    if [ -z "${MARKDOWN_APP}" ];then
+        open '{query}'
+    else
+	    open -a "${MARKDOWN_APP}" '{query}'
+    fi
+fi</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>2BEABD41-C15C-4012-837A-9A1CEE28C1F0</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>nt</string>
+				<key>subtext</key>
+				<string></string>
+				<key>text</key>
+				<string>Refresh updated time</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>2766465F-6260-4ADD-BE86-0FCF44283C71</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
 				<string>TT=$(osascript &lt;&lt;EOF
 tell application "System Events"
 	tell front window of application "Typora" to activate
@@ -306,120 +356,188 @@ BBB</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>1</integer>
 				<key>argumenttype</key>
-				<integer>2</integer>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
 				<key>keyword</key>
-				<string>nt</string>
+				<string>ns</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>2</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string>Searching ...</string>
+				<key>script</key>
+				<string>python3 ./search.py '{query}'</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>subtext</key>
 				<string></string>
-				<key>text</key>
-				<string>Refresh updated time</string>
+				<key>title</key>
+				<string>Search in notes</string>
+				<key>type</key>
+				<integer>0</integer>
 				<key>withspace</key>
-				<false/>
+				<true/>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
+			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
-			<string>2766465F-6260-4ADD-BE86-0FCF44283C71</string>
+			<string>4AE76153-7623-49D1-9851-0D3F2D3D3798</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>80B10ECE-CC52-4707-BB91-E0E4A16645ED</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>
 	<string>Handle your personal knowledge management with ease!
 
 - Create or open a node (inter-link, backlink)
-- Refresh updated time in meta-data
-
-
-
-
-
-
-
-
-
-Icons made by &lt;a href="https://www.flaticon.com/authors/freepik" title="Freepik"&gt;Freepik&lt;/a&gt; from &lt;a href="https://www.flaticon.com/" title="Flaticon"&gt; www.flaticon.com&lt;/a&gt;</string>
+- Refresh updated time in meta-data</string>
 	<key>uidata</key>
 	<dict>
 		<key>102D616D-2953-4568-86A3-5735D8AEA270</key>
 		<dict>
 			<key>xpos</key>
-			<integer>210</integer>
+			<integer>395</integer>
 			<key>ypos</key>
-			<integer>200</integer>
+			<integer>190</integer>
 		</dict>
 		<key>2766465F-6260-4ADD-BE86-0FCF44283C71</key>
 		<dict>
 			<key>note</key>
 			<string>Refresh updated time</string>
 			<key>xpos</key>
-			<integer>30</integer>
+			<integer>215</integer>
 			<key>ypos</key>
-			<integer>290</integer>
+			<integer>280</integer>
+		</dict>
+		<key>2BEABD41-C15C-4012-837A-9A1CEE28C1F0</key>
+		<dict>
+			<key>note</key>
+			<string>Open File</string>
+			<key>xpos</key>
+			<integer>880</integer>
+			<key>ypos</key>
+			<integer>270</integer>
 		</dict>
 		<key>37466BB2-A090-4712-AA83-89F367D8CBA5</key>
 		<dict>
 			<key>xpos</key>
-			<integer>280</integer>
+			<integer>465</integer>
 			<key>ypos</key>
-			<integer>170</integer>
+			<integer>160</integer>
 		</dict>
 		<key>45D8F9E6-A0E7-496E-9250-EEC5D5CB0286</key>
 		<dict>
 			<key>xpos</key>
-			<integer>25</integer>
+			<integer>210</integer>
 			<key>ypos</key>
-			<integer>85</integer>
+			<integer>75</integer>
+		</dict>
+		<key>4AE76153-7623-49D1-9851-0D3F2D3D3798</key>
+		<dict>
+			<key>xpos</key>
+			<integer>215</integer>
+			<key>ypos</key>
+			<integer>455</integer>
 		</dict>
 		<key>6432274D-3360-46EF-A830-32D1B77A92CA</key>
 		<dict>
 			<key>xpos</key>
-			<integer>230</integer>
+			<integer>415</integer>
 			<key>ypos</key>
-			<integer>290</integer>
+			<integer>280</integer>
 		</dict>
-		<key>B774F4C7-56C1-4EAD-80E1-97A08F01B476</key>
+		<key>80B10ECE-CC52-4707-BB91-E0E4A16645ED</key>
 		<dict>
 			<key>xpos</key>
-			<integer>670</integer>
+			<integer>35</integer>
 			<key>ypos</key>
-			<integer>85</integer>
+			<integer>455</integer>
 		</dict>
 		<key>C7154953-6853-409B-967C-CDFC17AB7C49</key>
 		<dict>
 			<key>xpos</key>
-			<integer>210</integer>
+			<integer>395</integer>
 			<key>ypos</key>
-			<integer>115</integer>
+			<integer>105</integer>
 		</dict>
 		<key>CF7E6AB0-8030-4128-BA60-E62F109A3A26</key>
 		<dict>
 			<key>xpos</key>
-			<integer>435</integer>
+			<integer>620</integer>
 			<key>ypos</key>
-			<integer>200</integer>
+			<integer>190</integer>
 		</dict>
 		<key>FC4A76BD-290F-4443-95DE-97105A58E97D</key>
 		<dict>
 			<key>xpos</key>
-			<integer>510</integer>
+			<integer>695</integer>
 			<key>ypos</key>
-			<integer>85</integer>
+			<integer>75</integer>
 		</dict>
 	</dict>
 	<key>variables</key>
 	<dict>
-		<key>wiki_nodes_path</key>
+		<key>MARKDOWN_APP</key>
+		<string>/Applications/Typora.app</string>
+		<key>NODES_PATH</key>
 		<string>~/Documents/Sync/Docs_Wiki/010 - Nodes/</string>
+		<key>NOTES_PATH</key>
+		<string>/Users/dhh/Documents/Sync/Docs_Wiki/010 - Nodes/</string>
 	</dict>
 	<key>variablesdontexport</key>
 	<array>
-		<string>wiki_nodes_path</string>
+		<string>NODES_PATH</string>
+		<string>NOTES_PATH</string>
 	</array>
 	<key>version</key>
 	<string>0.1.0</string>
 	<key>webaddress</key>
-	<string>konfido.github.com</string>
+	<string>https://github.com/Konfido/alfred-pkmanager</string>
 </dict>
 </plist>

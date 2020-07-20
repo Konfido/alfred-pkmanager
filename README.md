@@ -8,21 +8,22 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
 
 - Search / Open / Create your files with ease.
 - Manually refresh the Markdown YAML metadata
-    - updated time 
+    - updated time
     - and more
 
 
 
-### Usage 
+### Usage
 
-- `n`: Search and open ( if existing ) or create a new node. `␣` means "Press the space bar".
-    - `n␣`: List sorted `docs` in reverse order by modification time
+- `n`: Search and open ( if existing ) or create a new node. All searching is case-insensitive.
+    - `n␣`: List recent `notes` which sorted in reverse order by modification time
+        - `␣` means "Press the space bar"
     - `n␣test`: Search the exact `Node` "test"
-    - `n␣test␣`: Search all docs with the `keyword` "test"
-    - `n␣test␣alfred`: Search all docs with the `keyword` "test" and "alfred"
-    - `n␣,test`: Search all docs with the `tag` "test"
-    - `n␣k1␣k2,t1␣t2`: Search all docs with the `keyword`"k1", "k2" and the `tag` "t1","t2"
-    - 
+    - `n␣test␣`: Search all notes with the `keyword` "test"
+    - `n␣test␣alfred`: Search all notes with the `keyword` "test" and "alfred"
+    - `n␣,test`: Search all notes with the `tag` "test"
+    - `n␣k1␣k2,t1␣t2`: Search all notes with the `keyword`"k1", "k2" and the `tag` "t1","t2"
+    -
     - Press `Command` to insert inter-link (`[xxx](./?/xxx.md)`) to front application
 - `nt`: Refresh meta information in the YAML frontier of the current Markdown file.
 
@@ -32,11 +33,11 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
 
 - Terms explanation
 
-    - `node`: A pivot/hub/Wiki for any vital terms, actually a Markdown file `node_name.md` , which can be checked or linked to other docs with ease and is placed in an independent folder. 
+    - `node`: A pivot/hub/Wiki for any vital terms, actually a Markdown file `node_name.md` , which can be checked or linked to other notes with ease and is placed in an independent folder.
 
-    - `docs`: Normal Markdown files
+    - `notes`: Normal Markdown files
 
-    - `template`: A markdown file with formatted content used to generate new nodes/docs. You can make your own template and place it in workflow's subfolder `./templates/`
+    - `template`: A markdown file with formatted content used to generate new nodes/notes. You can make your own template and place it in workflow's subfolder `./templates/`
 
     - `metadata`: YAML frontier with important infos placed at the beginning of the Markdown document between two triple dashes. Example:
 
@@ -50,24 +51,24 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
         date: {date:yyyy-MM-dd HH:mm:ss}
         updated: {date:yyyy-MM-dd HH:mm:ss}
         ---
-        
+
         Content
         ```
 
-    - `synonyms`: An item defined in metadata which is used to find out the same result in Node searching once the input word is listed in its synonyms. Example: if you create a Node naming "test" with `synonyms: [tmp, 测试]`, then you get the same doc when search for node "test", "tmp" or "测试".
+    - `synonyms`: An item defined in metadata which is used to find out the same result in Node searching once the input word is listed in its synonyms. Example: if you create a Node naming "test" with `synonyms: [tmp, 测试]`, then you get the same note when search for node "test", "tmp" or "测试".
 
 - Workflow variables
 
     - `NODES_PATH`: folder's path to your nodes
 
-    - `DOCS_PATH`: folder's path to your docs
+    - `NOTES_PATH`: folder's path to your notes
 
-    - A possible variables setting for the following folder tree: 
+    - A possible variables setting for the following folder tree:
 
         ```
         ~
         └── Documents/
-            └── My_Docs/
+            └── My_Notes/
                 ├── Nodes/
                 │   ├── foo.py
                 │   └── foo2.py
@@ -78,8 +79,8 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
         ```
 
         ```
-        NODES_PATH: ~/Documents/My_Docs/Nodes/
-        DOCS_PATH: [~/Documents/My_Docs/Nodes/, ~/Documents/My_Docs/Develop/, ~/Documents/My_Docs/Others/]
+        NODES_PATH: ~/Documents/My_Notes/Nodes/
+        NOTES_PATH: [~/Documents/My_Notes/Nodes/, ~/Documents/My_Notes/Develop/, ~/Documents/My_Notes/Others/]
         ```
 
 
@@ -87,8 +88,8 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
 ### Dependencies
 
 - [Typora](https://typora.io/): A powerful Markdown editor with WYSIWYM feature. Highly recommended.
-
 - [Glance](https://github.com/samuelmeuli/glance): All-in-one Quick Look plugin for Mac, which provide perfect preview for Markdown files for dismissing its meta info of YAML frontier.
+- Python 3: A Python 3 env is needed for some of the scripts, so make sure you've installed it in your env.
 
 
 
@@ -106,7 +107,13 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
 
 - [ ] Search algorithm: And | Or | Recommendation
 
-    
+- [ ] Rename current file
+
+  - [ ] update backlinks
+
+- [ ] Snippet Search
+
+
 
 
 
@@ -114,7 +121,6 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
 
 ### Acknowledgement
 
-- Many thanks to the project [`Alfred Markdown Notes`](https://github.com/Acidham/alfred-markdown-notes) ! It's a fantastic workflow but just sadly does not support searching in subdirectories ([ Issue #1](https://github.com/Acidham/alfred-markdown-notes/issues/1#issuecomment-489371014)). Instead of cloning the whole project ( its python code looks too decoupled for me), I decided to partly adopt and refactor its code, which make it much easier to accomplish my own customized features. 
+- Many thanks to the project [`Alfred Markdown Notes`](https://github.com/Acidham/alfred-markdown-notes) ! It's a fantastic workflow but just sadly does not support searching in subdirectories ([ Issue #1](https://github.com/Acidham/alfred-markdown-notes/issues/1#issuecomment-489371014)). Instead of cloning the whole project ( its python code looks too decoupled for me), I decided to partly adopt and refactor its code, which make it much easier to accomplish my own customized features.
 
 - The workflow icon is made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com.</a>
-

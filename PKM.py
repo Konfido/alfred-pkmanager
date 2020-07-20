@@ -1,20 +1,25 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+#! -*- coding:utf-8 -*-
 # ------------------------------------------------
 # Author:        Konfido <konfido.du@outlook.com>
 # Created Date:  July 16th 2020
 # ------------------------------------------------
 
 
+import datetime
 import json
 import os
+import re
 import sys
 import time
+import urllib
+from collections import Counter, OrderedDict
 from plistlib import readPlist, writePlist
-import re
+from unicodedata import normalize
+
 
 class Items(object):
-    """ To generate Script Filter object """
+    """ To generate Script Filter item """
 
     def __init__(self):
         self.items = []
@@ -51,51 +56,66 @@ class Items(object):
 class Utils(object):
 
     @staticmethod
-    def getEnv(var):
+    def get_env(var):
         """ Reads environment variable """
         return os.getenv(var) if os.getenv(var) is not None else str()
 
-    @staticmethod
-    def getArgv(i):
-        """ Fetch input string """
-        try:
-            return sys.argv[i]
-        except IndexError:
-            return str()
+    @classmethod
+    def checked_env_varibles(cls):
+        for env in ["MARKDOWN_APP","NOTES_PATH"]:
+            if not cls.get_env(env):
+                cls.show(
+                    (   "ERROR: Find empty environt varibles!",
+                        "Please check: \"{}\".".format(env) ))
+                # exit(0)
+                return False
+            else:
+                for path in cls.get_env("NOTES_PATH").split(","):
+                    if not(os.path.exists(path)):
+                        cls.show(
+                            (   "ERROR: Find invalid directory!",
+                                "Please check \"NOTES_PATH\": {}".format(path)))
+                        return False
+        return True
 
     @classmethod
-    def parsedArg(cls):
-        query = cls.getArgv(1)
+    def get_parsed_arg(cls):
+        # Tring to fetch input string
+        query = sys.argv[1]
         # no string
         if not query.strip():
             mode, keywords, tags = "Recent", [], []
-        # no comma
-        elif not re.findall(r'[,，]', query):
-            keys = re.findall(r'(\S+)', query)
-            # 1 word with no space tail
-            if keys.__len__() == 1 and query[-1:] != " ":
-                mode, keywords, tags = "Nodes", [query.strip()], []
-            # 1 word with space tail & >= 2 words
-            else:
-                mode, keywords, tags = "Keywords", keys, []
-        # 1 comma
-        elif re.findall(r'[,，]', query).__len__() == 1:
-            kstring, tstring = re.match(r'(.*)[,，](.*)', query).groups()
-            keywords = [ k for k in kstring.split(" ") if k is not "" ]
-            tags = [ t for t in tstring.split(" ") if t is not "" ]
-            if not tags:
-                mode = "Keywords"
-            elif not keywords:
-                mode = "Tags"
-            else:
-                mode = "Both"
-        # >= 2 comma
-        elif re.findall(r'[,，]', query).__len__() > 2:
-            cls.show("2(≥) commas are not allowed!")
-            mode, keywords, tags = "", [], []
         else:
-            cls.show(["Error!", "Can't parse the input: \'{0}\'".format(query)])
-            mode, keywords, tags = "", [], []
+            commas = re.findall('[,，]', query)
+            # no comma
+            if not commas:
+                keys = re.findall(r'(\S+)', query)
+                # 1 word with no space tail
+                if keys.__len__() == 1 and query[-1:] != " ":
+                    mode, keywords, tags = "Nodes", [query.strip()], []
+                # 1 word with space tail & >= 2 words
+                else:
+                    mode, keywords, tags = "Keywords", keys, []
+            # 1 comma
+            elif commas.__len__() == 1:
+                kstring, tstring = re.match(r'(.*)[,，](.*)', query).groups()
+                keywords = [ k for k in kstring.split(" ") if k is not "" ]
+                tags = [ t for t in tstring.split(" ") if t is not "" ]
+                if not tags:
+                    mode = "Keywords"
+                elif not keywords:
+                    mode = "Tags"
+                else:
+                    mode = "Both"
+            # >= 2 comma
+            elif commas.__len__() >= 2:
+                cls.show(("Error!", "Having 2 (>=) commas is not allowed!"))
+                exit(0)
+                mode, keywords, tags = "", [], []
+            else:
+                cls.show(("Error!", "Can't parse the input: \'{0}\'".format(query)))
+                exit(0)
+                mode, keywords, tags = "", [], []
 
         return mode, keywords, tags
 

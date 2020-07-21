@@ -69,7 +69,18 @@
 			</dict>
 		</array>
 		<key>4AE76153-7623-49D1-9851-0D3F2D3D3798</key>
-		<array/>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>2BEABD41-C15C-4012-837A-9A1CEE28C1F0</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>80B10ECE-CC52-4707-BB91-E0E4A16645ED</key>
 		<array>
 			<dict>
@@ -143,7 +154,7 @@
 				<key>createintermediatefolders</key>
 				<false/>
 				<key>filename</key>
-				<string>{var:NODES_PATH}{var:node}.md</string>
+				<string>{var:WIKI_PATH}{var:node}.md</string>
 				<key>filetext</key>
 				<string>---
 title: {var:node}
@@ -356,6 +367,35 @@ BBB</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>80B10ECE-CC52-4707-BB91-E0E4A16645ED</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
@@ -402,40 +442,12 @@ BBB</string>
 			<key>version</key>
 			<integer>3</integer>
 		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>3</integer>
-				<key>focusedappvariable</key>
-				<false/>
-				<key>focusedappvariablename</key>
-				<string></string>
-				<key>hotkey</key>
-				<integer>0</integer>
-				<key>hotmod</key>
-				<integer>0</integer>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>80B10ECE-CC52-4707-BB91-E0E4A16645ED</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
 	</array>
 	<key>readme</key>
 	<string>Handle your personal knowledge management with ease!
 
 - Create or open a node (inter-link, backlink)
+- Open recent notes
 - Refresh updated time in meta-data</string>
 	<key>uidata</key>
 	<dict>
@@ -525,18 +537,18 @@ BBB</string>
 	<dict>
 		<key>MARKDOWN_APP</key>
 		<string>/Applications/Typora.app</string>
-		<key>NODES_PATH</key>
-		<string>~/Documents/Sync/Docs_Wiki/010 - Nodes/</string>
 		<key>NOTES_PATH</key>
-		<string>/Users/dhh/Documents/Sync/Docs_Wiki/010 - Nodes/</string>
+		<string>/Users/dhh/Documents/Sync/Docs_Wiki back/</string>
+		<key>WIKI_PATH</key>
+		<string>~/Documents/Sync/Docs_Wiki back/010 - Wiki/</string>
 	</dict>
 	<key>variablesdontexport</key>
 	<array>
-		<string>NODES_PATH</string>
+		<string>WIKI_PATH</string>
 		<string>NOTES_PATH</string>
 	</array>
 	<key>version</key>
-	<string>0.1.0</string>
+	<string>0.2.0</string>
 	<key>webaddress</key>
 	<string>https://github.com/Konfido/alfred-pkmanager</string>
 </dict>

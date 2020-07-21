@@ -18,7 +18,7 @@ from plistlib import readPlist, writePlist
 from unicodedata import normalize
 
 
-class Items(object):
+class Items():
     """ To generate Script Filter item """
 
     def __init__(self):
@@ -53,30 +53,38 @@ class Items(object):
         sys.stdout.write(output)
 
 
-class Utils(object):
+class Utils():
 
     @staticmethod
     def get_env(var):
         """ Reads environment variable """
         return os.getenv(var) if os.getenv(var) is not None else str()
 
+    @staticmethod
+    def get_abspath(path):
+        return os.path.abspath(os.getenv(path))
+
     @classmethod
-    def checked_env_varibles(cls):
-        for env in ["MARKDOWN_APP","NOTES_PATH"]:
+    def get_env_varibles(cls):
+        # check valibility
+        for env in ["MARKDOWN_APP","NOTES_PATH","WIKI_PATH"]:
             if not cls.get_env(env):
-                cls.show(
-                    (   "ERROR: Find empty environt varibles!",
-                        "Please check: \"{}\".".format(env) ))
-                # exit(0)
+                cls.show((  "ERROR: Find empty environt varibles!",
+                            "Please check: \"{}\".".format(env) ))
                 return False
-            else:
-                for path in cls.get_env("NOTES_PATH").split(","):
-                    if not(os.path.exists(path)):
-                        cls.show(
-                            (   "ERROR: Find invalid directory!",
-                                "Please check \"NOTES_PATH\": {}".format(path)))
-                        return False
-        return True
+        for path in cls.get_env("NOTES_PATH").split(","):
+            if not(os.path.exists(path)):
+                cls.show((  "ERROR: Find invalid directory!",
+                            "Please check \"NOTES_PATH\": {}".format(path)))
+                return False
+        if not cls.get_env("WIKI_PATH"):
+            cls.show((  "ERROR: Find invalid directory!",
+                        "Please check \"WIKI_PATH\""))
+            return False
+
+        notes_path = cls.get_abspath("NOTES_PATH").split(",")
+        wiki_path = cls.get_abspath("WIKI_PATH")
+        return (wiki_path, notes_path)
 
     @classmethod
     def get_parsed_arg(cls):
@@ -92,7 +100,7 @@ class Utils(object):
                 keys = re.findall(r'(\S+)', query)
                 # 1 word with no space tail
                 if keys.__len__() == 1 and query[-1:] != " ":
-                    mode, keywords, tags = "Nodes", [query.strip()], []
+                    mode, keywords, tags = "WIKI", [query.strip()], []
                 # 1 word with space tail & >= 2 words
                 else:
                     mode, keywords, tags = "Keywords", keys, []
@@ -119,6 +127,7 @@ class Utils(object):
 
         return mode, keywords, tags
 
+
     @staticmethod
     def notify(title, text="PKManger"):
         """ Send Notification to mac Notification Center """
@@ -135,30 +144,140 @@ class Utils(object):
             - Dict: {"Title": "xx", "Subtitle": "xx"}
         """
         cls = Items()
-
         for item in args:
-            if isinstance(item, list):
-                for i in item:
-                    cls.addItem({"title": i})
-                continue
-            if isinstance(item, str) or isinstance(item, int) or isinstance(item, float):
-                cls.addItem({"title":item})
-                continue
-            elif isinstance(item, tuple):
-                title = item[0]
-                subtitle = item[1]
-            elif isinstance(item, dict) and item.has_key("title"):
-                title = item["title"]
-                subtitle = item["subtitle"] if item.has_key("subtitle") else ""
-            else:
-                cls.addItem({
-                    "title": "Error!",
-                    "subtitle": "Filtering {} ...".format(item)})
-                continue
+            try:
+                if isinstance(item, str) or isinstance(item, int) or isinstance(item, float):
+                    cls.addItem({"title": item})
+                    continue
+                if isinstance(item, list):
+                    for i in item:
+                        cls.addItem({"title": i})
+                    continue
+                elif isinstance(item, tuple):
+                    title = item[0]
+                    subtitle = item[1]
+                elif isinstance(item, dict) and item.has_key("title"):
+                    title = item["title"]
+                    subtitle = item["subtitle"] if item.has_key("subtitle") else ""
+                else:
+                    cls.addItem({ "title": "Error!",
+                                  "subtitle": "Filter {}".format(item)})
+                    continue
 
-            cls.addItem({
-                "title": title,
-                "subtitle": subtitle
-            })
-
+                cls.addItem({"title": title,
+                             "subtitle": subtitle})
+            except Exception as e:
+                cls.addItem({"title": "Exception!",
+                             "subtitle": e})
         cls.write()
+
+    @staticmethod
+    def format_date(date, fmt="%Y-%m-%d %H:%M:%S"):
+        return time.strftime(fmt, time.gmtime(date))
+
+    @staticmethod
+    def get_now(fmt="%Y-%m-%d %H:%M:%S"):
+        """ Get formated today's date """
+        now = datetime.datetime.now()
+        return now.strftime(fmt)
+
+
+class Note():
+    def __init__(self, path):
+        # super().__init__()
+        self.path = os.path.abspath(path)
+
+    def _get_file_name(self):
+        file_name = os.path.basename(self.path)[:-len('.md')]
+        return file_name
+
+    def _get_file_content(self):
+        # only process Markdown file
+        if str(self.path).endswith(".md"):
+            with open(self.path, 'r') as f:
+                content = f.read()
+        else:
+            content = str()
+        return content
+
+    @staticmethod
+    def get_yaml_item(item, content):
+        match = re.search(
+            r'^---.*?\b{}: (.*?)\n.*?---'.format(item), content, re.I | re.S)
+        return match.group(1) if match is not None else None
+
+    def _get_file_title(self, content):
+        file_name = self._get_file_name(self)
+        yaml_title = self.get_yaml_item("title", content)
+        level_one_title = re.search(r'^# (\s+)', content)
+        title = yaml_title or level_one_title or file_name or ""
+        return title
+
+    @classmethod
+    def get_file_info(cls, path):
+        """ get file's info in dict """
+
+        cls.path = path
+        name = cls._get_file_name(cls)
+        content = cls._get_file_content(cls)
+        title = cls._get_file_title(cls, content)
+        file_stats = os.stat(cls.path)
+        file_infos = {
+            'path': path,
+            'file_name': name,
+            'content': content,
+            'title': title,
+            'ctime': file_stats.st_birthtime,
+            'mtime': file_stats.st_mtime,
+            'size': file_stats.st_size
+        }
+        return file_infos
+
+    def new(self):
+        pass
+
+
+class Search():
+    # def __init__(self):
+    #     self.paths = []
+    #     self.file_infos = []
+
+    @staticmethod
+    def _get_all_files(paths):
+        file_paths_list = []
+        # support multi note paths
+        for path in paths:
+            # support subfolders
+            for root, dirs, files in os.walk(path):
+                for name in files:
+                    if name.endswith(".md"):
+                        file_paths_list.append(os.path.join(root, name))
+        if not file_paths_list:
+            Utils.show("No valid notes, please add one.")
+            exit(0)
+        return file_paths_list
+
+    @classmethod
+    def get_sorted_files(cls, paths, reverse=True):
+        # resent modified files
+        seq = list()
+        for path in cls._get_all_files(paths):
+            seq.append(Note.get_file_info(path))
+        sorted_files = sorted(seq, key=lambda k: k['mtime'], reverse=reverse)
+        return sorted_files
+
+    def _matched(self, search_terms, content):
+        """ Search for matches """
+        for term in search_terms:
+            if re.search(r'term', content, re.I):
+                return True
+        return False
+
+    def notes_search(self, search_terms, files):
+        """ Returns a list of matched files """
+        matched_list = []
+        for f in files:
+            content = self._get_file_content(f['path'])
+            if self._matched(search_terms, content):
+                matched_list.append(f)
+        return matched_list

@@ -15,7 +15,7 @@ import time
 import urllib
 from collections import Counter, OrderedDict
 from plistlib import readPlist, writePlist
-from unicodedata import normalize
+from Customization import Configuration as C
 
 
 class Items():
@@ -180,6 +180,22 @@ class Utils():
                              "subtitle": e})
         cls.write()
 
+    @staticmethod
+    def get_now(fmt="%Y-%m-%d %H:%M:%S"):
+        """ Get formated today's date """
+        now = datetime.datetime.now()
+        return now.strftime(fmt)
+
+    @staticmethod
+    def format_date(date, fmt="%Y-%m-%d %H:%M:%S"):
+        return time.strftime(fmt, time.gmtime(date))
+
+    @staticmethod
+    def str_replace(string, replace_map):
+        for r in replace_map.keys():
+            string = string.replace(r, replace_map[r])
+        return string
+
 
 class Note():
     def __init__(self, path):
@@ -213,29 +229,19 @@ class Note():
         title = yaml_title or level_one_title or file_name or ""
         return title
 
-    @staticmethod
-    def format_date(date, fmt="%Y-%m-%d %H:%M:%S"):
-        return time.strftime(fmt, time.gmtime(date))
-
-    @staticmethod
-    def get_now(fmt="%Y-%m-%d %H:%M:%S"):
-        """ Get formated today's date """
-        now = datetime.datetime.now()
-        return now.strftime(fmt)
-
     @classmethod
     def get_file_info(cls, path):
         """ get file's info in dict """
 
         cls.path = path
         name = cls._get_file_name(cls)
-        content = cls.get_file_content(path)
-        title = cls._get_file_title(cls, content)
+        content = cls.get_file_content(path).lower()
+        title = cls._get_file_title(cls, content).lower()
         file_stats = os.stat(cls.path)
         ctime = file_stats.st_birthtime
         mtime = file_stats.st_mtime
-        cdate = cls.format_date(ctime, "%Y-%m-%d")
-        mdate = cls.format_date(mtime, "%Y-%m-%d")
+        cdate = Utils.format_date(ctime, "%Y-%m-%d")
+        mdate = Utils.format_date(mtime, "%Y-%m-%d")
         size = file_stats.st_size
         file_infos = {
             'path': path,
@@ -250,5 +256,31 @@ class Note():
         }
         return file_infos
 
-    def new(self):
-        pass
+    @staticmethod
+    def new(title, genre=''):
+        """ create a new file accroding to template """
+
+        if genre not in ['wiki', 'note', 'todo']:
+            Utils.notify("Unsupported template: {}".format(template))
+            return None
+
+        template = C.SETTINGS['type'][genre][0]
+        template_file = os.path.join(
+            C.SETTINGS['template_path'], template.join(".md"))
+
+        file_path = C.SETTINGS['type'][genre][1]
+        file = os.path.join(file_path, title.join('.md'))
+        replace_map = {
+            '{title}': title,
+            '{tag}': "[]",
+            '{datetime}': Utils.get_now()
+        }
+
+        with open(template_file, r) as f:
+            content = Utils.str_replace(f.read(), replace_map)
+
+        if not os.path.exists(file):
+            with open(file, w) as f:
+                f.write(content)
+
+        return file

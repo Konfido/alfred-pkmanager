@@ -14,7 +14,7 @@ from PKM import Items
 from PKM import Utils as U
 # from PKM import Search as S
 from PKM import Note
-# from Customization import SETTINGS
+from Customization import Configuration as C
 
 
 class Search():
@@ -80,6 +80,14 @@ class Search():
         return True
 
     @classmethod
+    def wiki_search(cls, search_terms, dicted_files):
+        matched_list = []
+        for f in dicted_files:
+            if search_terms[0] in f['title']:
+                matched_list.append(f)
+        return matched_list
+
+    @classmethod
     def notes_search(cls, search_terms, dicted_files):
         """ Get a list of matched files """
         matched_list = []
@@ -107,7 +115,7 @@ def main():
         if mode == "Recent":
             result = sorted_file_list
         elif mode == "WIKI":
-            result = S.notes_search(keywords, sorted_wiki_list)
+            result = S.wiki_search(keywords, sorted_wiki_list)
         elif mode == "Keywords":
             result = S.notes_search(keywords, sorted_file_list)
         elif mode == "Both":
@@ -123,7 +131,9 @@ def main():
         if not result:
             S.show_none_matched(query)
         else:
-            S.show_result_items(result)
+            num = C.SETTINGS["result_nums"] if isinstance(
+                C.SETTINGS["result_nums"], int) else 20
+            S.show_result_items(result[:num])
 
 if __name__ == "__main__":
     main()

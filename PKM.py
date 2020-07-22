@@ -90,7 +90,7 @@ class Utils():
 
     @staticmethod
     def get_query():
-        return  sys.argv[1]
+        return  sys.argv[1].lower()
 
     @classmethod
     def get_parsed_arg(cls):
@@ -271,7 +271,7 @@ class Note():
         file_path = C.SETTINGS['type'][genre][1]
         file = os.path.join(file_path, title.join('.md'))
         replace_map = {
-            '{title}': title,
+            '{title}': title.strip(),
             '{tag}': "[]",
             '{datetime}': Utils.get_now()
         }

@@ -75,6 +75,7 @@ class Search():
     def _matched(patterns, content):
         """ Search for matches """
         for pattern in patterns:
+            # ignore case
             if not re.search(r'{}'.format(pattern), content, re.I):
                 return False
         return True
@@ -94,6 +95,32 @@ class Search():
         for f in dicted_files:
             if cls._matched(search_terms, f['content']):
                 matched_list.append(f)
+        return matched_list
+
+    @classmethod
+    def tag_search(cls, search_tags, dicted_files):
+        matched_list = []
+        for f in dicted_files:
+            tags = []
+            match = Note.get_yaml_item('tags', f["content"])
+            if match:
+                tags.extend(match.strip('[]').split(','))
+            if not C.SETTINGS["search_yaml_tag_only"]:
+                tags.extend(re.findall(r'\b#(.*?)\b', f['content']), re.I)
+            if not tags:
+                continue
+            else:
+                # TODO: handle multi tags
+                for t in search_tags:
+                    if t in tags:
+                        matched_list.append(f)
+        return matched_list
+
+    @classmethod
+    def both_search(cls, keywords, tags, dicted_files):
+        # TODO: alter between `and` and `or`
+        matched_list = cls.notes_search(keywords, dicted_files)
+        matched_list = cls.tag_search(tags, matched_list)
         return matched_list
 
 
@@ -118,10 +145,10 @@ def main():
             result = S.wiki_search(keywords, sorted_wiki_list)
         elif mode == "Keywords":
             result = S.notes_search(keywords, sorted_file_list)
-        elif mode == "Both":
-            pass
         elif mode == "Tags":
-            pass
+            result = S.tag_search(tags, sorted_file_list)
+        elif mode == "Both":
+            result = S.both_search(keywords, tags, sorted_file_list)
         else:
             result = None
     except Exception as e:

@@ -12,7 +12,7 @@ class Configuration():
         # 'wiki_path': '',
         # 'notes_path': [],
         # search tags in yaml only or in full content: True/False
-        'tags_in_yaml_only': True,
+        'search_yaml_tag_only': True,
         # present which todo in the top: newest/oldest
         'todo_order': 'newest',
         # quantity of results: Int
@@ -29,7 +29,15 @@ class Configuration():
             # 'daily': 'new_note'
         },
         # illigal characters for the file name
-        # "illigal_char_list": ['/', '\\', ':', '|', ',', '#'],
+        "title_replace_map" : {
+            ' ': '_',
+            ',': '_',
+            '，': '_',
+            '.': '',
+            '/': '-',
+            ':': '-',
+            '#': '-'
+        }
         # allowed file extension
         # "ext": ['md']
         # used for iAwriter

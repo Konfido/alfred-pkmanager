@@ -72,7 +72,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>2BEABD41-C15C-4012-837A-9A1CEE28C1F0</string>
+				<string>DEDE3301-D002-4693-A13F-994442EE399B</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -147,6 +147,56 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>if [ -f '{query}' ];then
+    if [ -z "${MARKDOWN_APP}" ];then
+        open '{query}'
+    else
+	    open -a "${MARKDOWN_APP}" '{query}'
+    fi
+fi</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>2BEABD41-C15C-4012-837A-9A1CEE28C1F0</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>n</string>
+				<key>subtext</key>
+				<string>Press ⌘ to insert a relative Markdown link of this node.</string>
+				<key>text</key>
+				<string>Open/Create a WiKi node for {query}</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>45D8F9E6-A0E7-496E-9250-EEC5D5CB0286</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>adduuid</key>
 				<false/>
 				<key>allowemptyfiles</key>
@@ -177,27 +227,6 @@ updated: {date:yyyy-MM-dd HH:mm:ss}
 			<string>alfred.workflow.output.writefile</string>
 			<key>uid</key>
 			<string>FC4A76BD-290F-4443-95DE-97105A58E97D</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>keyword</key>
-				<string>n</string>
-				<key>subtext</key>
-				<string>Press ⌘ to insert a relative Markdown link of this node.</string>
-				<key>text</key>
-				<string>Open/Create a WiKi node for {query}</string>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>45D8F9E6-A0E7-496E-9250-EEC5D5CB0286</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -270,39 +299,10 @@ updated: {date:yyyy-MM-dd HH:mm:ss}
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>if [ -f '{query}' ];then
-    if [ -z "${MARKDOWN_APP}" ];then
-        open '{query}'
-    else
-	    open -a "${MARKDOWN_APP}" '{query}'
-    fi
-fi</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>2BEABD41-C15C-4012-837A-9A1CEE28C1F0</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>nt</string>
+				<string>nr</string>
 				<key>subtext</key>
 				<string></string>
 				<key>text</key>
@@ -367,29 +367,29 @@ BBB</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>3</integer>
-				<key>focusedappvariable</key>
+				<key>concurrently</key>
 				<false/>
-				<key>focusedappvariablename</key>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>if [ -f '{query}' ];then
+    if [ -z "${MARKDOWN_APP}" ];then
+        open '{query}'
+    else
+	    open -a "${MARKDOWN_APP}" '{query}'
+    fi
+fi</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
 				<string></string>
-				<key>hotkey</key>
-				<integer>0</integer>
-				<key>hotmod</key>
-				<integer>0</integer>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedAppsMode</key>
+				<key>type</key>
 				<integer>0</integer>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>80B10ECE-CC52-4707-BB91-E0E4A16645ED</string>
+			<string>DEDE3301-D002-4693-A13F-994442EE399B</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -442,6 +442,35 @@ BBB</string>
 			<key>version</key>
 			<integer>3</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>80B10ECE-CC52-4707-BB91-E0E4A16645ED</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Handle your personal knowledge management with ease!
@@ -472,9 +501,9 @@ BBB</string>
 			<key>note</key>
 			<string>Open File</string>
 			<key>xpos</key>
-			<integer>880</integer>
+			<integer>915</integer>
 			<key>ypos</key>
-			<integer>270</integer>
+			<integer>70</integer>
 		</dict>
 		<key>37466BB2-A090-4712-AA83-89F367D8CBA5</key>
 		<dict>
@@ -525,6 +554,15 @@ BBB</string>
 			<key>ypos</key>
 			<integer>190</integer>
 		</dict>
+		<key>DEDE3301-D002-4693-A13F-994442EE399B</key>
+		<dict>
+			<key>note</key>
+			<string>Open File</string>
+			<key>xpos</key>
+			<integer>630</integer>
+			<key>ypos</key>
+			<integer>450</integer>
+		</dict>
 		<key>FC4A76BD-290F-4443-95DE-97105A58E97D</key>
 		<dict>
 			<key>xpos</key>
@@ -548,7 +586,7 @@ BBB</string>
 		<string>NOTES_PATH</string>
 	</array>
 	<key>version</key>
-	<string>0.2.0</string>
+	<string>0.2.2</string>
 	<key>webaddress</key>
 	<string>https://github.com/Konfido/alfred-pkmanager</string>
 </dict>

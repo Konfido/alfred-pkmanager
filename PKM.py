@@ -28,11 +28,13 @@ class Items():
         """ An item example:
         {   "title": str
             "subtitle": str
-            "arg":
+            "arg": arg parsed to next
             "type":
             "icon": { "type": ""|"image"
                       "path": "icons/hashtag.png" }}
         """
+        # if not item.get("arg"):
+        #     item["arg"] = Utils.get_query()
         self.items.append(item)
 
     def getItems(self, response_type="json"):
@@ -62,11 +64,11 @@ class Utils():
 
     @staticmethod
     def get_abspath(path):
-        return os.path.abspath(os.getenv(path))
+        return os.path.expanduser(os.getenv(path))
 
     @classmethod
     def get_env_varibles(cls):
-        # check valibility
+        """ Check valibility of env variables"""
         for env in ["MARKDOWN_APP","NOTES_PATH","WIKI_PATH"]:
             if not cls.get_env(env):
                 cls.show((  "ERROR: Find empty environt varibles!",
@@ -83,13 +85,17 @@ class Utils():
             return False
 
         notes_path = cls.get_abspath("NOTES_PATH").split(",")
-        wiki_path = cls.get_abspath("WIKI_PATH")
+        wiki_path = cls.get_abspath("WIKI_PATH").split(",")
         return (wiki_path, notes_path)
+
+    @staticmethod
+    def get_query():
+        return  sys.argv[1]
 
     @classmethod
     def get_parsed_arg(cls):
         # Tring to fetch input string
-        query = sys.argv[1]
+        query = cls.get_query()
         # no string
         if not query.strip():
             mode, keywords, tags = "Recent", [], []
@@ -127,6 +133,9 @@ class Utils():
 
         return mode, keywords, tags
 
+    @staticmethod
+    def log(message):
+        sys.stderr.write('LOG: {0}\n'.format(message))
 
     @staticmethod
     def notify(title, text="PKManger"):
@@ -171,16 +180,6 @@ class Utils():
                              "subtitle": e})
         cls.write()
 
-    @staticmethod
-    def format_date(date, fmt="%Y-%m-%d %H:%M:%S"):
-        return time.strftime(fmt, time.gmtime(date))
-
-    @staticmethod
-    def get_now(fmt="%Y-%m-%d %H:%M:%S"):
-        """ Get formated today's date """
-        now = datetime.datetime.now()
-        return now.strftime(fmt)
-
 
 class Note():
     def __init__(self, path):
@@ -191,10 +190,11 @@ class Note():
         file_name = os.path.basename(self.path)[:-len('.md')]
         return file_name
 
-    def _get_file_content(self):
+    @staticmethod
+    def get_file_content(path):
         # only process Markdown file
-        if str(self.path).endswith(".md"):
-            with open(self.path, 'r') as f:
+        if str(path).endswith(".md"):
+            with open(path, 'r') as f:
                 content = f.read()
         else:
             content = str()
@@ -213,71 +213,42 @@ class Note():
         title = yaml_title or level_one_title or file_name or ""
         return title
 
+    @staticmethod
+    def format_date(date, fmt="%Y-%m-%d %H:%M:%S"):
+        return time.strftime(fmt, time.gmtime(date))
+
+    @staticmethod
+    def get_now(fmt="%Y-%m-%d %H:%M:%S"):
+        """ Get formated today's date """
+        now = datetime.datetime.now()
+        return now.strftime(fmt)
+
     @classmethod
     def get_file_info(cls, path):
         """ get file's info in dict """
 
         cls.path = path
         name = cls._get_file_name(cls)
-        content = cls._get_file_content(cls)
+        content = cls.get_file_content(path)
         title = cls._get_file_title(cls, content)
         file_stats = os.stat(cls.path)
+        ctime = file_stats.st_birthtime
+        mtime = file_stats.st_mtime
+        cdate = cls.format_date(ctime, "%Y-%m-%d")
+        mdate = cls.format_date(mtime, "%Y-%m-%d")
+        size = file_stats.st_size
         file_infos = {
             'path': path,
             'file_name': name,
             'content': content,
             'title': title,
-            'ctime': file_stats.st_birthtime,
-            'mtime': file_stats.st_mtime,
-            'size': file_stats.st_size
+            'cdate': cdate,
+            'mdate': mdate,
+            'ctime': ctime,
+            'mtime': mdate,
+            'size': size
         }
         return file_infos
 
     def new(self):
         pass
-
-
-class Search():
-    # def __init__(self):
-    #     self.paths = []
-    #     self.file_infos = []
-
-    @staticmethod
-    def _get_all_files(paths):
-        file_paths_list = []
-        # support multi note paths
-        for path in paths:
-            # support subfolders
-            for root, dirs, files in os.walk(path):
-                for name in files:
-                    if name.endswith(".md"):
-                        file_paths_list.append(os.path.join(root, name))
-        if not file_paths_list:
-            Utils.show("No valid notes, please add one.")
-            exit(0)
-        return file_paths_list
-
-    @classmethod
-    def get_sorted_files(cls, paths, reverse=True):
-        # resent modified files
-        seq = list()
-        for path in cls._get_all_files(paths):
-            seq.append(Note.get_file_info(path))
-        sorted_files = sorted(seq, key=lambda k: k['mtime'], reverse=reverse)
-        return sorted_files
-
-    def _matched(self, search_terms, content):
-        """ Search for matches """
-        for term in search_terms:
-            if re.search(r'term', content, re.I):
-                return True
-        return False
-
-    def notes_search(self, search_terms, files):
-        """ Returns a list of matched files """
-        matched_list = []
-        for f in files:
-            content = self._get_file_content(f['path'])
-            if self._matched(search_terms, content):
-                matched_list.append(f)
-        return matched_list

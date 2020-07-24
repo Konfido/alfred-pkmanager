@@ -182,13 +182,14 @@ class Utils():
 
     @staticmethod
     def get_now(fmt="%Y-%m-%d %H:%M:%S"):
-        """ Get formated today's date """
+        """ Get formated current date&time string """
         now = datetime.datetime.now()
         return now.strftime(fmt)
 
     @staticmethod
-    def format_date(date, fmt="%Y-%m-%d %H:%M:%S"):
-        return time.strftime(fmt, time.gmtime(date))
+    def format_date(float_date, fmt="%Y-%m-%d %H:%M:%S"):
+        """ float time to string """
+        return time.strftime(fmt, time.localtime(float_date))
 
     @staticmethod
     def str_replace(string, replace_map):
@@ -238,20 +239,20 @@ class Note():
         content = cls.get_file_content(path).lower()
         title = cls._get_file_title(cls, content).lower()
         file_stats = os.stat(cls.path)
-        ctime = file_stats.st_birthtime
-        mtime = file_stats.st_mtime
-        cdate = Utils.format_date(ctime, "%Y-%m-%d")
-        mdate = Utils.format_date(mtime, "%Y-%m-%d")
+        ctime_float = file_stats.st_birthtime
+        mtime_float = file_stats.st_mtime
+        cdate_string = Utils.format_date(ctime_float, "%Y-%m-%d")
+        mdate_string = Utils.format_date(mtime_float, "%Y-%m-%d")
         size = file_stats.st_size
         file_infos = {
             'path': path,
             'file_name': name,
             'content': content,
             'title': title,
-            'cdate': cdate,
-            'mdate': mdate,
-            'ctime': ctime,
-            'mtime': mdate,
+            'cdate': cdate_string,
+            'mdate': mdate_string,
+            'ctime': ctime_float,
+            'mtime': mtime_float,
             'size': size
         }
         return file_infos

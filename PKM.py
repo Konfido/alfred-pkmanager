@@ -37,11 +37,35 @@ class Items():
                 "type":         str, "fileicon"|"image"
                 "path":         str, path to file/image
             }
+            "mods": {
+                "alt": {        {str, "alt" | "cmd" | "shift" | "ctrl" | "fn"
+                    "valid":    boolean, validity of the mod
+                    "arg":      str, return to next
+                    "subtitle"  str, subtitle showed under mod
+                },
+            }
         }
         """
         # if not item.get("arg"):
         #     item["arg"] = Utils.get_query()
         self.items.append(item)
+
+    def _add_mod(self, mod, arg, subtitle, icon_type, icon_path):
+        """Add a mod to item"""
+
+        para = {
+            "valid": true,
+            "arg": arg,
+            "subtitle": subtitle
+        }
+        self.item["mods"].update({mod, para})
+        self.item["icon"].update({"type": icon_type})
+        self.item["icon"].update({"path": icon_path})
+        return self.item
+
+    def add_mods(self, mods):
+        for m in mods:
+            self._add_mod(self.item, m)
 
     def add_none_matched_item(self, query):
         self.add_item({
@@ -59,10 +83,14 @@ class Items():
                     f['mdate'], f['cdate'], u'\u2318', u'\u21E7'),
                 "type": 'file',
                 "arg": f['path'],
+                # "icon": {
+                #     "type": "fileicon",
+                #     "path": f['path']
+                # },
                 "mods": {
                     "command": {
-                        "arg": "test",
-                        "subtitle": "test"
+                        "arg": "",
+                        "subtitle": "Next Action for this Note"
                     }
                 }
             })

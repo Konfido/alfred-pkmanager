@@ -23,21 +23,51 @@ class Items():
 
     def __init__(self):
         self.items = []
+        self.item = {}
 
-    def addItem(self, item):
+    def add_item(self, item):
         """ An item example:
-        {   "title": str
-            "subtitle": str
-            "arg": arg parsed to next
-            "type":
-            "icon": { "type": ""|"image"
-                      "path": "icons/hashtag.png" }}
+
+        {   "title":            str, title
+            "subtitle":         str, subtitle
+            "arg":              str, arg parsed to next
+            "type":             str, file
+            "autocomplete":     str, auto completed after enter
+            "icon": {
+                "type":         str, "fileicon"|"image"
+                "path":         str, path to file/image
+            }
+        }
         """
         # if not item.get("arg"):
         #     item["arg"] = Utils.get_query()
         self.items.append(item)
 
-    def getItems(self, response_type="json"):
+    def add_none_matched_item(self, query):
+        self.add_item({
+            "title": "Nothing found...",
+            "subtitle": "Do you want to create a new note with title \"{0}\"?".format(
+                query),
+            "arg": query,
+        })
+
+    def add_result_items(self, dicted_files):
+        for f in dicted_files:
+            self.add_item({
+                "title": f['title'],
+                "subtitle": u"Modified: {0}, Created: {1}, ({2} Actions, {3} Quicklook)".format(
+                    f['mdate'], f['cdate'], u'\u2318', u'\u21E7'),
+                "type": 'file',
+                "arg": f['path'],
+                "mods": {
+                    "command": {
+                        "arg": "test",
+                        "subtitle": "test"
+                    }
+                }
+            })
+
+    def get_items(self, response_type="json"):
         """ get the final items of the script filter output """
         if response_type not in {"json", "dict"}:
             raise ValueError("Type must be in: %s" % {"json", "dict"})
@@ -51,7 +81,7 @@ class Items():
 
     def write(self, response_type='json'):
         """ Generate Script Filter Output """
-        output = self.getItems(response_type=response_type)
+        output = self.get_items(response_type=response_type)
         sys.stdout.write(output)
 
 
@@ -156,11 +186,11 @@ class Utils():
         for item in args:
             try:
                 if isinstance(item, str) or isinstance(item, int) or isinstance(item, float):
-                    cls.addItem({"title": item})
+                    cls.add_item({"title": item})
                     continue
                 if isinstance(item, list):
                     for i in item:
-                        cls.addItem({"title": i})
+                        cls.add_item({"title": i})
                     continue
                 elif isinstance(item, tuple):
                     title = item[0]
@@ -169,14 +199,14 @@ class Utils():
                     title = item["title"]
                     subtitle = item["subtitle"] if item.has_key("subtitle") else ""
                 else:
-                    cls.addItem({ "title": "Error!",
+                    cls.add_item({ "title": "Error!",
                                   "subtitle": "Filter {}".format(item)})
                     continue
 
-                cls.addItem({"title": title,
+                cls.add_item({"title": title,
                              "subtitle": subtitle})
             except Exception as e:
-                cls.addItem({"title": "Exception!",
+                cls.add_item({"title": "Exception!",
                              "subtitle": e})
         cls.write()
 
@@ -258,6 +288,11 @@ class Note():
         return file_infos
 
     @staticmethod
+    def check_filename(s):
+        Utils.str_replace(s, SETTINGS.title_replace_map)
+        pass
+
+    @staticmethod
     def new(title, genre=''):
         """ create a new file accroding to template """
 
@@ -265,11 +300,11 @@ class Note():
             Utils.notify("Unsupported template: {}".format(template))
             return None
 
-        template = C.SETTINGS['type'][genre][0]
+        template = SETTINGS['type'][genre][0]
         template_file = os.path.join(
-            C.SETTINGS['template_path'], template.join(".md"))
+            SETTINGS['template_path'], template.join(".md"))
 
-        file_path = C.SETTINGS['type'][genre][1]
+        file_path = SETTINGS['type'][genre][1]
         file = os.path.join(file_path, title.join('.md'))
         replace_map = {
             '{title}': title.strip(),

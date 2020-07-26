@@ -47,30 +47,6 @@ class Search():
             matched_list, key=lambda k: k['mtime'], reverse=reverse)
         return sorted_files
 
-    @classmethod
-    def show_none_matched(cls, query):
-        cls = Items()
-        cls.addItem({
-            "title": "Nothing found...",
-            "subtitle": "Do you want to create a new note with title \"{0}\"?".format(
-                query),
-            "arg": query
-        })
-        cls.write()
-
-    @classmethod
-    def show_result_items(cls, dicted_files):
-        cls = Items()
-        for f in dicted_files:
-            cls.addItem({
-                "title": f['title'],
-                "subtitle": u"Modified: {0}, Created: {1}, ({2} Actions, {3} Quicklook)".format(
-                    f['mdate'], f['cdate'], u'\u2318', u'\u21E7'),
-                "type": 'file',
-                "arg": f['path']
-            })
-        cls.write()
-
     @staticmethod
     def _matched(patterns, content):
         """ Search for matches """
@@ -155,12 +131,14 @@ def main():
         U.log(e)
         return None
     else:
+        I = Items()
         if not result:
-            S.show_none_matched(query)
+            I.add_none_matched_item(query)
         else:
             num = C.SETTINGS["result_nums"] if isinstance(
                 C.SETTINGS["result_nums"], int) else 20
-            S.show_result_items(result[:num])
+            I.add_result_items(result[:num])
+        I.write()
 
 if __name__ == "__main__":
     main()

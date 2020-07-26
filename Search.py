@@ -6,47 +6,76 @@
 # ------------------------------------------------
 
 
-import sys
-import json
-import os
 import re
-from PKM import Items
+
+from Customization import SETTINGS
+from Items import Items
 from Utils import Utils as U
-from PKM import Note
-from Customization import Configuration as C
+
+
+class File():
+    def __init__(self, path):
+        self.path = path
+        self.file_name = U.get_file_name(self.path).lower()
+        self.content = U.get_file_content(self.path).lower()
+        self.title = self._get_file_title(self).lower()
+
+    def _get_file_title(self):
+        """ yaml_title > level_one_title > file_name """
+        yaml_title = U.get_yaml_item("title", self.content)
+        level_one_title = re.search(r'^# (\s+)', self.content)
+        title = yaml_title or level_one_title or self.file_name or ""
+        return title
+
+    @classmethod
+    def get_file_info(cls, path):
+        """ get file's info in a dict """
+        cls.__init__(cls, path)
+        size = U.get_file_meta(cls.path, "st_size")
+        ctime_float = U.get_file_meta(cls.path, "st_birthtime")
+        mtime_float = U.get_file_meta(cls.path, "st_mtime")
+        cdate_string = U.format_date(ctime_float, "%Y-%m-%d")
+        mdate_string = U.format_date(mtime_float, "%Y-%m-%d")
+        file_infos = {
+            'path': cls.path,
+            'file_name': cls.file_name,
+            'content': cls.content,
+            'title': cls.title,
+            'cdate': cdate_string,
+            'mdate': mdate_string,
+            'ctime': ctime_float,
+            'mtime': mtime_float,
+            'size': size
+        }
+        return file_infos
+
+    @staticmethod
+    def new(title, genre=''):
+        """ create a new file accroding to template """
+        template = U.path_join('./templates', genre.join(".md"))
+
+        file_path = SETTINGS['type'][genre][1]
+        title = U.str_replace(title, SETTINGS.title_replace_map)
+        file = U.path_join(file_path, title.join('.md'))
+
+        replace_map = {
+            '{title}': title.strip(),
+            '{tag}': "[]",
+            '{datetime}': U.get_now()
+        }
+
+        with open(template_file, r) as f:
+            content = U.str_replace(f.read(), replace_map)
+
+        if not U.path_exists(file):
+            with open(file, w) as f:
+                f.write(content)
+
+        return file
 
 
 class Search():
-    # def __init__(self):
-    #     self.paths = []
-    #     self.file_infos = []
-
-    @staticmethod
-    def _get_all_files(paths):
-        """ get all files from env paths """
-        file_paths_list = []
-        # support multi note paths
-        for path in paths:
-            path = U.get_abspath(path)
-            # support subfolders
-            for root, dirs, files in os.walk(path):
-                for name in files:
-                    if name.endswith(".md"):
-                        file_paths_list.append(os.path.join(root, name))
-        if not file_paths_list:
-            U.show("No valid notes, please input file's name to create one.")
-            exit()
-        return file_paths_list
-
-    @classmethod
-    def get_sorted_files(cls, paths, reverse=True):
-        """ Get all files sorted by modification time in reserve """
-        matched_list = list()
-        for path in cls._get_all_files(paths):
-            matched_list.append(Note.get_file_info(path))
-        sorted_files = sorted(
-            matched_list, key=lambda k: k['mtime'], reverse=reverse)
-        return sorted_files
+    """ handle all search procblems"""
 
     @staticmethod
     def _matched(patterns, content):
@@ -56,6 +85,20 @@ class Search():
             if not re.search(r'{}'.format(pattern), content, re.I):
                 return False
         return True
+
+    @classmethod
+    def get_sorted_files(cls, paths, reverse=True):
+        """ Get all files sorted by modification time in reserve """
+        all_files = U.get_all_files_path(paths)
+        if not all_files:
+            return None
+        else:
+            matched_list = list()
+            for path in all_files:
+                matched_list.append(File.get_file_info(path))
+            sorted_files = sorted(
+                matched_list, key=lambda k: k['mtime'], reverse=reverse)
+            return sorted_files
 
     @classmethod
     def wiki_search(cls, search_terms, dicted_files):
@@ -79,10 +122,10 @@ class Search():
         matched_list = []
         for f in dicted_files:
             tags = []
-            match = Note.get_yaml_item('tags', f["content"])
+            match = U.get_yaml_item('tags', f["content"])
             if match:
                 tags.extend(match.strip('[]').split(','))
-            if not C.SETTINGS["search_yaml_tag_only"]:
+            if not SETTINGS["search_yaml_tag_only"]:
                 tags.extend(re.findall(r'\b#(.*?)\b', f['content']), re.I)
             if not tags:
                 continue
@@ -99,47 +142,3 @@ class Search():
         matched_list = cls.notes_search(keywords, dicted_files)
         matched_list = cls.tag_search(tags, matched_list)
         return matched_list
-
-
-def main():
-    query = U.get_query()
-
-    if not U.get_env_varibles():
-        return None
-
-    # Load env variables
-    wiki_path, notes_path = U.get_env_varibles()
-    # Parse search input
-    mode, keywords, tags = U.get_parsed_arg()
-
-    S = Search()
-    sorted_wiki_list = S.get_sorted_files(wiki_path)
-    sorted_file_list = S.get_sorted_files(notes_path)
-    try:
-        if mode == "Recent":
-            result = sorted_file_list
-        elif mode == "WIKI":
-            result = S.wiki_search(keywords, sorted_wiki_list)
-        elif mode == "Keywords":
-            result = S.notes_search(keywords, sorted_file_list)
-        elif mode == "Tags":
-            result = S.tag_search(tags, sorted_file_list)
-        elif mode == "Both":
-            result = S.both_search(keywords, tags, sorted_file_list)
-        else:
-            result = None
-    except Exception as e:
-        U.log(e)
-        return None
-    else:
-        I = Items()
-        if not result:
-            I.add_none_matched_item(query)
-        else:
-            num = C.SETTINGS["result_nums"] if isinstance(
-                C.SETTINGS["result_nums"], int) else 20
-            I.add_result_items(result[:num])
-        I.write()
-
-if __name__ == "__main__":
-    main()

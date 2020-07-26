@@ -147,35 +147,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>if [ -f '{query}' ];then
-    if [ -z "${MARKDOWN_APP}" ];then
-        open '{query}'
-    else
-	    open -a "${MARKDOWN_APP}" '{query}'
-    fi
-fi</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>2BEABD41-C15C-4012-837A-9A1CEE28C1F0</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argumenttype</key>
 				<integer>0</integer>
 				<key>keyword</key>
@@ -229,6 +200,35 @@ updated: {date:yyyy-MM-dd HH:mm:ss}
 			<string>FC4A76BD-290F-4443-95DE-97105A58E97D</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>if [ -f '{query}' ];then
+    if [ -z "${MARKDOWN_APP}" ];then
+        open '{query}'
+    else
+	    open -a "${MARKDOWN_APP}" '{query}'
+    fi
+fi</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>2BEABD41-C15C-4012-837A-9A1CEE28C1F0</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -325,37 +325,13 @@ updated: {date:yyyy-MM-dd HH:mm:ss}
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>TT=$(osascript &lt;&lt;EOF
-tell application "System Events"
-	tell front window of application "Typora" to activate
-	keystroke "a" using command down
-	delay 0.1
-	keystroke "c" using command down
-	delay 0.1
-	get the clipboard
-end tell
-EOF
-)
-dateTime=$(date +'%Y-%m-%d %T')
-
-
-updatedText=$(echo $TT | tr '\r' '\n'| sed "s/\(updated: \).*/\1$dateTime/")
-
-echo $updatedText &gt; ~/Desktop/text.txt
-
-
-osascript &lt;&lt;BBB
-tell application "System Events"
-	set the clipboard to "$updatedText"
-	keystroke "v" using command down
-end tell
-BBB</string>
+				<string>sh ./update_meta.sh</string>
 				<key>scriptargtype</key>
-				<integer>1</integer>
+				<integer>0</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>type</key>
-				<integer>5</integer>
+				<integer>0</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
@@ -421,7 +397,7 @@ fi</string>
 				<key>runningsubtext</key>
 				<string>Searching ...</string>
 				<key>script</key>
-				<string>python3 ./search.py '{query}'</string>
+				<string>python3 ./PKM.py '{query}'</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -490,7 +466,7 @@ fi</string>
 		<key>2766465F-6260-4ADD-BE86-0FCF44283C71</key>
 		<dict>
 			<key>note</key>
-			<string>Refresh updated time</string>
+			<string>Refresh meta data</string>
 			<key>xpos</key>
 			<integer>215</integer>
 			<key>ypos</key>
@@ -503,7 +479,7 @@ fi</string>
 			<key>xpos</key>
 			<integer>915</integer>
 			<key>ypos</key>
-			<integer>70</integer>
+			<integer>75</integer>
 		</dict>
 		<key>37466BB2-A090-4712-AA83-89F367D8CBA5</key>
 		<dict>
@@ -573,17 +549,17 @@ fi</string>
 	</dict>
 	<key>variables</key>
 	<dict>
-		<key>MARKDOWN_APP</key>
+		<key>markdown_app</key>
 		<string>/Applications/Typora.app</string>
-		<key>NOTES_PATH</key>
-		<string>/Users/dhh/Documents/Sync/Docs_Wiki back/</string>
-		<key>WIKI_PATH</key>
-		<string>~/Documents/Sync/Docs_Wiki back/010 - Wiki/</string>
+		<key>notes_path</key>
+		<string>~/Documents/Sync/Docs_Wiki/</string>
+		<key>wiki_path</key>
+		<string>~/Documents/Sync/Docs_Wiki/010 - Wiki/</string>
 	</dict>
 	<key>variablesdontexport</key>
 	<array>
-		<string>WIKI_PATH</string>
-		<string>NOTES_PATH</string>
+		<string>notes_path</string>
+		<string>wiki_path</string>
 	</array>
 	<key>version</key>
 	<string>0.2.2</string>

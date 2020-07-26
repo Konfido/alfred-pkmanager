@@ -5,10 +5,15 @@
 # Created Date:  July 26th 2020
 # ------------------------------------------------
 
+import datetime
+import json
 import os
+import re
 import sys
 import time
-import re
+
+from Customization import SETTINGS
+
 
 class Utils():
 
@@ -20,6 +25,14 @@ class Utils():
     @staticmethod
     def get_abspath(path):
         return os.path.expanduser(path)
+
+    @staticmethod
+    def path_exists(path):
+        return os.path.exists(path)
+
+    @staticmethod
+    def path_join(root, file):
+        return os.path.join(root, file)
 
     @staticmethod
     def get_file_meta(path, key):
@@ -53,28 +66,6 @@ class Utils():
         match = re.search(
             r'^---.*?\b{}: (.*?)\n.*?---'.format(item), content, re.I | re.S)
         return match.group(1) if match is not None else None
-
-    @classmethod
-    def get_env_varibles(cls):
-        """ Check valibility of env variables"""
-        for env in ["MARKDOWN_APP", "NOTES_PATH", "WIKI_PATH"]:
-            if not cls.get_env(env):
-                cls.show(("ERROR: Find empty environt varibles!",
-                          "Please check: \"{}\".".format(env)))
-                return False
-        for path in cls.get_env("NOTES_PATH").split(","):
-            if not(os.path.exists(path)):
-                cls.show(("ERROR: Find invalid directory!",
-                          "Please check \"NOTES_PATH\": {}".format(path)))
-                return False
-        if not cls.get_env("WIKI_PATH"):
-            cls.show(("ERROR: Find invalid directory!",
-                      "Please check \"WIKI_PATH\""))
-            return False
-
-        notes_path = cls.get_abspath(cls.get_env("NOTES_PATH")).split(",")
-        wiki_path = cls.get_abspath(cls.get_env("WIKI_PATH")).split(",")
-        return (wiki_path, notes_path)
 
     @staticmethod
     def get_query():
@@ -111,16 +102,26 @@ class Utils():
                     mode = "Both"
             # >= 2 comma
             elif commas.__len__() >= 2:
-                cls.show(("Error!", "Having 2 (>=) commas is not allowed!"))
-                exit(0)
-                mode, keywords, tags = "", [], []
+                mode, keywords, tags = "GT2", [], []
             else:
-                cls.show(
+                cls.log(
                     ("Error!", "Can't parse the input: \'{0}\'".format(query)))
-                exit(0)
-                mode, keywords, tags = "", [], []
+                raise
 
         return mode, keywords, tags
+
+    @classmethod
+    def get_all_files_path(cls, paths):
+        file_paths_list = []
+        # support multi note paths
+        for path in paths:
+            path = cls.get_abspath(path)
+            # support subfolders
+            for root, dirs, files in os.walk(path):
+                for name in files:
+                    if name.endswith(".md"):
+                        file_paths_list.append(os.path.join(root, name))
+        return file_paths_list
 
     @staticmethod
     def log(message):
@@ -131,44 +132,6 @@ class Utils():
         """ Send Notification to mac Notification Center """
         os.system("""osascript -e 'display notification "{}" with title "{}"'
                   """.format(text, title))
-
-    @classmethod
-    def show(cls, *args):
-        """ Used under debugging: Send debug message to script filter
-
-        Allowed input format:
-            - String/Int/Float/List -> Title
-            - Tuple: T[0] -> Title; T[1] -> Subtitle
-            - Dict: {"Title": "xx", "Subtitle": "xx"}
-        """
-        cls = Items()
-        for item in args:
-            try:
-                if isinstance(item, str) or isinstance(item, int) or isinstance(item, float):
-                    cls.add_item({"title": item})
-                    continue
-                if isinstance(item, list):
-                    for i in item:
-                        cls.add_item({"title": i})
-                    continue
-                elif isinstance(item, tuple):
-                    title = item[0]
-                    subtitle = item[1]
-                elif isinstance(item, dict) and item.has_key("title"):
-                    title = item["title"]
-                    subtitle = item["subtitle"] if item.has_key(
-                        "subtitle") else ""
-                else:
-                    cls.add_item({"title": "Error!",
-                                  "subtitle": "Filter {}".format(item)})
-                    continue
-
-                cls.add_item({"title": title,
-                              "subtitle": subtitle})
-            except Exception as e:
-                cls.add_item({"title": "Exception!",
-                              "subtitle": e})
-        cls.write()
 
     @staticmethod
     def get_now(fmt="%Y-%m-%d %H:%M:%S"):

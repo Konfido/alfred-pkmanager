@@ -11,8 +11,7 @@ import json
 import os
 import re
 from PKM import Items
-from PKM import Utils as U
-# from PKM import Search as S
+from Utils import Utils as U
 from PKM import Note
 from Customization import Configuration as C
 
@@ -23,10 +22,12 @@ class Search():
     #     self.file_infos = []
 
     @staticmethod
-    def _get_all_files(env_paths):
+    def _get_all_files(paths):
+        """ get all files from env paths """
         file_paths_list = []
         # support multi note paths
-        for path in env_paths:
+        for path in paths:
+            path = U.get_abspath(path)
             # support subfolders
             for root, dirs, files in os.walk(path):
                 for name in files:

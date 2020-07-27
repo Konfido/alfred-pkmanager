@@ -175,7 +175,7 @@
 				<key>createintermediatefolders</key>
 				<false/>
 				<key>filename</key>
-				<string>{var:WIKI_PATH}{var:node}.md</string>
+				<string>{var:wiki_path}{var:node}.md</string>
 				<key>filetext</key>
 				<string>---
 title: {var:node}
@@ -210,10 +210,10 @@ updated: {date:yyyy-MM-dd HH:mm:ss}
 				<integer>102</integer>
 				<key>script</key>
 				<string>if [ -f '{query}' ];then
-    if [ -z "${MARKDOWN_APP}" ];then
+    if [ -z "${markdown_app}" ];then
         open '{query}'
     else
-	    open -a "${MARKDOWN_APP}" '{query}'
+	    open -a "${markdown_app}" '{query}'
     fi
 fi</string>
 				<key>scriptargtype</key>
@@ -254,7 +254,7 @@ fi</string>
 				<key>autopaste</key>
 				<true/>
 				<key>clipboardtext</key>
-				<string>[{var:node}](../010 - Nodes/{var:node}.md)</string>
+				<string>[{var:node}](../010 - Wiki/{var:node}.md)</string>
 				<key>transient</key>
 				<true/>
 			</dict>
@@ -372,6 +372,35 @@ fi</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>80B10ECE-CC52-4707-BB91-E0E4A16645ED</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
@@ -417,35 +446,6 @@ fi</string>
 			<string>4AE76153-7623-49D1-9851-0D3F2D3D3798</string>
 			<key>version</key>
 			<integer>3</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>3</integer>
-				<key>focusedappvariable</key>
-				<false/>
-				<key>focusedappvariablename</key>
-				<string></string>
-				<key>hotkey</key>
-				<integer>0</integer>
-				<key>hotmod</key>
-				<integer>0</integer>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>80B10ECE-CC52-4707-BB91-E0E4A16645ED</string>
-			<key>version</key>
-			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>

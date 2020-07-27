@@ -19,8 +19,7 @@ class Items():
         self.item = {}
 
     def add_item(self, item):
-        """ An item example:
-
+        """
         {   "title":            str, title
             "subtitle":         str, subtitle
             "arg":              str, arg parsed to next
@@ -31,7 +30,7 @@ class Items():
                 "path":         str, path to file/image
             }
             "mods": {
-                "alt": {        {str, "alt" | "cmd" | "shift" | "ctrl" | "fn"
+                "alt": {        str, "alt" | "cmd" | "shift" | "ctrl" | "fn"
                     "valid":    boolean, validity of the mod
                     "arg":      str, return to next
                     "subtitle"  str, subtitle showed under mod
@@ -43,22 +42,15 @@ class Items():
         #     item["arg"] = Utils.get_query()
         self.items.append(item)
 
-    def _add_mod(self, mod, arg, subtitle, icon_type, icon_path):
-        """Add a mod to item"""
-
-        para = {
-            "valid": true,
-            "arg": arg,
-            "subtitle": subtitle
-        }
-        self.item["mods"].update({mod, para})
-        self.item["icon"].update({"type": icon_type})
-        self.item["icon"].update({"path": icon_path})
-        return self.item
-
-    def add_mods(self, mods):
-        for m in mods:
-            self._add_mod(self.item, m)
+    def add_mod(self, mod, arg, subtitle, valid=True, icon_type="", icon_path=""):
+        """Add one mod to self.items
+        mod: ("alt" | "cmd" | "shift" | "ctrl" | "fn")
+        """
+        para = {"arg": arg, "subtitle": subtitle, "valid": valid}
+        icon = {"icon_type": icon_type, "icon_path": icon_path}
+        for item in self.items:
+            item["mods"].update({mod: para})
+            item.update({"icon": icon})
 
     def add_none_matched_item(self, genre, query):
         title = query if not query else "default"

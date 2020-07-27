@@ -50,13 +50,13 @@ class File():
         return file_infos
 
     @staticmethod
-    def new(title, genre=''):
+    def new(title, genre='wiki'):
         """ create a new file accroding to template """
         template = U.path_join('./templates', genre.join(".md"))
 
-        file_path = SETTINGS['type'][genre][1]
+        file_root = SETTINGS['new_file_root'][genre]
         title = U.str_replace(title, SETTINGS.title_replace_map)
-        file = U.path_join(file_path, title.join('.md'))
+        file = U.path_join(file_root, title.join('.md'))
 
         replace_map = {
             '{title}': title.strip(),

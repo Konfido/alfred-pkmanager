@@ -72,6 +72,11 @@ def main():
         num = SETTINGS["result_nums"] if isinstance(
             SETTINGS["result_nums"], int) else 20
         I.add_result_items(result[:num])
+        I.add_mod(
+            mod="cmd",
+            arg="",
+            subtitle="Press cmd to enter next menu"
+        )
     I.write()
 
 

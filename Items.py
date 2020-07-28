@@ -16,10 +16,32 @@ class Items():
 
     def __init__(self):
         self.items = []
-        self.item = {}
+        self.item = {
+            # "title": "xxx",           # str, title
+            # "subtitle": "xxx",        # str, subtitle
+            # "arg": "xxx",             # str, arg parsed to next
+            # "type": "xxx",            # str, file
+            # "autocomplete": "xxx",    # str, auto completed after enter
+            # "icon": {
+            #     "type": "xxx",        # str, "fileicon" | "image"
+            #     "path": "xxx"         # str, path to file/image
+            # },
+            # "mods": {
+            #     "xxx": {              # str, "alt" | "cmd" | "shift" | "ctrl" | "fn"
+            #         "valid": "xxx",   # boolean, validity of the mod
+            #         "arg": "xxx",     # str, return to next
+            #         "subtitle": "xxx" # str, subtitle showed under mod
+            #     }
+            # }
+        }
 
     def add_item(self, item):
-        self.items.append(item)
+        """ add an item / item_list """
+        if isinstance(item, list):
+            for i in item:
+                self.items.append(item)
+        else:
+            self.items.append(item)
 
     def add_mod_all(self, mod, arg, subtitle, valid=True, icon_type="", icon_path=""):
         """ Add one mod to self.items """
@@ -64,7 +86,7 @@ class Items():
                 "arg": "{}>{}".format("Open", f['path']),
                 "mods": {
                     "cmd":{
-                        "arg": "{}>{}".format("Action", f['path']),
+                        "arg": "{}>{}".format("Next", f['path']),
                         "subtitle": "Press 'Enter' to select your next action"}}})
         cls.write(cls)
 

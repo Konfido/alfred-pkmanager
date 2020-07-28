@@ -85,7 +85,7 @@ class Utils():
                 keys = re.findall(r'(\S+)', query)
                 # 1 word with no space tail
                 if keys.__len__() == 1 and query[-1:] != " ":
-                    mode, keywords, tags = "WIKI", [query.strip()], []
+                    mode, keywords, tags = "Wiki", [query.strip()], []
                 # 1 word with space tail & >= 2 words
                 else:
                     mode, keywords, tags = "Keywords", keys, []
@@ -149,3 +149,7 @@ class Utils():
         for r in replace_map.keys():
             string = string.replace(r, replace_map[r])
         return string
+
+    @staticmethod
+    def output(string):
+        sys.stdout.write(string)

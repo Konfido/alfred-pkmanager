@@ -50,28 +50,27 @@ class File():
         return file_infos
 
     @staticmethod
-    def new(title, genre='Wiki'):
+    def new(title, genre='wiki'):
         """ create a new file accroding to template """
+
         template = U.path_join('./templates', genre.join(".md"))
-
         file_root = SETTINGS['new_file_root'][genre]
-        title = U.str_replace(title, SETTINGS.title_replace_map)
-        file = U.path_join(file_root, title.join('.md'))
-
+        title = U.str_replace(title, SETTINGS['title_replace_map'])
+        file_path = U.path_join(file_root, '{}.md'.format(title) )
         replace_map = {
             '{title}': title.strip(),
             '{tag}': "[]",
-            '{datetime}': U.get_now()
+            '{datetime}': U.get_now(SETTINGS["date_format"])
         }
 
-        with open(template_file, r) as f:
+        with open("./templates/Wiki.md", 'r') as f:
             content = U.str_replace(f.read(), replace_map)
 
-        if not U.path_exists(file):
-            with open(file, w) as f:
+        if not U.path_exists(file_path):
+            with open(file_path, "w") as f:
                 f.write(content)
 
-        return file
+        return file_path
 
 
 class Search():

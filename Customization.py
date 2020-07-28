@@ -6,8 +6,6 @@
 # ------------------------------------------------
 
 
-# class Configuration():
-
 SETTINGS = {
     # path to your Markdown App
     # 'app_path': '/Applications/Typora.app',
@@ -24,11 +22,11 @@ SETTINGS = {
     # default date format used by templates's YAML info
     'date_format': '%Y-%m-%d %H:%M:%S',
     # set default [template, path] for deferent genre of newly created files.
-    'new_file_path': {
-        'note': '',
-        'wiki': '',
-        'todo': '',
-        'journay': ''
+    'new_file_root': {
+        'note': './test',
+        'wiki': './test',
+        'todo': './test',
+        'journay': './test'
     },
     # illigal characters for the file name
     "title_replace_map" : {

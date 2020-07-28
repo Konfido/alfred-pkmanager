@@ -6,19 +6,6 @@
 	<string>com.konfido.pkmanager</string>
 	<key>connections</key>
 	<dict>
-		<key>102D616D-2953-4568-86A3-5735D8AEA270</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>37466BB2-A090-4712-AA83-89F367D8CBA5</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
 		<key>2766465F-6260-4ADD-BE86-0FCF44283C71</key>
 		<array>
 			<dict>
@@ -32,47 +19,11 @@
 				<false/>
 			</dict>
 		</array>
-		<key>37466BB2-A090-4712-AA83-89F367D8CBA5</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>CF7E6AB0-8030-4128-BA60-E62F109A3A26</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>45D8F9E6-A0E7-496E-9250-EEC5D5CB0286</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>C7154953-6853-409B-967C-CDFC17AB7C49</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>102D616D-2953-4568-86A3-5735D8AEA270</string>
-				<key>modifiers</key>
-				<integer>1048576</integer>
-				<key>modifiersubtext</key>
-				<string>Insert the link:  [{query}](./xxx)</string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
 		<key>4AE76153-7623-49D1-9851-0D3F2D3D3798</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>DEDE3301-D002-4693-A13F-994442EE399B</string>
+				<string>8C862048-2D38-4CD1-B863-8CA9D6178736</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -81,6 +32,8 @@
 				<false/>
 			</dict>
 		</array>
+		<key>60413B5A-4962-4B37-BE2F-1B88254A0FD1</key>
+		<array/>
 		<key>80B10ECE-CC52-4707-BB91-E0E4A16645ED</key>
 		<array>
 			<dict>
@@ -94,11 +47,11 @@
 				<false/>
 			</dict>
 		</array>
-		<key>C7154953-6853-409B-967C-CDFC17AB7C49</key>
+		<key>8C862048-2D38-4CD1-B863-8CA9D6178736</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>FC4A76BD-290F-4443-95DE-97105A58E97D</string>
+				<string>979E21AA-8D3C-4716-A18C-4D9CE276F2E0</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -107,11 +60,23 @@
 				<false/>
 			</dict>
 		</array>
-		<key>CF7E6AB0-8030-4128-BA60-E62F109A3A26</key>
+		<key>979E21AA-8D3C-4716-A18C-4D9CE276F2E0</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>FC4A76BD-290F-4443-95DE-97105A58E97D</string>
+				<string>FCBE6F87-6FFF-4D6C-938B-87588E77E108</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>sourceoutputuid</key>
+				<string>8A354F79-2EA1-48C2-A73D-F684B4E33868</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>60413B5A-4962-4B37-BE2F-1B88254A0FD1</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -120,7 +85,7 @@
 				<false/>
 			</dict>
 		</array>
-		<key>FC4A76BD-290F-4443-95DE-97105A58E97D</key>
+		<key>FCBE6F87-6FFF-4D6C-938B-87588E77E108</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -137,70 +102,13 @@
 	<key>createdby</key>
 	<string>Konfido</string>
 	<key>description</key>
-	<string>My Personal Knowledge Manager</string>
+	<string>A Personal Knowledge Manager</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>A PKManager</string>
+	<string>PKManager</string>
 	<key>objects</key>
 	<array>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>keyword</key>
-				<string>n</string>
-				<key>subtext</key>
-				<string>Press ⌘ to insert a relative Markdown link of this node.</string>
-				<key>text</key>
-				<string>Open/Create a WiKi node for {query}</string>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>45D8F9E6-A0E7-496E-9250-EEC5D5CB0286</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>adduuid</key>
-				<false/>
-				<key>allowemptyfiles</key>
-				<false/>
-				<key>createintermediatefolders</key>
-				<false/>
-				<key>filename</key>
-				<string>{var:wiki_path}{var:node}.md</string>
-				<key>filetext</key>
-				<string>---
-title: {var:node}
-synonyms: []
-tags: []
-typora-root-url: ..
-typora-copy-images-to: ../images
-date: {date:yyyy-MM-dd HH:mm:ss}
-updated: {date:yyyy-MM-dd HH:mm:ss}
----
-
-
-</string>
-				<key>relativepathmode</key>
-				<integer>0</integer>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.writefile</string>
-			<key>uid</key>
-			<string>FC4A76BD-290F-4443-95DE-97105A58E97D</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -233,141 +141,74 @@ fi</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argument</key>
-				<string>{query}</string>
-				<key>variables</key>
-				<dict>
-					<key>node</key>
-					<string>{query}</string>
-				</dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string></string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string>action_fast.py</string>
+				<key>type</key>
+				<integer>8</integer>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.utility.argument</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>C7154953-6853-409B-967C-CDFC17AB7C49</string>
+			<string>FCBE6F87-6FFF-4D6C-938B-87588E77E108</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>autopaste</key>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>1</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>n</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
 				<true/>
-				<key>clipboardtext</key>
-				<string>[{var:node}](../010 - Wiki/{var:node}.md)</string>
-				<key>transient</key>
+				<key>queuedelaymode</key>
+				<integer>2</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string>Searching ...</string>
+				<key>script</key>
+				<string>python3 ./PKM.py '{query}'</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string>PKM.py</string>
+				<key>subtext</key>
+				<string>Press ⌘ to insert a relative Markdown link of this node.</string>
+				<key>title</key>
+				<string>Search a WiKi node for {query}</string>
+				<key>type</key>
+				<integer>8</integer>
+				<key>withspace</key>
 				<true/>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.output.clipboard</string>
+			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
-			<string>37466BB2-A090-4712-AA83-89F367D8CBA5</string>
+			<string>4AE76153-7623-49D1-9851-0D3F2D3D3798</string>
 			<key>version</key>
 			<integer>3</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>seconds</key>
-				<string>0.2</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.utility.delay</string>
-			<key>uid</key>
-			<string>CF7E6AB0-8030-4128-BA60-E62F109A3A26</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argument</key>
-				<string>{query}</string>
-				<key>variables</key>
-				<dict>
-					<key>node</key>
-					<string>{query}</string>
-				</dict>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.utility.argument</string>
-			<key>uid</key>
-			<string>102D616D-2953-4568-86A3-5735D8AEA270</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>nr</string>
-				<key>subtext</key>
-				<string></string>
-				<key>text</key>
-				<string>Refresh updated time</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>2766465F-6260-4ADD-BE86-0FCF44283C71</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>sh ./update_meta.sh</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>6432274D-3360-46EF-A830-32D1B77A92CA</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>if [ -f '{query}' ];then
-    if [ -z "${MARKDOWN_APP}" ];then
-        open '{query}'
-    else
-	    open -a "${MARKDOWN_APP}" '{query}'
-    fi
-fi</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>DEDE3301-D002-4693-A13F-994442EE399B</string>
-			<key>version</key>
-			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -401,51 +242,140 @@ fi</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>conditions</key>
+				<array>
+					<dict>
+						<key>inputstring</key>
+						<string>{var:next_1}</string>
+						<key>matchcasesensitive</key>
+						<false/>
+						<key>matchmode</key>
+						<integer>1</integer>
+						<key>matchstring</key>
+						<string>Next</string>
+						<key>outputlabel</key>
+						<string>Fast</string>
+						<key>uid</key>
+						<string>8A354F79-2EA1-48C2-A73D-F684B4E33868</string>
+					</dict>
+				</array>
+				<key>elselabel</key>
+				<string>Next</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.conditional</string>
+			<key>uid</key>
+			<string>979E21AA-8D3C-4716-A18C-4D9CE276F2E0</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>delimiter</key>
+				<string>&gt;</string>
+				<key>trimarguments</key>
+				<true/>
+				<key>variableprefix</key>
+				<string>next_</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.split</string>
+			<key>uid</key>
+			<string>8C862048-2D38-4CD1-B863-8CA9D6178736</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
 				<integer>0</integer>
 				<key>argumenttreatemptyqueryasnil</key>
-				<false/>
+				<true/>
 				<key>argumenttrimmode</key>
-				<integer>1</integer>
+				<integer>0</integer>
 				<key>argumenttype</key>
-				<integer>1</integer>
+				<integer>0</integer>
 				<key>escaping</key>
-				<integer>102</integer>
-				<key>keyword</key>
-				<string>ns</string>
+				<integer>0</integer>
 				<key>queuedelaycustom</key>
-				<integer>1</integer>
+				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
 				<true/>
 				<key>queuedelaymode</key>
-				<integer>2</integer>
-				<key>queuemode</key>
-				<integer>2</integer>
-				<key>runningsubtext</key>
-				<string>Searching ...</string>
-				<key>script</key>
-				<string>python3 ./PKM.py '{query}'</string>
-				<key>scriptargtype</key>
 				<integer>0</integer>
-				<key>scriptfile</key>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
 				<string></string>
+				<key>script</key>
+				<string></string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string>action_next.py</string>
 				<key>subtext</key>
 				<string></string>
 				<key>title</key>
-				<string>Search in notes</string>
+				<string></string>
 				<key>type</key>
-				<integer>0</integer>
+				<integer>8</integer>
 				<key>withspace</key>
 				<true/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
-			<string>4AE76153-7623-49D1-9851-0D3F2D3D3798</string>
+			<string>60413B5A-4962-4B37-BE2F-1B88254A0FD1</string>
 			<key>version</key>
 			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>keyword</key>
+				<string>nr</string>
+				<key>subtext</key>
+				<string></string>
+				<key>text</key>
+				<string>Refresh updated time</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>2766465F-6260-4ADD-BE86-0FCF44283C71</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>sh ./update_meta.sh</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>6432274D-3360-46EF-A830-32D1B77A92CA</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -456,95 +386,78 @@ fi</string>
 - Refresh updated time in meta-data</string>
 	<key>uidata</key>
 	<dict>
-		<key>102D616D-2953-4568-86A3-5735D8AEA270</key>
-		<dict>
-			<key>xpos</key>
-			<integer>395</integer>
-			<key>ypos</key>
-			<integer>190</integer>
-		</dict>
 		<key>2766465F-6260-4ADD-BE86-0FCF44283C71</key>
 		<dict>
 			<key>note</key>
 			<string>Refresh meta data</string>
 			<key>xpos</key>
-			<integer>215</integer>
+			<integer>225</integer>
 			<key>ypos</key>
-			<integer>280</integer>
+			<integer>310</integer>
 		</dict>
 		<key>2BEABD41-C15C-4012-837A-9A1CEE28C1F0</key>
 		<dict>
 			<key>note</key>
 			<string>Open File</string>
 			<key>xpos</key>
-			<integer>915</integer>
+			<integer>1215</integer>
 			<key>ypos</key>
-			<integer>75</integer>
-		</dict>
-		<key>37466BB2-A090-4712-AA83-89F367D8CBA5</key>
-		<dict>
-			<key>xpos</key>
-			<integer>465</integer>
-			<key>ypos</key>
-			<integer>160</integer>
-		</dict>
-		<key>45D8F9E6-A0E7-496E-9250-EEC5D5CB0286</key>
-		<dict>
-			<key>xpos</key>
-			<integer>210</integer>
-			<key>ypos</key>
-			<integer>75</integer>
+			<integer>25</integer>
 		</dict>
 		<key>4AE76153-7623-49D1-9851-0D3F2D3D3798</key>
 		<dict>
+			<key>note</key>
+			<string>Search / Create</string>
 			<key>xpos</key>
-			<integer>215</integer>
+			<integer>230</integer>
 			<key>ypos</key>
-			<integer>455</integer>
+			<integer>160</integer>
+		</dict>
+		<key>60413B5A-4962-4B37-BE2F-1B88254A0FD1</key>
+		<dict>
+			<key>note</key>
+			<string>Next Actions</string>
+			<key>xpos</key>
+			<integer>725</integer>
+			<key>ypos</key>
+			<integer>255</integer>
 		</dict>
 		<key>6432274D-3360-46EF-A830-32D1B77A92CA</key>
 		<dict>
 			<key>xpos</key>
-			<integer>415</integer>
+			<integer>420</integer>
 			<key>ypos</key>
-			<integer>280</integer>
+			<integer>310</integer>
 		</dict>
 		<key>80B10ECE-CC52-4707-BB91-E0E4A16645ED</key>
 		<dict>
 			<key>xpos</key>
-			<integer>35</integer>
+			<integer>70</integer>
 			<key>ypos</key>
-			<integer>455</integer>
+			<integer>160</integer>
 		</dict>
-		<key>C7154953-6853-409B-967C-CDFC17AB7C49</key>
+		<key>8C862048-2D38-4CD1-B863-8CA9D6178736</key>
 		<dict>
 			<key>xpos</key>
-			<integer>395</integer>
-			<key>ypos</key>
-			<integer>105</integer>
-		</dict>
-		<key>CF7E6AB0-8030-4128-BA60-E62F109A3A26</key>
-		<dict>
-			<key>xpos</key>
-			<integer>620</integer>
+			<integer>435</integer>
 			<key>ypos</key>
 			<integer>190</integer>
 		</dict>
-		<key>DEDE3301-D002-4693-A13F-994442EE399B</key>
+		<key>979E21AA-8D3C-4716-A18C-4D9CE276F2E0</key>
+		<dict>
+			<key>xpos</key>
+			<integer>545</integer>
+			<key>ypos</key>
+			<integer>180</integer>
+		</dict>
+		<key>FCBE6F87-6FFF-4D6C-938B-87588E77E108</key>
 		<dict>
 			<key>note</key>
-			<string>Open File</string>
+			<string>Fast Actions</string>
 			<key>xpos</key>
-			<integer>630</integer>
+			<integer>725</integer>
 			<key>ypos</key>
-			<integer>450</integer>
-		</dict>
-		<key>FC4A76BD-290F-4443-95DE-97105A58E97D</key>
-		<dict>
-			<key>xpos</key>
-			<integer>695</integer>
-			<key>ypos</key>
-			<integer>75</integer>
+			<integer>25</integer>
 		</dict>
 	</dict>
 	<key>variables</key>
@@ -562,7 +475,7 @@ fi</string>
 		<string>wiki_path</string>
 	</array>
 	<key>version</key>
-	<string>0.2.2</string>
+	<string>0.3.0</string>
 	<key>webaddress</key>
 	<string>https://github.com/Konfido/alfred-pkmanager</string>
 </dict>

@@ -19,82 +19,54 @@ class Items():
         self.item = {}
 
     def add_item(self, item):
-        """
-        {   "title":            str, title
-            "subtitle":         str, subtitle
-            "arg":              str, arg parsed to next
-            "type":             str, file
-            "autocomplete":     str, auto completed after enter
-            "icon": {
-                "type":         str, "fileicon"|"image"
-                "path":         str, path to file/image
-            }
-            "mods": {
-                "alt": {        str, "alt" | "cmd" | "shift" | "ctrl" | "fn"
-                    "valid":    boolean, validity of the mod
-                    "arg":      str, return to next
-                    "subtitle"  str, subtitle showed under mod
-                },
-            }
-        }
-        """
-        # if not item.get("arg"):
-        #     item["arg"] = Utils.get_query()
         self.items.append(item)
 
-    def add_mod(self, mod, arg, subtitle, valid=True, icon_type="", icon_path=""):
-        """Add one mod to self.items
-        mod: ("alt" | "cmd" | "shift" | "ctrl" | "fn")
-        """
+    def add_mod_all(self, mod, arg, subtitle, valid=True, icon_type="", icon_path=""):
+        """ Add one mod to self.items """
         para = {"arg": arg, "subtitle": subtitle, "valid": valid}
         icon = {"icon_type": icon_type, "icon_path": icon_path}
         for item in self.items:
             item["mods"].update({mod: para})
             item.update({"icon": icon})
 
-    def add_none_matched_item(self, genre, query):
-        title = query if not query else "default"
-        self.add_item({
-            "title": "Nothing found...",
-            "subtitle": "Do you want to create a new {0} with title \"{1}\"?".format(
-                genre, title),
-            "arg": query,
-        })
-
-    def add_result_items(self, dicted_files):
-        for f in dicted_files:
-            self.add_item({
-                "title": f['title'],
-                "subtitle": u"Modified: {0}, Created: {1}, ({2} Actions, {3} Quicklook)".format(
-                    f['mdate'], f['cdate'], u'\u2318', u'\u21E7'),
-                "type": 'file',
-                "arg": f['path'],
-                # "icon": {
-                #     "type": "fileicon",
-                #     "path": f['path']
-                # },
-                "mods": {
-                    "command": {
-                        "arg": "",
-                        "subtitle": "Next Action for this Note"
-                    }
-                }
-            })
-
-    def get_items(self):
-        """ get the final items of the script filter output """
-        out = {"items": self.items}
-        return json.dumps(out)
-
     def write(self):
         """ Generate Script Filter Output """
-        output = self.get_items()
-        sys.stdout.write(output)
+        out = json.dumps({"items": self.items})
+        sys.stdout.write(out)
 
-    # def write(self):
-    #     out = {"items": self.items}
-    #     out = json.dumps(out)
-    #     sys.stdout.write(out)
+
+    ##  Customize SrciptFilter to show specific content
+
+    @classmethod
+    def show_none_matched(cls, mode, query):
+        cls.__init__(cls)
+        genre = "Wiki" if mode == "Wiki" else "Note"
+        cls.add_item(cls, {
+            "title": "Nothing found...",
+            "subtitle": "Presh '\u2318' and 'Enter' to create a new \"{0}\" with title \"{1}\"".format(
+                genre, query),
+            "arg": "{}>{}".format("None", query),
+            "mods": {
+                "cmd": {
+                    "arg": "{}>{}".format("New", [mode, query]),
+                    "subtitle": "Press 'Enter' to complete"}}})
+        cls.write(cls)
+
+    @classmethod
+    def show_matched_result(cls, dicted_files):
+        cls.__init__(cls)
+        for f in dicted_files:
+            cls.add_item(cls, {
+                "title": f['title'],
+                "subtitle": u"Modified: {0}, ({1} Actions, {2} Quicklook)".format(
+                    f['mdate'], u'\u2318', u'\u21E7'),
+                "type": 'file',
+                "arg": "{}>{}".format("Open", f['path']),
+                "mods": {
+                    "cmd":{
+                        "arg": "{}>{}".format("Action", f['path']),
+                        "subtitle": "Press 'Enter' to select your next action"}}})
+        cls.write(cls)
 
     @classmethod
     def show(cls, *args):
@@ -135,5 +107,4 @@ class Items():
                 cls.add_item(cls, {"title": "Exception!",
                             "subtitle": e})
 
-        output = cls.get_items(cls)
-        sys.stdout.write(output)
+        cls.write(cls)

@@ -50,7 +50,7 @@ class File():
         return file_infos
 
     @staticmethod
-    def new(title, genre='wiki'):
+    def new(title, genre='Wiki'):
         """ create a new file accroding to template """
         template = U.path_join('./templates', genre.join(".md"))
 

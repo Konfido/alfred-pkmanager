@@ -8,7 +8,6 @@
 
 import ast
 
-from Customization import SETTINGS
 from Items import Items
 from Search import File, Search
 from Utils import Utils as U

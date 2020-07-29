@@ -8,7 +8,7 @@
 
 import re
 
-from Customization import SETTINGS
+from Customization import Config as C
 from Items import Items
 from Utils import Utils as U
 
@@ -52,15 +52,25 @@ class File():
     @staticmethod
     def new(title, genre='wiki'):
         """ create a new file accroding to template """
+        # illigal characters for the file name
+        title_replace_map = {
+            ' ': '_',
+            ',': '-',
+            '，': '-',
+            '.': '_',
+            '/': '-',
+            ':': '-',
+            '#': '-'
+        }
 
         template = U.path_join('./templates', genre.join(".md"))
-        file_root = SETTINGS['new_file_root'][genre]
-        title = U.str_replace(title, SETTINGS['title_replace_map'])
+        file_root = C().configs['new_file_root'][genre]
+        title = U.str_replace(title, title_replace_map)
         file_path = U.path_join(file_root, '{}.md'.format(title) )
         replace_map = {
             '{title}': title.strip(),
             '{tag}': "[]",
-            '{datetime}': U.get_now(SETTINGS["date_format"])
+            '{datetime}': U.get_now(C().configs["date_format"])
         }
 
         with open("./templates/Wiki.md", 'r') as f:
@@ -124,7 +134,7 @@ class Search():
             match = U.get_yaml_item('tags', f["content"])
             if match:
                 tags.extend(match.strip('[]').split(','))
-            if not SETTINGS["search_yaml_tag_only"]:
+            if not C().configs["search_yaml_tag_only"]:
                 tags.extend(re.findall(r'\b#(.*?)\b', f['content']), re.I)
             if not tags:
                 continue

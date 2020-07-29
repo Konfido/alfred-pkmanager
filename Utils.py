@@ -6,13 +6,10 @@
 # ------------------------------------------------
 
 import datetime
-import json
 import os
 import re
 import sys
 import time
-
-from Customization import SETTINGS
 
 
 class Utils():
@@ -29,6 +26,10 @@ class Utils():
     @staticmethod
     def path_exists(path):
         return os.path.exists(path)
+
+    @staticmethod
+    def mkdir(path):
+        return os.makedirs(path)
 
     @staticmethod
     def path_join(root, file):

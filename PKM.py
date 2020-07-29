@@ -6,34 +6,20 @@
 # ------------------------------------------------
 
 
-from Customization import SETTINGS
+from Customization import Config as C
 from Items import Items
 from Search import File as F
 from Search import Search as S
 from Utils import Utils as U
 
 
-def varibles_checked():
-    """ Check validity of env variables"""
-    for env in ["markdown_app", "notes_path", "wiki_path"]:
-        if not U.get_env(env):
-            Items().show(("ERROR: Find empty environt varibles!",
-                          "Please check: \"{}\".".format(env)))
-            return False
-    for path in U.get_env("notes_path").split(","):
-        if not(U.path_exists(U.get_abspath(path))):
-            Items().show(("ERROR: Find invalid directory!",
-                          "Please check \"notes_path\": {}".format(path)))
-            return False
-    if not U.get_env("wiki_path"):
-        Items().show(("ERROR: Find invalid directory!",
-                      "Please check \"wiki_path\""))
-        return False
-
-    return True
-
-
 def main():
+    if not C.varibles_checked():
+        return 0
+
+
+    Items.show(C().configs["todo_order"])
+    exit()
     query = U.get_query()
     notes_path = U.get_abspath(U.get_env("notes_path")).split(",")
     wiki_path = U.get_abspath(U.get_env("wiki_path")).split(",")
@@ -65,13 +51,12 @@ def main():
     if not result:
         Items.show_none_matched(mode, query)
     else:
-        num = SETTINGS["result_nums"] if isinstance(
-            SETTINGS["result_nums"], int) else 20
+        num = C().configs["result_nums"] if isinstance(
+            C().configs["result_nums"], int) else 20
         Items.show_matched_result(result[:num])
 
     return
 
 
 if __name__ == "__main__":
-    if varibles_checked():
-        main()
+    main()

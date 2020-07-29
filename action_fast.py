@@ -13,7 +13,7 @@ from Search import File, Search
 from Utils import Utils as U
 
 
-option, query = U.get_query().split('>')
+option, query = U.get_query().split('|')
 
 if option == "open":
     U.output(query)

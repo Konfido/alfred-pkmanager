@@ -39,7 +39,7 @@ class Items():
         """ add an item / item_list """
         if isinstance(item, list):
             for i in item:
-                self.items.append(item)
+                self.items.append(i)
         else:
             self.items.append(item)
 
@@ -67,15 +67,15 @@ class Items():
             "title": "Nothing found...",
             "subtitle": "Presh '\u2318' and 'Enter' to create a new \"{0}\" with title \"{1}\"".format(
                 genre, query),
-            "arg": "{}>{}".format("None", query),
+            "arg": "{}|{}".format("None", query),
             "mods": {
                 "cmd": {
-                    "arg": "{}>{}".format("New", [mode, query]),
+                    "arg": "{}|{}".format("New", [mode, query]),
                     "subtitle": "Press 'Enter' to complete"}}})
         cls.write(cls)
 
     @classmethod
-    def show_matched_result(cls, dicted_files):
+    def show_matched_result(cls, dicted_files, query):
         cls.__init__(cls)
         for f in dicted_files:
             cls.add_item(cls, {
@@ -83,10 +83,10 @@ class Items():
                 "subtitle": u"Modified: {0}, ({1} Actions, {2} Quicklook)".format(
                     f['mdate'], u'\u2318', u'\u21E7'),
                 "type": 'file',
-                "arg": "{}>{}".format("Open", f['path']),
+                "arg": "{}|{}".format("Open", f['path']),
                 "mods": {
                     "cmd":{
-                        "arg": "{}>{}".format("Next", f['path']),
+                        "arg": "{}|{}".format("Next", [f['path'], query]),
                         "subtitle": "Press 'Enter' to select your next action"}}})
         cls.write(cls)
 

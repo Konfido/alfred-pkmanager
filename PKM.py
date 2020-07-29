@@ -17,9 +17,6 @@ def main():
     if not C.varibles_checked():
         return 0
 
-
-    Items.show(C().configs["todo_order"])
-    exit()
     query = U.get_query()
     notes_path = U.get_abspath(U.get_env("notes_path")).split(",")
     wiki_path = U.get_abspath(U.get_env("wiki_path")).split(",")
@@ -53,7 +50,7 @@ def main():
     else:
         num = C().configs["result_nums"] if isinstance(
             C().configs["result_nums"], int) else 20
-        Items.show_matched_result(result[:num])
+        Items.show_matched_result(result[:num], query)
 
     return
 

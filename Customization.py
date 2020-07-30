@@ -8,7 +8,7 @@
 
 import os
 
-from Items import Items
+from Items import Items, Display
 from Utils import Utils as U
 import json
 
@@ -64,16 +64,16 @@ class Config():
         # Check validity of Workflow env variables
         for env in ["markdown_app", "notes_path", "wiki_path"]:
             if not U.get_env(env):
-                Items().show(("ERROR: Find empty environt varibles!",
+                Display.show(("ERROR: Find empty environt varibles!",
                               "Please check: \"{}\".".format(env)))
                 return False
         for path in U.get_env("notes_path").split(","):
             if not(U.path_exists(U.get_abspath(path))):
-                Items().show(("ERROR: Find invalid directory!",
+                Display.show(("ERROR: Find invalid directory!",
                               "Please check \"notes_path\": {}".format(path)))
                 return False
         if not U.get_env("wiki_path"):
-            Items().show(("ERROR: Find invalid directory!",
+            Display.show(("ERROR: Find invalid directory!",
                           "Please check \"wiki_path\""))
             return False
 
@@ -86,7 +86,7 @@ class Config():
             try:
                 cls._load_all()
             except Exception as e:
-                Items.show(e)
+                Display.show(e)
                 #TODO: reset all config/go check?
                 return False
 
@@ -95,22 +95,19 @@ class Config():
     @staticmethod
     def _load_all():
         """ Get user's local config """
-        with open(CONFIG_FILE, 'r') as f:
-            configs = json.load(f)
-        return configs
+        return U.json_load(CONFIG_FILE)
 
     def get(self, key):
         return self.configs[key]
 
     def update(self, key, value):
         self.configs.update({key, value})
+        U.json_dump(self.configs, CONFIG_FILE)
 
     def reset(self, key):
         self.configs.update({key, DEFAULTS[key]})
-        with open(CONFIG_FILE, "w") as f:
-            json.dump(self.configs, f, indent=4)
+        U.json_dump(self.configs, CONFIG_FILE)
 
     @staticmethod
     def reset_all():
-        with open(CONFIG_FILE, "w") as f:
-            json.dump(DEFAULTS, f, indent=4)
+        U.json_dump(DEFAULTS, CONFIG_FILE)

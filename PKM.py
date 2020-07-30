@@ -7,7 +7,7 @@
 
 
 from Customization import Config as C
-from Items import Items
+from Items import Items, Display
 from Search import File as F
 from Search import Search as S
 from Utils import Utils as U
@@ -39,18 +39,18 @@ def main():
     elif mode == "Both":
         result = S.both_search(keywords, tags, sorted_file_list)
     elif mode == "GT2":
-        Items.show(("Error!", "Having 2 (>=) commas is not allowed!"))
+        Display.show(("Error!", "Having 2 (>=) commas is not allowed!"))
         result = []
     else:
         result = []
 
     # Generate ScriptFilter Output
     if not result:
-        Items.show_none_matched(mode, query)
+        Display.none_matched(mode, query)
     else:
         num = C().configs["result_nums"] if isinstance(
             C().configs["result_nums"], int) else 20
-        Items.show_matched_result(result[:num], query)
+        Display.matched_result(result[:num], query)
 
     return
 

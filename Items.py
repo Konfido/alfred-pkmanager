@@ -35,13 +35,18 @@ class Items():
             # }
         }
 
-    def add_item(self, item):
-        """ add an item / item_list """
-        if isinstance(item, list):
-            for i in item:
-                self.items.append(i)
+    def add_item(self, arg):
+        """ Allowed arg structure: int/float/str/dict/list/tuple """
+        if isinstance(arg, list) or isinstance(arg, tuple):
+            for i in arg:
+                self.add_item(i)
+        elif isinstance(arg, dict):
+            self.items.append(arg)
         else:
-            self.items.append(item)
+            try:
+                self.items.append({"title": arg})
+            except Exception as e:
+                self.items.append({"title": "Exception!", "subtitle": e})
 
     def add_mod_all(self, mod, arg, subtitle, valid=True, icon_type="", icon_path=""):
         """ Add one mod to self.items """
@@ -57,13 +62,21 @@ class Items():
         sys.stdout.write(out)
 
 
-    ##  Customize SrciptFilter to show specific content
+class Display():
+    """  Customize SrciptFilter to show specific content """
+
+    @staticmethod
+    def show(*args):
+        """ Send common messages to script filter """
+        I = Items()
+        for arg in args:
+            I.add_item(arg)
+        I.write()
 
     @classmethod
-    def show_none_matched(cls, mode, query):
-        cls.__init__(cls)
+    def none_matched(cls, mode, query):
         genre = "Wiki" if mode == "Wiki" else "Note"
-        cls.add_item(cls, {
+        cls.show({
             "title": "Nothing found...",
             "subtitle": "Presh '\u2318' and 'Enter' to create a new \"{0}\" with title \"{1}\"".format(
                 genre, query),
@@ -72,61 +85,16 @@ class Items():
                 "cmd": {
                     "arg": "{}|{}".format("New", [mode, query]),
                     "subtitle": "Press 'Enter' to complete"}}})
-        cls.write(cls)
 
     @classmethod
-    def show_matched_result(cls, dicted_files, query):
-        cls.__init__(cls)
-        for f in dicted_files:
-            cls.add_item(cls, {
+    def matched_result(cls, dicted_files, query):
+            cls.show([{
                 "title": f['title'],
                 "subtitle": u"Modified: {0}, ({1} Actions, {2} Quicklook)".format(
                     f['mdate'], u'\u2318', u'\u21E7'),
                 "type": 'file',
                 "arg": "{}|{}".format("Open", f['path']),
                 "mods": {
-                    "cmd":{
+                    "cmd": {
                         "arg": "{}|{}".format("Edit", [f['path'], query]),
-                        "subtitle": "Press 'Enter' to select your next action"}}})
-        cls.write(cls)
-
-    @classmethod
-    def show(cls, *args):
-        """ Used under debugging: Send debug message to script filter
-
-        Allowed input format:
-            - String/Int/Float/List -> Title
-            - Tuple: T[0] -> Title; T[1] -> Subtitle
-            - Dict: {"Title": "xx", "Subtitle": "xx"}
-        """
-        cls.__init__(cls)
-
-        for item in args:
-
-            try:
-                if isinstance(item, str) or isinstance(item, int) or isinstance(item, float):
-                    cls.add_item(cls, {"title": item})
-                    continue
-                if isinstance(item, list):
-                    for i in item:
-                        cls.add_item(cls, {"title": i})
-                    continue
-                elif isinstance(item, tuple):
-                    title = item[0]
-                    subtitle = item[1]
-                elif isinstance(item, dict) and item.has_key("title"):
-                    title = item["title"]
-                    subtitle = item["subtitle"] if item.has_key(
-                        "subtitle") else ""
-                else:
-                    cls.add_item(cls, {"title": "Error!",
-                                "subtitle": "Filter {}".format(item)})
-                    continue
-
-                cls.add_item(cls, {"title": title,
-                            "subtitle": subtitle})
-            except Exception as e:
-                cls.add_item(cls, {"title": "Exception!",
-                            "subtitle": e})
-
-        cls.write(cls)
+                        "subtitle": "Press 'Enter' to select your next action"}}} for f in dicted_files])

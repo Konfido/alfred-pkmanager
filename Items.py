@@ -86,7 +86,7 @@ class Items():
                 "arg": "{}|{}".format("Open", f['path']),
                 "mods": {
                     "cmd":{
-                        "arg": "{}|{}".format("Next", [f['path'], query]),
+                        "arg": "{}|{}".format("Edit", [f['path'], query]),
                         "subtitle": "Press 'Enter' to select your next action"}}})
         cls.write(cls)
 

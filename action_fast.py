@@ -9,7 +9,7 @@
 from Items import Display
 from Search import File
 from Utils import Utils as U
-from Customization import Config
+from Config import Config
 
 
 inputs = U.get_query()

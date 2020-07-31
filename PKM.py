@@ -6,8 +6,10 @@
 # ------------------------------------------------
 
 
-from Customization import Config as C
-from Items import Items, Display
+import re
+
+from Config import Config as C
+from Items import Display, Items
 from Search import File as F
 from Search import Search as S
 from Utils import Utils as U

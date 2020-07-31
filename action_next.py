@@ -6,7 +6,7 @@
 # ------------------------------------------------
 
 
-from Customization import Config
+from Config import Config
 from Items import Display
 from Utils import Utils as U
 

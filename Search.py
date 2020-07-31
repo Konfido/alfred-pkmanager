@@ -8,7 +8,7 @@
 
 import re
 
-from Customization import Config as C
+from Config import Config as C
 from Items import Items
 from Utils import Utils as U
 

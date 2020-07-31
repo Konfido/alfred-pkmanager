@@ -16,6 +16,7 @@ import json
 config_dir = U.get_env("alfred_workflow_data")
 config_path = U.path_join(config_dir, "config.json")
 template_dir = U.path_join(config_dir, "templates")
+
 notes_path = U.get_abspath(U.get_env("notes_path")).split(",")
 wiki_path = U.get_abspath(U.get_env("wiki_path")).split(",")
 

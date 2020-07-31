@@ -90,45 +90,6 @@ class Utils():
         return sys.argv[1].lower()
 
     @classmethod
-    def get_parsed_arg(cls):
-        # Tring to fetch input string
-        query = cls.get_query()
-        # no string
-        if not query.strip():
-            mode, keywords, tags = "Recent", [], []
-        else:
-            commas = re.findall('[,，]', query)
-            # no comma
-            if not commas:
-                keys = re.findall(r'(\S+)', query)
-                # 1 word with no space tail
-                if keys.__len__() == 1 and query[-1:] != " ":
-                    mode, keywords, tags = "Wiki", [query.strip()], []
-                # 1 word with space tail & >= 2 words
-                else:
-                    mode, keywords, tags = "Keywords", keys, []
-            # 1 comma
-            elif commas.__len__() == 1:
-                kstring, tstring = re.match(r'(.*)[,，](.*)', query).groups()
-                keywords = [k for k in kstring.split(" ") if k is not ""]
-                tags = [t for t in tstring.split(" ") if t is not ""]
-                if not tags:
-                    mode = "Keywords"
-                elif not keywords:
-                    mode = "Tags"
-                else:
-                    mode = "Both"
-            # >= 2 comma
-            elif commas.__len__() >= 2:
-                mode, keywords, tags = "GT2", [], []
-            else:
-                cls.log(
-                    ("Error!", "Can't parse the input: \'{0}\'".format(query)))
-                raise
-
-        return mode, keywords, tags
-
-    @classmethod
     def get_all_files_path(cls, paths):
         """ support multi note paths """
         file_paths_list = []

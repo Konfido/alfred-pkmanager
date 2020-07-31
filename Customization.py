@@ -13,8 +13,9 @@ from Utils import Utils as U
 import json
 
 
-CONFIG_PATH = U.get_env("alfred_workflow_data")
-CONFIG_FILE = U.path_join(CONFIG_PATH, "config.json")
+config_dir = U.get_env("alfred_workflow_data")
+config_path = U.path_join(config_dir, "config.json")
+template_dir = U.path_join(config_dir, "templates")
 notes_path = U.get_abspath(U.get_env("notes_path")).split(",")
 wiki_path = U.get_abspath(U.get_env("wiki_path")).split(",")
 
@@ -80,9 +81,9 @@ class Config():
             return False
 
         # Create local configuration file
-        if not U.path_exists(CONFIG_PATH):
-            U.mkdir(CONFIG_PATH)
-        if not U.path_exists(CONFIG_FILE):
+        if not U.path_exists(config_dir):
+            U.mkdir(config_dir)
+        if not U.path_exists(config_path):
             cls.reset_all(new=True)
         else:
             try:
@@ -92,12 +93,20 @@ class Config():
                 #TODO: reset all config/go check?
                 return False
 
+        # Move templates to local folder
+        if not U.path_exists(template_dir):
+            U.mkdir(template_dir)
+        for source in U.get_all_files_path(U.get_cwd()+"/templates"):
+            name = 'Default_' + U.get_file_name(source, True)
+            target = U.path_join(template_dir, name)
+            if not U.path_exists(target):
+                U.copy(source, target)
         return True
 
     @staticmethod
     def _load_all():
         """ Get user's local config """
-        return U.json_load(CONFIG_FILE)
+        return U.json_load(config_path)
 
     def get(self, key):
         return self.configs[key]
@@ -108,7 +117,7 @@ class Config():
             value = U.literal_eval(value)
             value = value if isinstance(value, int) else 20
         self.configs.update({key: value})
-        U.json_dump(self.configs, CONFIG_FILE)
+        U.json_dump(self.configs, config_path)
 
     def swap(self, key):
         if key == "search_yaml_tag_only":
@@ -124,19 +133,19 @@ class Config():
 
     def reset(self, key):
         self.configs.update({key: DEFAULTS[key]})
-        U.json_dump(self.configs, CONFIG_FILE)
+        U.json_dump(self.configs, config_path)
         U.notify("Done!", "{} is reset to {}.".format(key, DEFAULTS[key]))
 
     @staticmethod
     def reset_all(new=False):
         """ create or reset all """
-        U.json_dump(DEFAULTS, CONFIG_FILE)
+        U.json_dump(DEFAULTS, config_path)
         if new:
             U.notify("Done!", "All configs are reset to defaults.")
 
     @staticmethod
     def open_file():
-        U.open_file(CONFIG_FILE)
+        U.open_file(config_path)
         U.notify("Edit the config with care.", "Don't break it!")
 
 

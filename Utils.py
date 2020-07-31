@@ -12,6 +12,7 @@ import sys
 import time
 import json
 import ast
+import shutil
 
 class Utils():
 
@@ -23,6 +24,10 @@ class Utils():
     @staticmethod
     def get_abspath(path):
         return os.path.expanduser(path)
+
+    @staticmethod
+    def get_cwd():
+        return os.getcwd()
 
     @staticmethod
     def path_exists(path):
@@ -125,8 +130,10 @@ class Utils():
 
     @classmethod
     def get_all_files_path(cls, paths):
+        """ support multi note paths """
         file_paths_list = []
-        # support multi note paths
+        if isinstance(paths, str):
+            paths = [paths]
         for path in paths:
             path = cls.get_abspath(path)
             # support subfolders
@@ -174,3 +181,9 @@ class Utils():
     @staticmethod
     def literal_eval(var):
         return ast.literal_eval(var)
+        # return eval(var)
+
+    @classmethod
+    def copy(cls, source, target):
+        """copy source file to target """
+        shutil.copy(source, target)

@@ -11,7 +11,7 @@ import re
 import sys
 import time
 import json
-
+import ast
 
 class Utils():
 
@@ -170,3 +170,7 @@ class Utils():
     @staticmethod
     def open_file(path):
         os.system("open \"{}\"".format(path))
+
+    @staticmethod
+    def literal_eval(var):
+        return ast.literal_eval(var)

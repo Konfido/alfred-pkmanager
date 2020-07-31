@@ -15,6 +15,8 @@ import json
 
 CONFIG_PATH = U.get_env("alfred_workflow_data")
 CONFIG_FILE = U.path_join(CONFIG_PATH, "config.json")
+notes_path = U.get_abspath(U.get_env("notes_path")).split(",")
+wiki_path = U.get_abspath(U.get_env("wiki_path")).split(",")
 
 DEFAULTS = {
     # path to your Markdown App
@@ -32,10 +34,10 @@ DEFAULTS = {
     # default date format used by templates's YAML info
     'date_format': '%Y-%m-%d %H:%M:%S',
     # set default [template, path] for deferent genre of newly created files.
-    'new_note_path': './',
-    'new_wiki_path': './',
-    'new_todo_path': './',
-    'new_journal_path': './',
+    'new_note_path': notes_path[0],
+    'new_wiki_path': wiki_path[0],
+    'new_todo_path': notes_path[0],
+    'new_journal_path': notes_path[0],
 
     # allowed file extension
     # "ext": ['md']
@@ -81,7 +83,7 @@ class Config():
         if not U.path_exists(CONFIG_PATH):
             U.mkdir(CONFIG_PATH)
         if not U.path_exists(CONFIG_FILE):
-            cls.reset_all()
+            cls.reset_all(new=True)
         else:
             try:
                 cls._load_all()
@@ -103,6 +105,7 @@ class Config():
     def update(self, key, value):
         """ check and update value """
         if key == "result_nums":
+            value = U.literal_eval(value)
             value = value if isinstance(value, int) else 20
         self.configs.update({key: value})
         U.json_dump(self.configs, CONFIG_FILE)
@@ -125,10 +128,11 @@ class Config():
         U.notify("Done!", "{} is reset to {}.".format(key, DEFAULTS[key]))
 
     @staticmethod
-    def reset_all():
+    def reset_all(new=False):
         """ create or reset all """
         U.json_dump(DEFAULTS, CONFIG_FILE)
-        U.notify("Done!", "All configs are reset to defaults.")
+        if new:
+            U.notify("Done!", "All configs are reset to defaults.")
 
     @staticmethod
     def open_file():

@@ -6,8 +6,6 @@
 # ------------------------------------------------
 
 
-import ast
-
 from Items import Display
 from Search import File
 from Utils import Utils as U
@@ -21,7 +19,7 @@ if option == "open":
     # U.output(arg)
     U.open_file(arg)
 elif option == "new":
-    genre, title = ast.literal_eval(arg)
+    genre, title = U.literal_eval(arg)
     path = File.new(title, genre)
     # U.output(path)
     U.open_file(path)
@@ -34,7 +32,7 @@ elif option == "open_config":
 elif option == "swap_config":
     Config().swap(arg)
 elif option == "set_config":
-    key, value = ast.literal_eval(arg)
+    key, value = U.literal_eval(arg)
     if value:
         Config().set(key, value)
 

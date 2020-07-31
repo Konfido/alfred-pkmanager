@@ -6,8 +6,6 @@
 # ------------------------------------------------
 
 
-import ast
-
 from Customization import Config
 from Items import Display
 from Utils import Utils as U
@@ -23,7 +21,7 @@ else:
     arg = U.get_env('next_2')
 
 if option == "Next":
-    path, query = ast.literal_eval(arg)
+    path, query = U.literal_eval(arg)
     file_name = U.get_file_name(path)
     m_path, m_type = "icon", "image"
 

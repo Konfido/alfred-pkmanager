@@ -32,10 +32,10 @@ DEFAULTS = {
     # default date format used by templates's YAML info
     'date_format': '%Y-%m-%d %H:%M:%S',
     # set default [template, path] for deferent genre of newly created files.
-    'new_note_path': '',
-    'new_wiki_path': '',
-    'new_todo_path': 'newest_first',
-    'new_journal_path': '',
+    'new_note_path': './',
+    'new_wiki_path': './',
+    'new_todo_path': './',
+    'new_journal_path': './',
 
     # allowed file extension
     # "ext": ['md']
@@ -101,13 +101,40 @@ class Config():
         return self.configs[key]
 
     def update(self, key, value):
-        self.configs.update({key, value})
+        """ check and update value """
+        if key == "result_nums":
+            value = value if isinstance(value, int) else 20
+        self.configs.update({key: value})
         U.json_dump(self.configs, CONFIG_FILE)
 
+    def swap(self, key):
+        if key == "search_yaml_tag_only":
+            value = not self.get(key)
+        elif key == "todo_order":
+            value = "nearest" if self.get(key) == "oldest" else "oldest"
+        self.update(key, value)
+        U.notify("Done!", "{} is changed to {}.".format(key, value))
+
+    def set(self, key, value):
+        self.update(key, value)
+        U.notify("Done!", "{} is set to {}.".format(key, value))
+
     def reset(self, key):
-        self.configs.update({key, DEFAULTS[key]})
+        self.configs.update({key: DEFAULTS[key]})
         U.json_dump(self.configs, CONFIG_FILE)
+        U.notify("Done!", "{} is reset to {}.".format(key, DEFAULTS[key]))
 
     @staticmethod
     def reset_all():
+        """ create or reset all """
         U.json_dump(DEFAULTS, CONFIG_FILE)
+        U.notify("Done!", "All configs are reset to defaults.")
+
+    @staticmethod
+    def open_file():
+        U.open_file(CONFIG_FILE)
+        U.notify("Edit the config with care.", "Don't break it!")
+
+
+if __name__ == "__main__":
+    Display.config_options()

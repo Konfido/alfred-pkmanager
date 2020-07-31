@@ -8,16 +8,35 @@
 
 import ast
 
-from Items import Items
-from Search import File, Search
+from Items import Display
+from Search import File
 from Utils import Utils as U
+from Customization import Config
 
 
-option, query = U.get_query().split('|')
+inputs = U.get_query()
+option, arg = inputs.split('|')
 
 if option == "open":
-    U.output(query)
+    # U.output(arg)
+    U.open_file(arg)
 elif option == "new":
-    genre, title = ast.literal_eval(query)
+    genre, title = ast.literal_eval(arg)
     path = File.new(title, genre)
-    U.output(path)
+    # U.output(path)
+    U.open_file(path)
+
+# config's submenu
+elif option == "reset_config":
+    Config.reset_all()
+elif option == "open_config":
+    Config.open_file()
+elif option == "swap_config":
+    Config().swap(arg)
+elif option == "set_config":
+    key, value = ast.literal_eval(arg)
+    if value:
+        Config().set(key, value)
+
+else:
+    Display.show("Error")

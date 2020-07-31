@@ -48,8 +48,7 @@ def main():
     if not result:
         Display.none_matched(mode, query)
     else:
-        num = C().configs["result_nums"] if isinstance(
-            C().configs["result_nums"], int) else 20
+        num = int(C().configs["result_nums"])
         Display.matched_result(result[:num], query)
 
     return

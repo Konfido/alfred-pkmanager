@@ -10,6 +10,7 @@ import os
 import re
 import sys
 import time
+import json
 
 
 class Utils():
@@ -34,6 +35,17 @@ class Utils():
     @staticmethod
     def path_join(root, file):
         return os.path.join(root, file)
+
+    @staticmethod
+    def json_load(file):
+        with open(file, 'r') as f:
+            var = json.load(f)
+        return var
+
+    @staticmethod
+    def json_dump(var, file):
+        with open(file, 'w') as f:
+            json.dump(var, f, indent=4)
 
     @staticmethod
     def get_file_meta(path, key):
@@ -154,3 +166,7 @@ class Utils():
     @staticmethod
     def output(string):
         sys.stdout.write(string)
+
+    @staticmethod
+    def open_file(path):
+        os.system("open \"{}\"".format(path))

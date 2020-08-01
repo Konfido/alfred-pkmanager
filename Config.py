@@ -15,7 +15,6 @@ import json
 
 config_dir = U.get_env("alfred_workflow_data")
 config_path = U.path_join(config_dir, "config.json")
-template_dir = U.path_join(config_dir, "templates")
 
 notes_path = U.get_abspath(U.get_env("notes_path")).split(",")
 wiki_path = U.get_abspath(U.get_env("wiki_path")).split(",")
@@ -94,14 +93,6 @@ class Config():
                 #TODO: reset all config/go check?
                 return False
 
-        # Move templates to local folder
-        if not U.path_exists(template_dir):
-            U.mkdir(template_dir)
-        for source in U.get_all_files_path(U.get_cwd()+"/templates"):
-            name = 'Default_' + U.get_file_name(source, True)
-            target = U.path_join(template_dir, name)
-            if not U.path_exists(target):
-                U.copy(source, target)
         return True
 
     @staticmethod
@@ -151,4 +142,16 @@ class Config():
 
 
 if __name__ == "__main__":
-    Display.config_options()
+    Display.show(
+        {"title": "Set configurations",
+         "subtitle": "Press 'Enter' to select",
+         "arg": "{}|{}".format("select_config", "")
+         },
+        {"title": "Open the config file",
+         "subtitle": "This will open a json config file with your default application.",
+         "arg": "{}|{}".format("open_config", "")
+         },
+        {"title": "Reset all configurations",
+         "subtitle": "Configs will be reverted to default. This can't be undone!",
+         "arg": "{}|{}".format("reset_config", "")
+         })

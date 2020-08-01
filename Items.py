@@ -101,20 +101,3 @@ class Display():
                         "arg": "{}|{}".format("Next", [f['path'], query]),
                         "subtitle": "Press 'Enter' to select your next action"}}})
         cls.show(items)
-
-    @classmethod
-    def config_options(cls):
-        """  Config options """
-        Display.show(
-            {   "title": "Set configurations",
-                "subtitle": "Press 'Enter' to select",
-                "arg": "{}|{}".format("select_config", "")
-            },
-            {   "title": "Open the config file",
-                "subtitle": "This will open a json config file with your default application.",
-                "arg": "{}|{}".format("open_config", "")
-            },
-            {   "title": "Reset all configurations",
-                "subtitle": "Configs will be reverted to default. This can't be undone!",
-                "arg": "{}|{}".format("reset_config", "")
-            })

@@ -7,7 +7,7 @@
 
 
 from Items import Display
-from Search import File
+from New import New
 from Utils import Utils as U
 from Config import Config
 
@@ -20,7 +20,7 @@ if option == "open":
     U.open_file(arg)
 elif option == "new":
     genre, title = U.literal_eval(arg)
-    path = File.new(title, genre)
+    path = New.new(title, genre)
     # U.output(path)
     U.open_file(path)
 

@@ -136,7 +136,8 @@ class Utils():
         sys.stdout.write(string)
 
     @staticmethod
-    def open_file(path):
+    def open(path):
+        """ open file / folder """
         os.system("open \"{}\"".format(path))
 
     @staticmethod

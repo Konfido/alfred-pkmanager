@@ -28,21 +28,21 @@ if option == "Next":
     Display.show(
         {
             "title": "Back",
-            "subtitle": f"Back to Search with query: {query}",
+            "subtitle": "Back to Search with query: {}".format(query),
             # "arg": f"back|{query}",
-            "arg": f"back|{query}",
+            "arg": "{}|{}".format("back", query),
             # "icon": "icons/back.png",
         },
         {
             "title": "Markdown Link",
-            "subtitle": f"Copy MD Link for \"{file_name}\" to the Clipboard",
-            "arg": f"link|[{file_name}]({path})",
+            "subtitle": "Copy MD Link for \"{}\" to the Clipboard".format(file_name),
+            "arg": "{}|[{}]({})".format("link", file_name, path),
             # "icon": "icons/link.png",
         },
         {
             "title": "Delete Note",
-            "subtitle": u"Delete \"{0}\". This action cannot be undone!".format(file_name),
-            "arg": f"delete|{path}>{query}",
+            "subtitle": "Delete \"{}\". This action cannot be undone!".format(file_name),
+            "arg": "{}|{}".format("delete", [path, file_name]),
             # "icon": "icons/delete.png",
         }
     )

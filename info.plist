@@ -174,18 +174,6 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>D7553769-3A4A-4272-8506-AD7D3C346B3C</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>sourceoutputuid</key>
-				<string>3961D0C5-8015-4EDE-8753-F201EB4B11C1</string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
 				<string>DD9EFEE7-F576-4FAC-BAF3-1B72E580860C</string>
 				<key>modifiers</key>
 				<integer>0</integer>
@@ -198,13 +186,13 @@
 			</dict>
 			<dict>
 				<key>destinationuid</key>
-				<string>C269336D-1968-4EF7-BD94-786A618D3DB9</string>
+				<string>91BA3B59-AF2F-483A-B729-26521D2C6182</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
 				<key>sourceoutputuid</key>
-				<string>6D724BD9-BEF7-4D28-8DCC-A594E968CD3E</string>
+				<string>F91FAF25-B937-4B06-8F78-AB31FF4DC7C4</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -271,19 +259,7 @@
 				<key>modifiersubtext</key>
 				<string></string>
 				<key>sourceoutputuid</key>
-				<string>060B7614-3824-4241-9B44-72676263BBD6</string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>FCBE6F87-6FFF-4D6C-938B-87588E77E108</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>sourceoutputuid</key>
-				<string>42384EF3-1134-4934-ADBD-7AAE3239684E</string>
+				<string>37DBD27A-430F-489A-B605-501F16168553</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -294,8 +270,6 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
-				<key>sourceoutputuid</key>
-				<string>37DBD27A-430F-489A-B605-501F16168553</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -456,45 +430,17 @@
 						<key>matchcasesensitive</key>
 						<false/>
 						<key>matchmode</key>
-						<integer>0</integer>
-						<key>matchstring</key>
-						<string>swap_config</string>
-						<key>outputlabel</key>
-						<string>swap</string>
-						<key>uid</key>
-						<string>060B7614-3824-4241-9B44-72676263BBD6</string>
-					</dict>
-					<dict>
-						<key>inputstring</key>
-						<string>{var:second_1}</string>
-						<key>matchcasesensitive</key>
-						<false/>
-						<key>matchmode</key>
-						<integer>0</integer>
-						<key>matchstring</key>
-						<string>reset_all</string>
-						<key>outputlabel</key>
-						<string>default</string>
-						<key>uid</key>
-						<string>42384EF3-1134-4934-ADBD-7AAE3239684E</string>
-					</dict>
-					<dict>
-						<key>inputstring</key>
-						<string>{var:second_1}</string>
-						<key>matchcasesensitive</key>
-						<false/>
-						<key>matchmode</key>
-						<integer>0</integer>
+						<integer>1</integer>
 						<key>matchstring</key>
 						<string>receive_config</string>
 						<key>outputlabel</key>
-						<string>receive</string>
+						<string>more</string>
 						<key>uid</key>
 						<string>37DBD27A-430F-489A-B605-501F16168553</string>
 					</dict>
 				</array>
 				<key>elselabel</key>
-				<string>else</string>
+				<string>receive</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.utility.conditional</string>
@@ -529,7 +475,7 @@
 						<key>matchmode</key>
 						<integer>4</integer>
 						<key>matchstring</key>
-						<string>Open|New</string>
+						<string>open|new</string>
 						<key>outputlabel</key>
 						<string>Open</string>
 						<key>uid</key>
@@ -789,29 +735,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>script</key>
-				<string></string>
-				<key>scriptargtype</key>
-				<integer>1</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>D7553769-3A4A-4272-8506-AD7D3C346B3C</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>externaltriggerid</key>
 				<string>n_search</string>
 				<key>passinputasargument</key>
@@ -831,22 +754,23 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argument</key>
+				<string>{var:second_2}</string>
+				<key>variables</key>
+				<dict/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>DD9EFEE7-F576-4FAC-BAF3-1B72E580860C</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>conditions</key>
 				<array>
-					<dict>
-						<key>inputstring</key>
-						<string>{var:second_1}</string>
-						<key>matchcasesensitive</key>
-						<false/>
-						<key>matchmode</key>
-						<integer>0</integer>
-						<key>matchstring</key>
-						<string>delete</string>
-						<key>outputlabel</key>
-						<string>delete</string>
-						<key>uid</key>
-						<string>3961D0C5-8015-4EDE-8753-F201EB4B11C1</string>
-					</dict>
 					<dict>
 						<key>inputstring</key>
 						<string>{var:second_1}</string>
@@ -873,7 +797,7 @@
 						<key>outputlabel</key>
 						<string>link</string>
 						<key>uid</key>
-						<string>6D724BD9-BEF7-4D28-8DCC-A594E968CD3E</string>
+						<string>F91FAF25-B937-4B06-8F78-AB31FF4DC7C4</string>
 					</dict>
 				</array>
 				<key>elselabel</key>
@@ -933,32 +857,17 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argument</key>
-				<string>{var:second_2}</string>
-				<key>variables</key>
-				<dict/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.utility.argument</string>
-			<key>uid</key>
-			<string>DD9EFEE7-F576-4FAC-BAF3-1B72E580860C</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>autopaste</key>
 				<true/>
 				<key>clipboardtext</key>
-				<string>[]({var:second_2})</string>
+				<string>{var:second_2}</string>
 				<key>transient</key>
-				<false/>
+				<true/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.clipboard</string>
 			<key>uid</key>
-			<string>C269336D-1968-4EF7-BD94-786A618D3DB9</string>
+			<string>91BA3B59-AF2F-483A-B729-26521D2C6182</string>
 			<key>version</key>
 			<integer>3</integer>
 		</dict>
@@ -1061,14 +970,21 @@
 			<key>ypos</key>
 			<integer>25</integer>
 		</dict>
+		<key>91BA3B59-AF2F-483A-B729-26521D2C6182</key>
+		<dict>
+			<key>xpos</key>
+			<integer>1300</integer>
+			<key>ypos</key>
+			<integer>570</integer>
+		</dict>
 		<key>A0600ECF-869C-4CEA-A39C-208FB8FE2A6D</key>
 		<dict>
 			<key>colorindex</key>
 			<integer>1</integer>
 			<key>xpos</key>
-			<integer>1320</integer>
+			<integer>1295</integer>
 			<key>ypos</key>
-			<integer>470</integer>
+			<integer>445</integer>
 		</dict>
 		<key>C1BDE131-F763-483E-838D-F36A1A4985E4</key>
 		<dict>
@@ -1076,13 +992,6 @@
 			<integer>970</integer>
 			<key>ypos</key>
 			<integer>480</integer>
-		</dict>
-		<key>C269336D-1968-4EF7-BD94-786A618D3DB9</key>
-		<dict>
-			<key>xpos</key>
-			<integer>1320</integer>
-			<key>ypos</key>
-			<integer>590</integer>
 		</dict>
 		<key>C468F035-82C9-477F-A52F-28163F055F53</key>
 		<dict>
@@ -1093,19 +1002,12 @@
 			<key>ypos</key>
 			<integer>180</integer>
 		</dict>
-		<key>D7553769-3A4A-4272-8506-AD7D3C346B3C</key>
-		<dict>
-			<key>xpos</key>
-			<integer>1320</integer>
-			<key>ypos</key>
-			<integer>360</integer>
-		</dict>
 		<key>DD9EFEE7-F576-4FAC-BAF3-1B72E580860C</key>
 		<dict>
 			<key>xpos</key>
-			<integer>1220</integer>
+			<integer>1195</integer>
 			<key>ypos</key>
-			<integer>500</integer>
+			<integer>475</integer>
 		</dict>
 		<key>E1CFB6A0-024A-4699-9981-0BF9DEA5422A</key>
 		<dict>
@@ -1166,7 +1068,7 @@
 		<string>wiki_path</string>
 	</array>
 	<key>version</key>
-	<string>0.6.0</string>
+	<string>0.7.0</string>
 	<key>webaddress</key>
 	<string>https://github.com/Konfido/alfred-pkmanager</string>
 </dict>

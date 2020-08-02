@@ -133,7 +133,7 @@ class Config():
     def reset_all(new=False):
         """ create or reset all """
         U.json_dump(DEFAULTS, config_path)
-        if new:
+        if not new:
             U.notify("Done!", "All configs are reset to defaults.")
 
 

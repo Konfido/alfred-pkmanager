@@ -141,6 +141,10 @@ class Utils():
         os.system("open \"{}\"".format(path))
 
     @staticmethod
+    def delete(path):
+        os.remove(path)
+
+    @staticmethod
     def literal_eval(var):
         return ast.literal_eval(var)
         # return eval(var)

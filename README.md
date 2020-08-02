@@ -6,26 +6,28 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
 
 ### Main Features:
 
-- Search / Open / Create your files with ease.
-- Manually refresh the Markdown YAML metadata
-    - updated time
-    - and more
+- Search / Open your Markdown notes with ease
+    - Search by keywords, tags or wiki's name
+- Create notes with templates including Wiki, Note, Todo and the ones created by yourself.
+- Others
+    - Manually refresh the Markdown YAML metadata
 
 
 
 ### Usage
 
-- `n`: Search and open ( if existing ) or create a new node. All searching is case-insensitive.
-    - `n␣`: List recent `notes` which sorted in reverse order by modification time
+- `s`: **S**earch and open ( if existing ) or create a new wiki/note. All searching is case-insensitive.
+    - `s␣`: List recent `notes` which sorted in reverse order by modification time
         - `␣` means "Press the space bar"
-    - `n␣test`: Search the exact `Node` "test"
-    - `n␣test␣`: Search all notes with the `keyword` "test"
-    - `n␣test␣alfred`: Search all notes with the `keyword` "test" and "alfred"
-    - `n␣,test`: Search all notes with the `tag` "test"
-    - `n␣k1␣k2,t1␣t2`: Search all notes with the `keyword`"k1", "k2" and the `tag` "t1","t2"
+    - `s␣test`: Search the exact `Wiki` "test"
+    - `s␣test␣`: Search all notes with the `keyword` "test"
+    - `s␣test␣alfred`: Search all notes with the `keyword` "test" and "alfred"
+    - `s␣,test`: Search all notes with the `tag` "test"
+    - `s␣k1␣k2,t1␣t2`: Search all notes with the `keyword`"k1", "k2" and the `tag` "t1","t2"
     -
     - Press `Command` to insert inter-link (`[xxx](./?/xxx.md)`) to front application
-- `nt`: Refresh meta information in the YAML frontier of the current Markdown file.
+- `n␣`: Create **N**ew file by selected templates
+- `r␣`: **R**efresh meta information in the YAML frontier of the current Markdown file.
 
 
 
@@ -33,17 +35,20 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
 
 - Terms explanation
 
-    - `node`: A pivot/hub/Wiki for any vital terms, actually a Markdown file `node_name.md` , which can be checked or linked to other notes with ease and is placed in an independent folder.
+    - `wiki`: A Wiki for any vital terms/concept (without space in its name), which can be linked to other notes. It's stored as a Markdown file and should be placed in one independent folder.
 
     - `notes`: Normal Markdown files
 
-    - `template`: A markdown file with formatted content used to generate new nodes/notes. You can make your own template and place it in workflow's subfolder `./templates/`
+    - `template`: A markdown file with formatted content used to generate new notes. 
+
+        - Select `Open templates folder` in `PKManger Configuration`. Place your created template in the folder and the workflow will load it automatically.
+        - Do not edit the `Default_*.md` templates directly. They are just for reference and can be restored when you delete them. 
 
     - `metadata`: YAML frontier with important infos placed at the beginning of the Markdown document between two triple dashes. Example:
 
         ```markdown
         ---
-        title: {var:node}
+        title: {var:wiki}
         synonyms: []
         tags: []
         typora-root-url: ..
@@ -55,13 +60,13 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
         Content
         ```
 
-    - `synonyms`: An item defined in metadata which is used to find out the same result in Node searching once the input word is listed in its synonyms. Example: if you create a Node naming "test" with `synonyms: [tmp, 测试]`, then you get the same note when search for node "test", "tmp" or "测试".
+    - `synonyms`: An item defined in metadata which is used to find out the same result in Wiki searching once the input word is listed in its synonyms. Example: if you create a Wiki naming "test" with `synonyms: [tmp, 测试]`, then you get the same note when search for wiki "test", "tmp" or "测试".
 
-- Workflow variables
+- Set Workflow variables
 
-    - `NODES_PATH`: folder's path to your nodes
+    - `NOTES_PATH`: folder's path to your notes files. Multi paths and sub-folder is supported, but it goes with the increasing of consuming time. Use comma `,` to separate your paths.
 
-    - `NOTES_PATH`: folder's path to your notes
+    - `WIKI_PATH`: folder's path to your wiki files. Mutil path is supported, but only setting one path is recommended.
 
     - A possible variables setting for the following folder tree:
 
@@ -69,7 +74,7 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
         ~
         └── Documents/
             └── My_Notes/
-                ├── Nodes/
+                ├── Wiki/
                 │   ├── foo.py
                 │   └── foo2.py
                 ├── Develop/
@@ -79,8 +84,8 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
         ```
 
         ```
-        NODES_PATH: ~/Documents/My_Notes/Nodes/
-        NOTES_PATH: [~/Documents/My_Notes/Nodes/, ~/Documents/My_Notes/Develop/, ~/Documents/My_Notes/Others/]
+        WIKI_PATH: ~/Documents/My_Notes/Wiki/
+        NOTES_PATH: [~/Documents/My_Notes/Wiki/, ~/Documents/My_Notes/Develop/, ~/Documents/My_Notes/Others/]
         ```
 
 
@@ -89,7 +94,7 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
 
 - [Typora](https://typora.io/): A powerful Markdown editor with WYSIWYM feature. Highly recommended.
 - [Glance](https://github.com/samuelmeuli/glance): All-in-one Quick Look plugin for Mac, which provide perfect preview for Markdown files for dismissing its meta info of YAML frontier.
-- Python 3: A Python 3 env is needed for some of the scripts, so make sure you've installed it in your env.
+- Python 3: A Python 3 env is needed for some internal scripts, so make sure you've installed it in your env.
 
 
 
@@ -97,21 +102,26 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
 
 ### Roadmap
 
-- [ ] Synonyms redirect
-
-- [ ] Backlink searching
-
-- [ ] Full-text search
-
-- [ ] Tag search
-
-- [ ] Search algorithm: And | Or | Recommendation
-
+- [ ] Search
+    - [x] Full-text search
+    - [x] Tag search
+    - [ ] Synonyms redirect
+    - [ ] Backlink searching
+    - [ ] Snippet Search
+    - [ ] Search algorithm: And | Or | Recommendation
+    - [ ] Hide / Block files
+- [ ] Local storage
+    - [x] Preferences
+    - [x] Templates
+    - [ ] Recent hit
 - [ ] Rename current file
-
   - [ ] update backlinks
-
-- [ ] Snippet Search
+- [ ] Templates
+	- [ ] Journal/Diary
+- [ ] Others
+    - [ ] Autoupdate
+    - [ ] Integrated with "Dewey Decimal Classification"
+    - [ ] Auto bump version in Workflow by operating info.plist
 
 
 

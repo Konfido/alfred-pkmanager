@@ -38,6 +38,8 @@ elif option == "back":
         to run trigger "search" in workflow "com.konfido.pkmanager" \
         with argument "{}"'
         """.format(query))
+elif option == "refresh":
+    os.system('bash ./update_meta.sh')
 
 # config's submenu
 elif option == "reset_config":

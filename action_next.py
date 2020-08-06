@@ -37,10 +37,15 @@ elif option == "show_actions":
             # "icon": "icons/back.png",
         },
         {
-            "title": "Markdown Link",
+            "title": "Copy Markdown Link",
             "subtitle": f"Copy MD Link for \"{file_name}\" to the Clipboard",
             "arg": f"link|[{file_name}]({path})",
             # "icon": "icons/link.png",
+        },
+        {
+            "title": "Refresh 'updated time'",
+            "subtitle": "",
+            "arg": f'refresh|{path}'
         },
         {
             "title": "Delete Note",
@@ -146,7 +151,7 @@ elif option == "show_templates":
             "title": "New {} with title of {}".format(genre, name),
             "subtitle": "Template: {} \t(You can change {}'s format in \
                 'PKManger Configuration')".format(template, genre),
-            "arg": "{}|{}".format("new", [genre, name])
+            "arg": f"new|[{genre}, {name}]"
         })
 
     Display.show(items)

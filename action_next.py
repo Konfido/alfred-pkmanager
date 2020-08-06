@@ -6,105 +6,150 @@
 # ------------------------------------------------
 
 
+import re
+
 from Config import Config
-from Items import Display
+from Items import Display, Items
 from Utils import Utils as U
+from Search import File as F
+from Search import Search as S
 
 
-# get variable from env
-# the query passing through is none to keep input box clean
-if U.get_env('second_1'):
-    option = U.get_env('second_1')
-    arg = U.get_env('second_2')
-else:
-    option = U.get_env('next_1')
-    arg = U.get_env('next_2')
+input_str = U.get_query()
+option = U.get_env('next_1')
+arg = U.get_env('next_2')
 
-if option == "Next":
-    path, query = U.literal_eval(arg)
+
+if option == "show_error":
+    step, message = arg.strip('[]').split(", ")
+    Display.show((f"Error happened in the step of {step}", message))
+
+elif option == "show_actions":
+    path, query = arg.strip('[]').split(", ")
     file_name = U.get_file_name(path)
     m_path, m_type = "icon", "image"
 
     Display.show(
         {
             "title": "Back",
-            "subtitle": "Back to Search with query: {}".format(query),
-            # "arg": f"back|{query}",
-            "arg": "{}|{}".format("back", query),
+            "subtitle": f"Back to Search with query: {query}",
+            "arg": f"back|{query}",
             # "icon": "icons/back.png",
         },
         {
             "title": "Markdown Link",
-            "subtitle": "Copy MD Link for \"{}\" to the Clipboard".format(file_name),
-            "arg": "{}|[{}]({})".format("link", file_name, path),
+            "subtitle": f"Copy MD Link for \"{file_name}\" to the Clipboard",
+            "arg": f"link|[{file_name}]({path})",
             # "icon": "icons/link.png",
         },
         {
             "title": "Delete Note",
-            "subtitle": "Delete \"{}\". This action cannot be undone!".format(file_name),
-            "arg": "{}|{}".format("delete", [path, file_name]),
+            "subtitle": f"delete \"{file_name}\". This action cannot be undone!",
+            "arg": f"delete|[{path}, {file_name}]",
             # "icon": "icons/delete.png",
-        }
+        })
+
+elif option == "show_configs":
+    config_dir = U.get_env("alfred_workflow_data")
+    config_path = U.path_join(config_dir, "config.json")
+    template_dir = U.path_join(config_dir, "templates")
+
+    Display.show(
+        {
+            "title": "Set configurations",
+            "subtitle": "Go next and see the details",
+            "arg": f"show_editable_configs|"
+        },
+        {
+            "title": "Open config file",
+            "subtitle": "Open & Modify a JSON formatted config file",
+            "arg": f"open_config_file|{config_path}"
+        },
+        {
+            "title": "Open templates folder",
+            "subtitle": "Put your Markdown templates files in the folder",
+            "arg": f"open_template|{template_dir}"
+        },
+        {
+            "title": "Reset all configurations",
+            "subtitle": "Configs will be reverted to default. This can't be undone!",
+            "arg": f"reset_all_configs|"
+        },
     )
 
-elif option == "select_config":
+elif option == "show_editable_configs":
     C = Config().configs
     _tag = str(not C["search_yaml_tag_only"])
     _todo = "newest" if C["todo_order"] == "oldest" else "newest"
 
-    Display.show(
+    items = []
+    items.extend([
         {
             "title": "Only search the tags in YAML frontier",
             "subtitle": "Change to \"{}\"".format(_tag),
-            "arg": "{}|{}".format("swap_config", "search_yaml_tag_only")
+            "arg": "swap_config|search_yaml_tag_only"
         },
         {
             "title": "Show {} TODOs in the top".format(C["todo_order"]),
-            "subtitle": "Change to \"{}\"".format(_todo),
-            "arg": "{}|{}".format("swap_config", "todo_order")
+            "subtitle": "List \"{}\" TODOs in the top?".format(_todo),
+            "arg": "swap_config|todo_order"
         },
         {
             "title": "Number of reserved searching results".format(),
             "subtitle": str(C["result_nums"]),
-            "arg": "{}|{}".format("receive_config", "result_nums")
+            "arg": "show_receive_config|result_nums"
         },
         {
             "title": "Date format used in templates",
-            "subtitle": "{}".format(C["date_format"]),
-            "arg": "{}|{}".format("receive_config", "date_format")
-        },
-        {
-            "title": "Path to your new created Note",
-            "subtitle": "{}".format(C["new_note_path"]),
-            "arg": "{}|{}".format("receive_config", "new_note_path")
-        },
-        {
-            "title": "Path to your new created Wiki",
-            "subtitle": "{}".format(C["new_wiki_path"]),
-            "arg": "{}|{}".format("receive_config", "new_wiki_path")
-        },
-        {
-            "title": "Path to your new created TODO",
-            "subtitle": "{}".format(C["new_todo_path"]),
-            "arg": "{}|{}".format("receive_config", "new_todo_path")
-        },
-        {
-            "title": "Path to your new created Journal",
-            "subtitle": "{}".format(C["new_journal_path"]),
-            "arg": "{}|{}".format("receive_config", "new_journal_path")
-        },
-    )
+            "subtitle": C["date_format"],
+            "arg": "show_receive_config|date_format"
+        }
+    ])
+    for i in ["note", "wiki", "todo", "journal"]:
+        items.append({
+            "title": f"Path to your {i}",
+            "subtitle": f'{C[f"new_{i}_path"]}',
+            "arg": f"show_receive_config|new_{i}_path"
+        })
 
-elif option == "receive_config":
-    try:
-        value = U.get_query()
-    except:
-        value = ""
+    for i in ["note", "wiki", "todo", "journal"]:
+        items.append({
+            "title": f"Path to your {i}",
+            "subtitle": f'{C[f"new_{i}_path"]}',
+            "arg": f"show_receive_config|new_{i}_path"
+        })
+    Display.show(items)
+
+elif option == "show_receive_config":
+    config_key = arg
+    config_value = U.get_query()
 
     Display.show(
         {
-            "title": "Input a new value of your \"{}\"".format(arg),
+            "title": f'Input a new value of your "{config_key}"',
             "subtitle": "Press \"Enter\" to confirm",
-            "arg": "{}|{}".format("set_config", [arg, value])
+            "arg": f"set_config|[{config_key}, {config_value}]"
         }
     )
+
+elif option == "show_templates":
+    query = U.get_query()
+    templates_path = U.get_all_files_path('./templates')
+
+    items = []
+    for path in templates_path:
+        genre = U.get_file_name(path)
+        name = query if query else "Default"
+        template = C().configs["new_{}_path".format(genre)]
+
+        items.append({
+            "title": "New {} with title of {}".format(genre, name),
+            "subtitle": "Template: {} \t(You can change {}'s format in \
+                'PKManger Configuration')".format(template, genre),
+            "arg": "{}|{}".format("new", [genre, name])
+        })
+
+    Display.show(items)
+
+else:
+    U.notify("Error")

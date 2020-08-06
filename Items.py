@@ -72,32 +72,3 @@ class Display():
         for arg in args:
             I.add_item(arg)
         I.write()
-
-    @classmethod
-    def none_matched(cls, mode, query):
-        genre = "Wiki" if mode == "Wiki" else "Note"
-        cls.show({
-            "title": "Nothing found...",
-            "subtitle": "Presh '\u2318' and 'Enter' to create a new \"{0}\" with title \"{1}\"".format(
-                genre, query),
-            "arg": "{}|{}".format("None", query),
-            "mods": {
-                "cmd": {
-                    "arg": "{}|{}".format("New", [mode, query]),
-                    "subtitle": "Press 'Enter' to complete"}}})
-
-    @classmethod
-    def matched_result(cls, dicted_files, query):
-        items = []
-        for f in dicted_files:
-            items.append({
-                "title": f['title'],
-                "subtitle": u"Modified: {0}, ({1} Actions, {2} Quicklook)".format(
-                    f['mdate'], u'\u2318', u'\u21E7'),
-                "type": 'file',
-                "arg": "{}|{}".format("Open", f['path']),
-                "mods": {
-                    "cmd": {
-                        "arg": "{}|{}".format("Next", [f['path'], query]),
-                        "subtitle": "Press 'Enter' to select your next action"}}})
-        cls.show(items)

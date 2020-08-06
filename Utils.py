@@ -87,7 +87,11 @@ class Utils():
 
     @staticmethod
     def get_query():
-        return sys.argv[1].lower()
+        try:
+            query = sys.argv[1].lower()
+        except:
+            query = ""
+        return query
 
     @classmethod
     def get_all_files_path(cls, paths):
@@ -108,11 +112,20 @@ class Utils():
     def log(message):
         sys.stderr.write('LOG: {0}\n'.format(message))
 
-    @staticmethod
-    def notify(title, text="PKManger"):
+    @classmethod
+    def notify(cls, text, title="PKManger", log=False):
         """ Send Notification to mac Notification Center """
         os.system("""osascript -e 'display notification "{}" with title "{}"'
                   """.format(text, title))
+        if log:
+            cls.log(text)
+
+    @staticmethod
+    def to_clipboard(content):
+        os.system(
+            """osascript -e \
+            'tell application "System Events" to set the clipboard to "{}"'
+            """.format(content))
 
     @staticmethod
     def get_now(fmt="%Y-%m-%d %H:%M:%S"):

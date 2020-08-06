@@ -14,7 +14,6 @@ from Config import Config as C
 config_dir = U.get_env("alfred_workflow_data")
 config_path = U.path_join(config_dir, "config.json")
 template_dir = U.path_join(config_dir, "templates")
-# templates = U.get_all_files_path()
 
 # query = U.get_query()
 
@@ -48,10 +47,10 @@ class New():
             '#': '-'
         }
 
-        template = U.path_join('./templates', genre.join(".md"))
-        file_root = C().configs['new_{}_path'.format(genre)]
+        file_dir = C().configs['path_to_new_file'][genre]
         title = U.str_replace(title, title_replace_map)
-        file_path = U.path_join(file_root, '{}.md'.format(title))
+        new_file_path = U.path_join(file_dir, title+'.md')
+
         replace_map = {
             '{title}': title.strip(),
             '{tag}': "[]",
@@ -59,20 +58,16 @@ class New():
             '{language}': language,
         }
 
-        with open("./templates/Wiki.md", 'r') as f:
-            content = U.str_replace(f.read(), replace_map)
+        # use default format if not configured
+        template_dir = template_dir if C(
+        ).configs["template"][genre] != 'Default_{}'.format(genre) else './templates'
 
-        if not U.path_exists(file_path):
-            with open(file_path, "w") as f:
+        template_path = U.path_join(template_dir, genre+".md")
+
+        with open("./templates/{}.md".format(genre), 'r') as f:
+            content = U.str_replace(f.read(), replace_map)
+        if not U.path_exists(new_file_path):
+            with open(new_file_path, "w") as f:
                 f.write(content)
 
-        return file_path
-
-
-if __name__ == "__main__":
-    Display.show(
-        {"title": "file_name",
-         "subtitle": "",
-         "arg": "{}|{}".format("", "")
-         },
-    )
+        return new_file_path

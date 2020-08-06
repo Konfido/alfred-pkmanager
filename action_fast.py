@@ -10,7 +10,7 @@ from Items import Display
 from New import New
 from Utils import Utils as U
 from Config import Config
-
+import os
 
 inputs = U.get_query()
 option, arg = inputs.split('|')
@@ -19,27 +19,53 @@ if option == "open":
     # U.output(arg)
     U.open(arg)
 elif option == "new":
-    genre, title = U.literal_eval(arg)
+    genre, title = arg.strip('[]').split(", ")
     path = New.new(title, genre)
     # U.output(path)
     U.open(path)
 elif option == "delete":
-    path, file_name = U.literal_eval(arg)
+    path, file_name = arg.strip('[]').split(", ")
     U.delete(path)
-    U.notify("{} has been successfully deleted!".format(file_name))
+    U.notify(f"{file_name} has been successfully deleted!")
+elif option == "link":
+    link = arg
+    U.to_clipboard(link)
+elif option == "back":
+    query = arg
+    os.system(
+        """osascript -e \
+        'tell application id "com.runningwithcrayons.Alfred" \
+        to run trigger "search" in workflow "com.konfido.pkmanager" \
+        with argument "{}"'
+        """.format(query))
 
 # config's submenu
 elif option == "reset_config":
+    key = arg
+    value = Config().reset(key)
+    U.notify("Done!", f"{key} is reset to default: {value}.")
+
+elif option == "reset_all_configs":
     Config.reset_all()
-elif option == "open_config":
+    U.notify("Done!", "All configs have been reset to defaults.")
+
+elif option in ["open_config_file", "open_template"]:
     U.open(arg)
+    target = option.split("_")[1]
+    U.notify(f"Edit the {target} with care! Do not break it!")
+
 elif option == "swap_config":
-    Config().swap(arg)
+    key = arg
+    value = Config().swap(key)
+    U.notify("Done!", f"{key} is changed to {value}.")
+
 elif option == "set_config":
-    key, value = U.literal_eval(arg)
+    key, value = arg.strip('[]').split(", ")
     if value:
         Config().set(key, value)
-elif option == "open_template":
-    U.open(arg)
+        U.notify("Done!", f"{key} is set to {value}.")
+    else:
+        U.notify("Not a valid value. Please retry.")
+
 else:
-    Display.show("Error")
+    U.notify(f"Error! {option}: {arg}", log=True)

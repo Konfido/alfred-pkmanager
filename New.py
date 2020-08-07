@@ -49,7 +49,7 @@ class New():
         Display.show(items)
 
     @classmethod
-    def new(cls, title, genre='note', language=''):
+    def new(cls, title, genre='Note', language=''):
         """ create a new file accroding to template """
 
         # illigal characters for the file name

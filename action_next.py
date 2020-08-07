@@ -110,19 +110,15 @@ elif option == "show_editable_configs":
             "arg": "show_receive_config|date_format"
         }
     ])
-    for i in ["note", "wiki", "todo", "journal"]:
+    config_dir = U.get_env("alfred_workflow_data")
+    template_dir = U.path_join(config_dir, "templates")
+    for i in [U.get_file_name(f) for f in U.get_all_files_path(template_dir)]:
         items.append({
-            "title": f"Path to your {i}",
-            "subtitle": f'{C[f"new_{i}_path"]}',
-            "arg": f"show_receive_config|new_{i}_path"
+            "title": f"Path to new {i}",
+            "subtitle": C[f"path_to_new_{i}"],
+            "arg": f"show_receive_config|path_to_new_{i}"
         })
 
-    for i in ["note", "wiki", "todo", "journal"]:
-        items.append({
-            "title": f"Path to your {i}",
-            "subtitle": f'{C[f"new_{i}_path"]}',
-            "arg": f"show_receive_config|new_{i}_path"
-        })
     Display.show(items)
 
 elif option == "show_receive_config":

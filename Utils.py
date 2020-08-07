@@ -86,9 +86,9 @@ class Utils():
         return match.group(1) if match is not None else None
 
     @staticmethod
-    def get_query():
+    def get_query(lower=False):
         try:
-            query = sys.argv[1].lower()
+            query = sys.argv[1].lower() if lower else sys.argv[1]
         except:
             query = ""
         return query

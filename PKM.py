@@ -143,7 +143,7 @@ def get_parsed_arg():
 
 
 if __name__ == "__main__":
-    query = U.get_query()
+    query = U.get_query(lower=True)
     config_dir = U.get_env("alfred_workflow_data")
     config_path = U.path_join(config_dir, "config.json")
 

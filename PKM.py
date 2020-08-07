@@ -62,8 +62,7 @@ def main():
         Display.show(items)
     else:
         # show none matched info
-        mode = arg
-        genre = "Wiki" if mode == "Wiki" else "Note"
+        genre = "wiki" if mode == "Wiki" else "note"
         Display.show({
             "title": "Nothing found ..",
             "subtitle": f'Presh "\u2318" to create a new \"{genre}\" with title \"{query}\"',
@@ -107,7 +106,6 @@ def varibles_checked():
             all_set = False
 
     return all_set
-
 
 def get_parsed_arg():
     # no string

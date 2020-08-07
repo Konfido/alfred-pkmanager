@@ -6,19 +6,6 @@
 	<string>com.konfido.pkmanager</string>
 	<key>connections</key>
 	<dict>
-		<key>1DCFABE0-8CBE-4ED9-9486-9DFE6CC1304D</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>6BDC107A-3B00-4CF4-9F6B-EAF754916E25</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
 		<key>240F2307-D2CC-4508-AA90-839A3DC0A7B4</key>
 		<array>
 			<dict>
@@ -83,11 +70,11 @@
 				<false/>
 			</dict>
 		</array>
-		<key>6BDC107A-3B00-4CF4-9F6B-EAF754916E25</key>
+		<key>7B0264D7-E3F1-4C35-82E5-7080DA5D08EE</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>F6EA4B04-7578-4F5B-94E7-E8FF02CC1971</string>
+				<string>C468F035-82C9-477F-A52F-28163F055F53</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -424,6 +411,55 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>n</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string></string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string>New.py</string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>type</key>
+				<integer>8</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>7B0264D7-E3F1-4C35-82E5-7080DA5D08EE</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argument</key>
 				<string></string>
 				<key>variables</key>
@@ -439,47 +475,6 @@
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>keyword</key>
-				<string>n</string>
-				<key>subtext</key>
-				<string></string>
-				<key>text</key>
-				<string></string>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>1DCFABE0-8CBE-4ED9-9486-9DFE6CC1304D</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argument</key>
-				<string>{query}</string>
-				<key>variables</key>
-				<dict>
-					<key>input_str</key>
-					<string>{query}</string>
-					<key>next_1</key>
-					<string>new</string>
-				</dict>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.utility.argument</string>
-			<key>uid</key>
-			<string>6BDC107A-3B00-4CF4-9F6B-EAF754916E25</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
 	</array>
 	<key>readme</key>
 	<string>Handle your personal knowledge management with ease!
@@ -490,15 +485,6 @@
 - Refresh meta-data in YAML frontier</string>
 	<key>uidata</key>
 	<dict>
-		<key>1DCFABE0-8CBE-4ED9-9486-9DFE6CC1304D</key>
-		<dict>
-			<key>note</key>
-			<string>New</string>
-			<key>xpos</key>
-			<integer>255</integer>
-			<key>ypos</key>
-			<integer>450</integer>
-		</dict>
 		<key>240F2307-D2CC-4508-AA90-839A3DC0A7B4</key>
 		<dict>
 			<key>xpos</key>
@@ -527,14 +513,16 @@
 			<key>xpos</key>
 			<integer>420</integer>
 			<key>ypos</key>
-			<integer>350</integer>
+			<integer>330</integer>
 		</dict>
-		<key>6BDC107A-3B00-4CF4-9F6B-EAF754916E25</key>
+		<key>7B0264D7-E3F1-4C35-82E5-7080DA5D08EE</key>
 		<dict>
+			<key>note</key>
+			<string>New</string>
 			<key>xpos</key>
-			<integer>420</integer>
+			<integer>545</integer>
 			<key>ypos</key>
-			<integer>480</integer>
+			<integer>300</integer>
 		</dict>
 		<key>9AEF8A4C-224C-4E4D-B78F-ECE53BD1A8DA</key>
 		<dict>
@@ -577,7 +565,7 @@
 			<key>xpos</key>
 			<integer>255</integer>
 			<key>ypos</key>
-			<integer>320</integer>
+			<integer>300</integer>
 		</dict>
 		<key>F6EA4B04-7578-4F5B-94E7-E8FF02CC1971</key>
 		<dict>
@@ -613,7 +601,7 @@
 		<string>wiki_path</string>
 	</array>
 	<key>version</key>
-	<string>1.1.0</string>
+	<string>1.3.0</string>
 	<key>webaddress</key>
 	<string>https://github.com/Konfido/alfred-pkmanager</string>
 </dict>

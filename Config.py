@@ -35,32 +35,20 @@ DEFAULTS = {
     # default date format used by templates's YAML info
     'date_format': '%Y-%m-%d %H:%M:%S',
     # set default [template, path] for deferent genre of newly created files.
-    'new_note_path': notes_path[0],
-    'new_wiki_path': wiki_path[0],
-    'new_todo_path': notes_path[0],
-    'new_journal_path': notes_path[0],
+    'path_to_new_note': notes_path[0],
+    'path_to_new_wiki': wiki_path[0],
+    'path_to_new_todo': notes_path[0],
+    'path_to_new_journal': notes_path[0],
 
-    # allowed file extension
-    # "ext": ['md']
-    # used for iAwriter
-    # 'url_scheme': 'x-marked://open/?file=',
+    'templates': {},
+    'destination': {}.update()
 }
 
 
 class Config():
 
     def __init__(self):
-        self._configs = self._load_all()
-        self.configs = {
-            "result_nums": self._configs['result_nums'],
-            "date_format": self._configs['date_format'],
-            "search_yaml_tag_only": self._configs['search_yaml_tag_only'],
-            "new_note_path": self._configs['new_note_path'],
-            "new_wiki_path": self._configs['new_wiki_path'],
-            "new_journal_path": self._configs['new_journal_path'],
-            "new_todo_path": self._configs['new_todo_path'],
-            "todo_order": self._configs['todo_order'],
-        }
+        self.configs = self._load_all()
 
     @staticmethod
     def _load_all():

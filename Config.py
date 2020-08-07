@@ -16,12 +16,10 @@ import json
 config_dir = U.get_env("alfred_workflow_data")
 config_path = U.path_join(config_dir, "config.json")
 template_dir = U.path_join(config_dir, "templates")
+templates = [U.get_file_name(f) for f in U.get_all_files_path(template_dir)]
 
 notes_path = U.get_abspath(U.get_env("notes_path")).split(",")
 wiki_path = U.get_abspath(U.get_env("wiki_path")).split(",")
-
-# genre list: ['wiki', 'note', 'todo', 'journal', 'snippet']
-genres = [U.get_file_name(f) for f in U.get_all_files_path(template_dir)]
 
 DEFAULTS = {
     # path to your Markdown App
@@ -38,9 +36,11 @@ DEFAULTS = {
     'result_nums': 20,
     # default date format used by templates's YAML info
     'date_format': '%Y-%m-%d %H:%M:%S',
+    # template list: ['wiki', 'note', 'todo', 'journal', 'snippet', ...]
+    'templates': templates
 }
 
-DEFAULTS.update(dict([(f'path_to_new_{g}', wiki_path[0]) for g in genres]))
+DEFAULTS.update(dict([(f'path_to_new_{t}', notes_path[0]) for t in templates]))
 
 
 class Config():
@@ -84,3 +84,22 @@ class Config():
     def reset_all():
         """ create or reset all """
         U.json_dump(DEFAULTS, config_path)
+
+    @classmethod
+    def templates_checked(cls):
+        # Move templates to local folder
+        if not U.path_exists(template_dir):
+            U.mkdir(template_dir)
+        for source in U.get_all_files_path(U.get_cwd()+"/templates"):
+            name = U.get_file_name(source, with_ext=True)
+            target = U.path_join(template_dir, name)
+            if not U.path_exists(target):
+                U.copy(source, target)
+        # Check if any new template put in the user's folder
+        templates_now = templates.copy()
+        for t in cls().configs["templates"]:
+            templates_now.remove(t)
+        if templates_now:
+            for t in templates_now:
+                cls().set(f'path_to_new_{t}', notes_path[0])
+            cls().set("templates", templates)

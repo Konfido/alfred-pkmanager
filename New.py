@@ -20,20 +20,9 @@ template_dir = U.path_join(config_dir, "templates")
 
 class New():
 
-    @staticmethod
-    def templates_checked():
-        # Move templates to local folder
-        if not U.path_exists(template_dir):
-            U.mkdir(template_dir)
-        for source in U.get_all_files_path(U.get_cwd()+"/templates"):
-            name = U.get_file_name(source, with_ext=True)
-            target = U.path_join(template_dir, name)
-            if not U.path_exists(target):
-                U.copy(source, target)
-
     @classmethod
     def show_templates(cls):
-        cls.templates_checked()
+        C().templates_checked()
         items = []
         for template_path in U.get_all_files_path(template_dir):
             genre = U.get_file_name(template_path)

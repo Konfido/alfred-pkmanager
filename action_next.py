@@ -112,9 +112,9 @@ elif option == "show_editable_configs":
     ])
     config_dir = U.get_env("alfred_workflow_data")
     template_dir = U.path_join(config_dir, "templates")
-    for i in [U.get_file_name(f) for f in U.get_all_files_path(template_dir)]:
+    for i in C["templates"]:
         items.append({
-            "title": f"Path to new {i}",
+            "title": f"Desired path to new {i}",
             "subtitle": C[f"path_to_new_{i}"],
             "arg": f"show_receive_config|path_to_new_{i}"
         })

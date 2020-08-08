@@ -62,8 +62,7 @@ def main():
         Display.show(items)
     else:
         # show none matched info
-        mode = arg
-        genre = "Wiki" if mode == "Wiki" else "Note"
+        genre = "wiki" if mode == "Wiki" else "note"
         Display.show({
             "title": "Nothing found ..",
             "subtitle": f'Presh "\u2318" to create a new \"{genre}\" with title \"{query}\"',
@@ -108,7 +107,6 @@ def varibles_checked():
 
     return all_set
 
-
 def get_parsed_arg():
     # no string
     if not query.strip():
@@ -145,7 +143,7 @@ def get_parsed_arg():
 
 
 if __name__ == "__main__":
-    query = U.get_query()
+    query = U.get_query(lower=True)
     config_dir = U.get_env("alfred_workflow_data")
     config_path = U.path_join(config_dir, "config.json")
 

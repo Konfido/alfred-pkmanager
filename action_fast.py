@@ -12,8 +12,8 @@ from Utils import Utils as U
 from Config import Config
 import os
 
-inputs = U.get_query()
-option, arg = inputs.split('|')
+query = U.get_query()
+option, arg = query.split('|')
 
 if option == "open":
     # U.output(arg)
@@ -31,13 +31,13 @@ elif option == "link":
     link = arg
     U.to_clipboard(link)
 elif option == "back":
-    query = arg
+    input_str = arg
     os.system(
         """osascript -e \
         'tell application id "com.runningwithcrayons.Alfred" \
         to run trigger "search" in workflow "com.konfido.pkmanager" \
         with argument "{}"'
-        """.format(query))
+        """.format(input_str))
 elif option == "refresh":
     os.system('bash ./update_meta.sh')
 

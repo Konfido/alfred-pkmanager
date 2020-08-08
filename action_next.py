@@ -15,7 +15,7 @@ from Search import File as F
 from Search import Search as S
 
 
-input_str = U.get_query()
+inputs = U.get_query()
 option = U.get_env('next_1')
 arg = U.get_env('next_2')
 
@@ -110,19 +110,15 @@ elif option == "show_editable_configs":
             "arg": "show_receive_config|date_format"
         }
     ])
-    for i in ["note", "wiki", "todo", "journal"]:
+    config_dir = U.get_env("alfred_workflow_data")
+    template_dir = U.path_join(config_dir, "templates")
+    for i in C["templates"]:
         items.append({
-            "title": f"Path to your {i}",
-            "subtitle": f'{C[f"new_{i}_path"]}',
-            "arg": f"show_receive_config|new_{i}_path"
+            "title": f"Desired path to new {i}",
+            "subtitle": C[f"path_to_new_{i}"],
+            "arg": f"show_receive_config|path_to_new_{i}"
         })
 
-    for i in ["note", "wiki", "todo", "journal"]:
-        items.append({
-            "title": f"Path to your {i}",
-            "subtitle": f'{C[f"new_{i}_path"]}',
-            "arg": f"show_receive_config|new_{i}_path"
-        })
     Display.show(items)
 
 elif option == "show_receive_config":
@@ -136,25 +132,6 @@ elif option == "show_receive_config":
             "arg": f"set_config|[{config_key}, {config_value}]"
         }
     )
-
-elif option == "show_templates":
-    query = U.get_query()
-    templates_path = U.get_all_files_path('./templates')
-
-    items = []
-    for path in templates_path:
-        genre = U.get_file_name(path)
-        name = query if query else "Default"
-        template = C().configs["new_{}_path".format(genre)]
-
-        items.append({
-            "title": "New {} with title of {}".format(genre, name),
-            "subtitle": "Template: {} \t(You can change {}'s format in \
-                'PKManger Configuration')".format(template, genre),
-            "arg": f"new|[{genre}, {name}]"
-        })
-
-    Display.show(items)
 
 else:
     U.notify("Error")

@@ -15,17 +15,19 @@ import json
 
 config_dir = U.get_env("alfred_workflow_data")
 config_path = U.path_join(config_dir, "config.json")
+template_dir = U.path_join(config_dir, "templates")
+templates = [U.get_file_name(f) for f in U.get_all_files_path(template_dir)]
 
+# list of abs_path to your notes, multi-path & sub-path is allowed
 notes_path = U.get_abspath(U.get_env("notes_path")).split(",")
+# list of abs_path to your Wiki
 wiki_path = U.get_abspath(U.get_env("wiki_path")).split(",")
+# default path to the file created by templates
+default_path = notes_path[0]
 
 DEFAULTS = {
     # path to your Markdown App
     # 'app_path': '/Applications/Typora.app',
-    # path to your Wiki
-    # 'wiki_path': '~/Documents/Sync/Docs_Wiki/010 - Wiki/',
-    # path to your notes, multi-path & sub-path is allowed
-    # 'notes_path': ['~/Documents/Sync/Docs_Wiki/'],
     # search tags in yaml only or in full content: True/False
     'search_yaml_tag_only': True,
     # present which todo in the top: newest/oldest
@@ -34,33 +36,17 @@ DEFAULTS = {
     'result_nums': 20,
     # default date format used by templates's YAML info
     'date_format': '%Y-%m-%d %H:%M:%S',
-    # set default [template, path] for deferent genre of newly created files.
-    'new_note_path': notes_path[0],
-    'new_wiki_path': wiki_path[0],
-    'new_todo_path': notes_path[0],
-    'new_journal_path': notes_path[0],
-
-    # allowed file extension
-    # "ext": ['md']
-    # used for iAwriter
-    # 'url_scheme': 'x-marked://open/?file=',
+    # template list: ['wiki', 'note', 'todo', 'journal', 'snippet', ...]
+    'templates': templates
 }
+
+DEFAULTS.update(dict([(f'path_to_new_{t}', default_path) for t in templates]))
 
 
 class Config():
 
     def __init__(self):
-        self._configs = self._load_all()
-        self.configs = {
-            "result_nums": self._configs['result_nums'],
-            "date_format": self._configs['date_format'],
-            "search_yaml_tag_only": self._configs['search_yaml_tag_only'],
-            "new_note_path": self._configs['new_note_path'],
-            "new_wiki_path": self._configs['new_wiki_path'],
-            "new_journal_path": self._configs['new_journal_path'],
-            "new_todo_path": self._configs['new_todo_path'],
-            "todo_order": self._configs['todo_order'],
-        }
+        self.configs = self._load_all()
 
     @staticmethod
     def _load_all():
@@ -98,3 +84,22 @@ class Config():
     def reset_all():
         """ create or reset all """
         U.json_dump(DEFAULTS, config_path)
+
+    @classmethod
+    def templates_checked(cls):
+        # Move templates to local folder
+        if not U.path_exists(template_dir):
+            U.mkdir(template_dir)
+        for source in U.get_all_files_path(U.get_cwd()+"/templates"):
+            name = U.get_file_name(source, with_ext=True)
+            target = U.path_join(template_dir, name)
+            if not U.path_exists(target):
+                U.copy(source, target)
+        # Check if any new template put in the user's folder
+        templates_now = templates.copy()
+        for t in cls().configs["templates"]:
+            templates_now.remove(t)
+        if templates_now:
+            for t in templates_now:
+                cls().set(f'path_to_new_{t}', default_path)
+            cls().set("templates", templates)

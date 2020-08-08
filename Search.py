@@ -8,7 +8,7 @@
 
 import re
 
-from Config import Config as C
+import Config as C
 from Items import Items
 from Utils import Utils as U
 
@@ -101,7 +101,7 @@ class Search():
             match = U.get_yaml_item('tags', f["content"])
             if match:
                 tags.extend(match.strip('[]').split(','))
-            if not C().configs["search_yaml_tag_only"]:
+            if not C.Config().configs["search_yaml_tag_only"]:
                 tags.extend(re.findall(r'\b#(.*?)\b', f['content']), re.I)
             if not tags:
                 continue

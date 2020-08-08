@@ -9,7 +9,7 @@
 from Items import Display
 from New import New
 from Utils import Utils as U
-from Config import Config
+import Config as C
 import os
 
 query = U.get_query()
@@ -44,11 +44,11 @@ elif option == "refresh":
 # config's submenu
 elif option == "reset_config":
     key = arg
-    value = Config().reset(key)
+    value = C.Config().reset(key)
     U.notify("Done!", f"{key} is reset to default: {value}.")
 
 elif option == "reset_all_configs":
-    Config.reset_all()
+    C.Config.reset_all()
     U.notify("Done!", "All configs have been reset to defaults.")
 
 elif option in ["open_config_file", "open_template"]:
@@ -58,13 +58,13 @@ elif option in ["open_config_file", "open_template"]:
 
 elif option == "swap_config":
     key = arg
-    value = Config().swap(key)
+    value = C.Config().swap(key)
     U.notify("Done!", f"{key} is changed to {value}.")
 
 elif option == "set_config":
     key, value = arg.strip('[]').split(", ")
     if value:
-        Config().set(key, value)
+        C.Config().set(key, value)
         U.notify("Done!", f"{key} is set to {value}.")
     else:
         U.notify("Not a valid value. Please retry.")

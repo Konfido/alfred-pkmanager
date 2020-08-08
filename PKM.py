@@ -8,7 +8,7 @@
 
 import re
 
-from Config import Config as C
+import Config as C
 from Items import Display, Items
 from Search import File as F
 from Search import Search as S
@@ -19,12 +19,9 @@ def main():
     if not varibles_checked():
         return 0
 
-    notes_path = U.get_abspath(U.get_env("notes_path")).split(",")
-    wiki_path = U.get_abspath(U.get_env("wiki_path")).split(",")
-
     # Get all sorted wikis and notes
-    sorted_wiki_list = S.get_sorted_files(wiki_path)
-    sorted_file_list = S.get_sorted_files(notes_path)
+    sorted_wiki_list = S.get_sorted_files(C.WIKI_PATH)
+    sorted_file_list = S.get_sorted_files(C.NOTES_PATH)
 
     # Parse input
     mode, keywords, tags = get_parsed_arg()
@@ -46,7 +43,7 @@ def main():
     # Generate ScriptFilter Output
     if result:
         # show matched results
-        num = int(C().configs["result_nums"])
+        num = int(C.Config().configs["result_nums"])
         items = []
         for r in result[:num]:
             items.append({
@@ -93,13 +90,13 @@ def varibles_checked():
         all_set = False
 
     # Check validity of config file
-    if not U.path_exists(config_dir):
-        U.mkdir(config_dir)
-    if not U.path_exists(config_path):
-        C.reset_all()
+    if not U.path_exists(C.CONFIG_DIR):
+        U.mkdir(C.CONFIG_DIR)
+    if not U.path_exists(C.CONFIG_PATH):
+        C.Config.reset_all()
     else:
         try:
-            C._load_all()
+            C.Config._load_all()
         except Exception as e:
             U.output(f'error|[search, {e}]')
             #TODO: reset all config/go check?
@@ -144,7 +141,4 @@ def get_parsed_arg():
 
 if __name__ == "__main__":
     query = U.get_query(lower=True)
-    config_dir = U.get_env("alfred_workflow_data")
-    config_path = U.path_join(config_dir, "config.json")
-
     main()

@@ -8,7 +8,7 @@
 
 import re
 
-from Config import Config
+import Config as C
 from Items import Display, Items
 from Utils import Utils as U
 from Search import File as F
@@ -55,9 +55,6 @@ elif option == "show_actions":
         })
 
 elif option == "show_configs":
-    config_dir = U.get_env("alfred_workflow_data")
-    config_path = U.path_join(config_dir, "config.json")
-    template_dir = U.path_join(config_dir, "templates")
 
     Display.show(
         {
@@ -68,12 +65,12 @@ elif option == "show_configs":
         {
             "title": "Open config file",
             "subtitle": "Open & Modify a JSON formatted config file",
-            "arg": f"open_config_file|{config_path}"
+            "arg": f"open_config_file|{C.CONFIG_PATH}"
         },
         {
             "title": "Open templates folder",
             "subtitle": "Put your Markdown templates files in the folder",
-            "arg": f"open_template|{template_dir}"
+            "arg": f"open_template|{C.TEMPLATE_DIR}"
         },
         {
             "title": "Reset all configurations",
@@ -83,7 +80,7 @@ elif option == "show_configs":
     )
 
 elif option == "show_editable_configs":
-    C = Config().configs
+    C = C.Config().configs
     _tag = str(not C["search_yaml_tag_only"])
     _todo = "newest" if C["todo_order"] == "oldest" else "newest"
 
@@ -110,8 +107,7 @@ elif option == "show_editable_configs":
             "arg": "show_receive_config|date_format"
         }
     ])
-    config_dir = U.get_env("alfred_workflow_data")
-    template_dir = U.path_join(config_dir, "templates")
+
     for i in C["templates"]:
         items.append({
             "title": f"Desired path to new {i}",

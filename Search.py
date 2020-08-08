@@ -45,7 +45,8 @@ class File():
             'mdate': mdate_string,
             'ctime': ctime_float,
             'mtime': mtime_float,
-            'size': size
+            'size': size,
+            'synonyms': U.get_yaml_item('synonyms', cls.content)
         }
         return file_infos
 
@@ -80,7 +81,9 @@ class Search():
     def wiki_search(cls, search_terms, dicted_files):
         matched_list = []
         for f in dicted_files:
-            if search_terms[0] in f['title']:
+            if f['title'] in cls.synonyms_search(search_terms):
+                matched_list.append(f)
+            elif search_terms[0] in f['title']:
                 matched_list.append(f)
         return matched_list
 
@@ -118,3 +121,14 @@ class Search():
         matched_list = cls.notes_search(keywords, dicted_files)
         matched_list = cls.tag_search(tags, matched_list)
         return matched_list
+
+    @classmethod
+    def synonyms_search(cls, search_terms):
+        synonyms = U.json_load(U.path_join(C.CONFIG_DIR, 'synonyms.json'))
+        out = []
+        for k in list(synonyms.keys()):
+            for s in synonyms[k]:
+                # TODO:
+                if search_terms[0] in s:
+                    out.append(k)
+        return out

@@ -77,6 +77,11 @@ elif option == "show_configs":
             "subtitle": "Configs will be reverted to default. This can't be undone!",
             "arg": f"reset_all_configs|"
         },
+        {
+            "title": "Update synonyms",
+            "subtitle": "",
+            "arg": f"update_synonyms|"
+        },
     )
 
 elif option == "show_editable_configs":

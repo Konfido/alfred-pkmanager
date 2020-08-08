@@ -106,7 +106,7 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
 - [ ] Search
     - [x] Full-text search
     - [x] Tag search
-    - [ ] Synonyms redirect
+    - [x] Synonyms redirect
     - [ ] Backlink searching
     - [ ] Snippet Search
     - [ ] Search algorithm: And | Or | Recommendation

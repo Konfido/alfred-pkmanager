@@ -11,6 +11,7 @@ from New import New
 from Utils import Utils as U
 import Config as C
 import os
+from Search import Search as S
 
 query = U.get_query()
 option, arg = query.split('|')
@@ -68,6 +69,17 @@ elif option == "set_config":
         U.notify("Done!", f"{key} is set to {value}.")
     else:
         U.notify("Not a valid value. Please retry.")
+
+elif option == "update_synonyms":
+    sorted_wiki_list = S.get_sorted_files(C.WIKI_PATH)
+    synonyms = {}
+    for wiki in sorted_wiki_list:
+        synonym = U.get_yaml_item("synonyms", wiki['content'])
+        if synonym and synonym != '[]':
+            synonyms.update({wiki['title']: synonym.strip('[]').split(',')})
+
+    U.json_dump(synonyms, U.path_join(C.CONFIG_DIR, "synonyms.json"))
+    U.notify("Done! Synonyms.json has been updated.")
 
 else:
     U.notify(f"Error! {option}: {arg}", log=True)

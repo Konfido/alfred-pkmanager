@@ -2,7 +2,7 @@
 
 A Alfred Workflow worked with Typora to handle your personal knowledge base that works on top of Markdown files.
 
-
+> Note: Working in Process, some content may differ between versions.
 
 ### Main Features:
 
@@ -39,10 +39,11 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
 
     - `notes`: Normal Markdown files
 
-    - `template`: A markdown file with formatted content used to generate new notes. 
+    - `template`: A markdown file with formatted content used to generate new notes.
 
-        - Select `Open templates folder` in `PKManger Configuration`. Place your created template in the folder and the workflow will load it automatically.
-        - Do not edit the `Default_*.md` templates directly. They are just for reference and can be restored when you delete them. 
+        - Select `Open templates folder` in `PKManger Configuration`. Place your created template in the folder and the workflow will
+        - Then, when you type `n_` to create a new file, the workflow will load your template and update your config automatically.
+        - The default templates can be restored when you delete any of them.
 
     - `metadata`: YAML frontier with important infos placed at the beginning of the Markdown document between two triple dashes. Example:
 
@@ -116,8 +117,6 @@ A Alfred Workflow worked with Typora to handle your personal knowledge base that
     - [ ] Recent hit
 - [ ] Rename current file
   - [ ] update backlinks
-- [ ] Templates
-	- [ ] Journal/Diary
 - [ ] Others
     - [ ] Autoupdate
     - [ ] Integrated with "Dewey Decimal Classification"

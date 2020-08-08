@@ -18,16 +18,16 @@ config_path = U.path_join(config_dir, "config.json")
 template_dir = U.path_join(config_dir, "templates")
 templates = [U.get_file_name(f) for f in U.get_all_files_path(template_dir)]
 
+# list of abs_path to your notes, multi-path & sub-path is allowed
 notes_path = U.get_abspath(U.get_env("notes_path")).split(",")
+# list of abs_path to your Wiki
 wiki_path = U.get_abspath(U.get_env("wiki_path")).split(",")
+# default path to the file created by templates
+default_path = notes_path[0]
 
 DEFAULTS = {
     # path to your Markdown App
     # 'app_path': '/Applications/Typora.app',
-    # path to your Wiki
-    # 'wiki_path': '~/Documents/Sync/Docs_Wiki/010 - Wiki/',
-    # path to your notes, multi-path & sub-path is allowed
-    # 'notes_path': ['~/Documents/Sync/Docs_Wiki/'],
     # search tags in yaml only or in full content: True/False
     'search_yaml_tag_only': True,
     # present which todo in the top: newest/oldest
@@ -40,7 +40,7 @@ DEFAULTS = {
     'templates': templates
 }
 
-DEFAULTS.update(dict([(f'path_to_new_{t}', notes_path[0]) for t in templates]))
+DEFAULTS.update(dict([(f'path_to_new_{t}', default_path) for t in templates]))
 
 
 class Config():
@@ -101,5 +101,5 @@ class Config():
             templates_now.remove(t)
         if templates_now:
             for t in templates_now:
-                cls().set(f'path_to_new_{t}', notes_path[0])
+                cls().set(f'path_to_new_{t}', default_path)
             cls().set("templates", templates)

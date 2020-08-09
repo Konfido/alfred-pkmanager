@@ -48,7 +48,7 @@ def main():
         for r in result[:num]:
             items.append({
                 "title": r['title'],
-                "subtitle": f"{r['mdate']}, ('\u2318' Actions, '\u21E7' Quicklook)",
+                "subtitle": f"{r['mdate']}, (\u2318-Actions, \u21E7-Quicklook)",
                 "type": 'file',
                 "arg": f'open|{r["path"]}',
                 "mods": {

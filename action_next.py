@@ -32,7 +32,7 @@ elif option == "show_actions":
     Display.show(
         {
             "title": "Back",
-            "subtitle": f"Back to Search with query: {query}",
+            "subtitle": f"Back to Search with: {query}",
             "arg": f"back|{query}",
             # "icon": "icons/back.png",
         },
@@ -43,9 +43,9 @@ elif option == "show_actions":
             # "icon": "icons/link.png",
         },
         {
-            "title": "Refresh 'updated time'",
-            "subtitle": "",
-            "arg": f'refresh|{path}'
+            "title": "Refresh YAML",
+            "subtitle": "'updated time', 'synonyms'",
+            "arg": f'refresh|'
         },
         {
             "title": "Delete Note",
@@ -76,12 +76,7 @@ elif option == "show_configs":
             "title": "Reset all configurations",
             "subtitle": "Configs will be reverted to default. This can't be undone!",
             "arg": f"reset_all_configs|"
-        },
-        {
-            "title": "Update synonyms",
-            "subtitle": "",
-            "arg": f"update_synonyms|"
-        },
+        }
     )
 
 elif option == "show_editable_configs":

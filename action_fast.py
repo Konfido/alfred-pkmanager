@@ -40,7 +40,18 @@ elif option == "back":
         with argument "{}"'
         """.format(input_str))
 elif option == "refresh":
+    # refresh updated time
     os.system('bash ./update_meta.sh')
+    # update synonyms
+    sorted_wiki_list = S.get_sorted_files(C.WIKI_PATH)
+    synonyms = {}
+    for wiki in sorted_wiki_list:
+        synonym = U.get_yaml_item("synonyms", wiki['content'])
+        if synonym and synonym != '[]':
+            synonyms.update({wiki['title']: synonym.strip('[]').split(',')})
+
+    U.json_dump(synonyms, U.path_join(C.CONFIG_DIR, "synonyms.json"))
+    U.notify("Done! Synonyms.json has been updated.")
 
 # config's submenu
 elif option == "reset_config":
@@ -70,16 +81,6 @@ elif option == "set_config":
     else:
         U.notify("Not a valid value. Please retry.")
 
-elif option == "update_synonyms":
-    sorted_wiki_list = S.get_sorted_files(C.WIKI_PATH)
-    synonyms = {}
-    for wiki in sorted_wiki_list:
-        synonym = U.get_yaml_item("synonyms", wiki['content'])
-        if synonym and synonym != '[]':
-            synonyms.update({wiki['title']: synonym.strip('[]').split(',')})
-
-    U.json_dump(synonyms, U.path_join(C.CONFIG_DIR, "synonyms.json"))
-    U.notify("Done! Synonyms.json has been updated.")
 
 else:
     U.notify(f"Error! {option}: {arg}", log=True)

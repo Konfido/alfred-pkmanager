@@ -70,6 +70,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>613C3561-AFF4-4248-8716-69A09A528105</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>FCBE6F87-6FFF-4D6C-938B-87588E77E108</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>7B0264D7-E3F1-4C35-82E5-7080DA5D08EE</key>
 		<array>
 			<dict>
@@ -390,6 +403,43 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>argumenttext</key>
+				<string>refresh|</string>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>15</integer>
+				<key>hotmod</key>
+				<integer>1572864</integer>
+				<key>hotstring</key>
+				<string>R</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedApps</key>
+				<array>
+					<string>abnerworks.Typora</string>
+				</array>
+				<key>relatedAppsMode</key>
+				<integer>1</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>613C3561-AFF4-4248-8716-69A09A528105</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -514,6 +564,15 @@
 			<integer>420</integer>
 			<key>ypos</key>
 			<integer>330</integer>
+		</dict>
+		<key>613C3561-AFF4-4248-8716-69A09A528105</key>
+		<dict>
+			<key>note</key>
+			<string>Update YAML</string>
+			<key>xpos</key>
+			<integer>865</integer>
+			<key>ypos</key>
+			<integer>300</integer>
 		</dict>
 		<key>7B0264D7-E3F1-4C35-82E5-7080DA5D08EE</key>
 		<dict>

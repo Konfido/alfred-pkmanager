@@ -8,38 +8,36 @@
 
 from Utils import Utils as U
 from Items import Items, Display
-from Config import Config as C
-
-
-config_dir = U.get_env("alfred_workflow_data")
-config_path = U.path_join(config_dir, "config.json")
-template_dir = U.path_join(config_dir, "templates")
-# templates = U.get_all_files_path()
-
-# query = U.get_query()
+# from Config import Config
+import Config as C
 
 
 class New():
 
-    @staticmethod
-    def templates_checked():
-        # Move templates to local folder
-        if not U.path_exists(template_dir):
-            U.mkdir(template_dir)
-        for source in U.get_all_files_path(U.get_cwd()+"/templates"):
-            name = 'Default_' + U.get_file_name(source, True)
-            target = U.path_join(template_dir, name)
-            if not U.path_exists(target):
-                U.copy(source, target)
+    @classmethod
+    def show_templates(cls):
+        C.Config().templates_checked()
+        items = []
+        for template_path in U.get_all_files_path(C.TEMPLATE_DIR):
+            genre = U.get_file_name(template_path)
+            name = query if query else U.get_now()
+            subtitle = query if query else U.get_now()+" (Default)"
+
+            items.append({
+                "title": f"Create a new {genre}",
+                "subtitle": f'Name: {subtitle}',
+                "arg": f"new|[{genre}, {name}]"
+            })
+
+        Display.show(items)
 
     @classmethod
-    def new(cls, title, genre='wiki', language=''):
+    def new(cls, title, genre='Note', language=''):
         """ create a new file accroding to template """
 
-        cls.templates_checked()
         # illigal characters for the file name
         title_replace_map = {
-            ' ': '_',
+            # ' ': '_',
             ',': '-',
             '，': '-',
             '.': '_',
@@ -48,31 +46,28 @@ class New():
             '#': '-'
         }
 
-        template = U.path_join('./templates', genre.join(".md"))
-        file_root = C().configs['new_{}_path'.format(genre)]
-        title = U.str_replace(title, title_replace_map)
-        file_path = U.path_join(file_root, '{}.md'.format(title))
-        replace_map = {
-            '{title}': title.strip(),
+        file_dir = C.Config().configs[f'path_to_new_{genre}']
+        title = U.str_replace(title.strip(), title_replace_map)
+        new_file_path = U.path_join(file_dir, title+'.md')
+
+        content_replace_map = {
+            '{title}': title,
             '{tag}': "[]",
-            '{datetime}': U.get_now(C().configs["date_format"]),
+            '{datetime}': U.get_now(C.Config().configs["date_format"]),
             '{language}': language,
         }
 
-        with open("./templates/Wiki.md", 'r') as f:
-            content = U.str_replace(f.read(), replace_map)
+        template_path = U.path_join(C.TEMPLATE_DIR, genre+".md")
 
-        if not U.path_exists(file_path):
-            with open(file_path, "w") as f:
+        with open(template_path, 'r') as f:
+            content = U.str_replace(f.read(), content_replace_map)
+        if not U.path_exists(new_file_path):
+            with open(new_file_path, "w") as f:
                 f.write(content)
 
-        return file_path
+        return new_file_path
 
 
 if __name__ == "__main__":
-    Display.show(
-        {"title": "file_name",
-         "subtitle": "",
-         "arg": "{}|{}".format("", "")
-         },
-    )
+    query = U.get_query()
+    New().show_templates()

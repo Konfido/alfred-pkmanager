@@ -6,27 +6,29 @@
 # ------------------------------------------------
 
 
-import os
-
 from Items import Items, Display
 from Utils import Utils as U
 import json
 
 
-config_dir = U.get_env("alfred_workflow_data")
-config_path = U.path_join(config_dir, "config.json")
-template_dir = U.path_join(config_dir, "templates")
 
-notes_path = U.get_abspath(U.get_env("notes_path")).split(",")
-wiki_path = U.get_abspath(U.get_env("wiki_path")).split(",")
+CONFIG_DIR = U.get_env("alfred_workflow_data")
+CONFIG_PATH = U.path_join(CONFIG_DIR, "config.json")
+TEMPLATE_DIR = U.path_join(CONFIG_DIR, "templates")
+# templates exist in the folder
+TEMPLATES = [U.get_file_name(f) for f in U.get_all_files_path(TEMPLATE_DIR)]
+
+# list of abs_path to your notes, multi-path & sub-path is allowed
+NOTES_PATH = U.get_abspath(U.get_env("notes_path")).split(",")
+# list of abs_path to your Wiki
+WIKI_PATH = U.get_abspath(U.get_env("wiki_path")).split(",")
+# default path to the file created by templates: wiki_path[0]
+DEFAULT_PATH = WIKI_PATH[0]
+
 
 DEFAULTS = {
     # path to your Markdown App
     # 'app_path': '/Applications/Typora.app',
-    # path to your Wiki
-    # 'wiki_path': '~/Documents/Sync/Docs_Wiki/010 - Wiki/',
-    # path to your notes, multi-path & sub-path is allowed
-    # 'notes_path': ['~/Documents/Sync/Docs_Wiki/'],
     # search tags in yaml only or in full content: True/False
     'search_yaml_tag_only': True,
     # present which todo in the top: newest/oldest
@@ -35,71 +37,23 @@ DEFAULTS = {
     'result_nums': 20,
     # default date format used by templates's YAML info
     'date_format': '%Y-%m-%d %H:%M:%S',
-    # set default [template, path] for deferent genre of newly created files.
-    'new_note_path': notes_path[0],
-    'new_wiki_path': wiki_path[0],
-    'new_todo_path': notes_path[0],
-    'new_journal_path': notes_path[0],
-
-    # allowed file extension
-    # "ext": ['md']
-    # used for iAwriter
-    # 'url_scheme': 'x-marked://open/?file=',
+    # template list: ['wiki', 'note', 'todo', 'journal', 'snippet', ...]
+    'templates': TEMPLATES
 }
+
+DEFAULTS.update(
+    dict([(f'path_to_new_{t}', DEFAULT_PATH) for t in TEMPLATES]))
 
 
 class Config():
 
     def __init__(self):
-        self._configs = self._load_all()
-        self.configs = {
-            "result_nums": self._configs['result_nums'],
-            "date_format": self._configs['date_format'],
-            "search_yaml_tag_only": self._configs['search_yaml_tag_only'],
-            "new_note_path": self._configs['new_note_path'],
-            "new_wiki_path": self._configs['new_wiki_path'],
-            "new_journal_path": self._configs['new_journal_path'],
-            "new_todo_path": self._configs['new_todo_path'],
-            "todo_order": self._configs['todo_order'],
-        }
-
-    @classmethod
-    def varibles_checked(cls):
-        # Check validity of Workflow env variables
-        for env in ["markdown_app", "notes_path", "wiki_path"]:
-            if not U.get_env(env):
-                Display.show(("ERROR: Find empty environt varibles!",
-                              "Please check: \"{}\".".format(env)))
-                return False
-        for path in U.get_env("notes_path").split(","):
-            if not(U.path_exists(U.get_abspath(path))):
-                Display.show(("ERROR: Find invalid directory!",
-                              "Please check \"notes_path\": {}".format(path)))
-                return False
-        if not U.get_env("wiki_path"):
-            Display.show(("ERROR: Find invalid directory!",
-                          "Please check \"wiki_path\""))
-            return False
-
-        # Create local configuration file
-        if not U.path_exists(config_dir):
-            U.mkdir(config_dir)
-        if not U.path_exists(config_path):
-            cls.reset_all(new=True)
-        else:
-            try:
-                cls._load_all()
-            except Exception as e:
-                Display.show(e)
-                #TODO: reset all config/go check?
-                return False
-
-        return True
+        self.configs = self._load_all()
 
     @staticmethod
     def _load_all():
         """ Get user's local config """
-        return U.json_load(config_path)
+        return U.json_load(CONFIG_PATH)
 
     def get(self, key):
         return self.configs[key]
@@ -110,7 +64,7 @@ class Config():
             value = U.literal_eval(value)
             value = value if isinstance(value, int) else 20
         self.configs.update({key: value})
-        U.json_dump(self.configs, config_path)
+        U.json_dump(self.configs, CONFIG_PATH)
 
     def swap(self, key):
         if key == "search_yaml_tag_only":
@@ -118,45 +72,36 @@ class Config():
         elif key == "todo_order":
             value = "nearest" if self.get(key) == "oldest" else "oldest"
         self.update(key, value)
-        U.notify("Done!", "{} is changed to {}.".format(key, value))
+        return value
 
     def set(self, key, value):
         self.update(key, value)
-        U.notify("Done!", "{} is set to {}.".format(key, value))
 
     def reset(self, key):
         self.configs.update({key: DEFAULTS[key]})
-        U.json_dump(self.configs, config_path)
-        U.notify("Done!", "{} is reset to {}.".format(key, DEFAULTS[key]))
+        U.json_dump(self.configs, CONFIG_PATH)
+        return DEFAULTS[key]
 
     @staticmethod
-    def reset_all(new=False):
+    def reset_all():
         """ create or reset all """
-        U.json_dump(DEFAULTS, config_path)
-        if not new:
-            U.notify("Done!", "All configs are reset to defaults.")
+        U.json_dump(DEFAULTS, CONFIG_PATH)
 
-
-if __name__ == "__main__":
-    Display.show(
-        {
-            "title": "Set configurations",
-            "subtitle": "Go next and see the details",
-            "arg": "{}|{}".format("select_config", "")
-        },
-        {
-            "title": "Open config file",
-            "subtitle": "Open & Modify a JSON formatted config file",
-            "arg": "{}|{}".format("open_config", config_path)
-        },
-        {
-            "title": "Open templates folder",
-            "subtitle": "Put your Markdown templates files in the folder",
-            "arg": "{}|{}".format("open_template", template_dir)
-        },
-        {
-            "title": "Reset all configurations",
-            "subtitle": "Configs will be reverted to default. This can't be undone!",
-            "arg": "{}|{}".format("reset_config", "")
-        },
-        )
+    @classmethod
+    def templates_checked(cls):
+        # Move templates to local folder
+        if not U.path_exists(TEMPLATE_DIR):
+            U.mkdir(TEMPLATE_DIR)
+        for source in U.get_all_files_path(U.get_cwd()+"/templates"):
+            name = U.get_file_name(source, with_ext=True)
+            target = U.path_join(TEMPLATE_DIR, name)
+            if not U.path_exists(target):
+                U.copy(source, target)
+        # Check if any new template put in the user's folder
+        templates_now = TEMPLATES.copy()
+        for t in cls().configs["templates"]:
+            templates_now.remove(t)
+        if templates_now:
+            for t in templates_now:
+                cls().set(f'path_to_new_{t}', DEFAULT_PATH)
+            cls().set("templates", TEMPLATES)

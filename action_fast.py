@@ -9,8 +9,9 @@
 from Items import Display
 from New import New
 from Utils import Utils as U
-from Config import Config
+import Config as C
 import os
+from Search import Search as S
 
 query = U.get_query()
 option, arg = query.split('|')
@@ -39,16 +40,27 @@ elif option == "back":
         with argument "{}"'
         """.format(input_str))
 elif option == "refresh":
+    # refresh updated time
     os.system('bash ./update_meta.sh')
+    # update synonyms
+    sorted_wiki_list = S.get_sorted_files(C.WIKI_PATH)
+    synonyms = {}
+    for wiki in sorted_wiki_list:
+        synonym = U.get_yaml_item("synonyms", wiki['content'])
+        if synonym and synonym != '[]':
+            synonyms.update({wiki['title']: synonym.strip('[]').split(',')})
+
+    U.json_dump(synonyms, U.path_join(C.CONFIG_DIR, "synonyms.json"))
+    U.notify("Done! Synonyms.json has been updated.")
 
 # config's submenu
 elif option == "reset_config":
     key = arg
-    value = Config().reset(key)
+    value = C.Config().reset(key)
     U.notify("Done!", f"{key} is reset to default: {value}.")
 
 elif option == "reset_all_configs":
-    Config.reset_all()
+    C.Config.reset_all()
     U.notify("Done!", "All configs have been reset to defaults.")
 
 elif option in ["open_config_file", "open_template"]:
@@ -58,16 +70,17 @@ elif option in ["open_config_file", "open_template"]:
 
 elif option == "swap_config":
     key = arg
-    value = Config().swap(key)
+    value = C.Config().swap(key)
     U.notify("Done!", f"{key} is changed to {value}.")
 
 elif option == "set_config":
     key, value = arg.strip('[]').split(", ")
     if value:
-        Config().set(key, value)
+        C.Config().set(key, value)
         U.notify("Done!", f"{key} is set to {value}.")
     else:
         U.notify("Not a valid value. Please retry.")
+
 
 else:
     U.notify(f"Error! {option}: {arg}", log=True)

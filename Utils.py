@@ -50,7 +50,7 @@ class Utils():
     @staticmethod
     def json_dump(var, file):
         with open(file, 'w') as f:
-            json.dump(var, f, indent=4)
+            json.dump(var, f, indent=4, ensure_ascii=False)
 
     @staticmethod
     def get_file_meta(path, key):

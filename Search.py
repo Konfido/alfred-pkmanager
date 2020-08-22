@@ -103,13 +103,12 @@ class Search():
             tags = []
             match = U.get_yaml_item('tags', f["content"])
             if match:
-                tags.extend(match.strip('[]').split(','))
+                tags.extend(match.strip('[]').split(', '))
             if not C.Config().configs["search_yaml_tag_only"]:
-                tags.extend(re.findall(r'\b#(.*?)\b', f['content']), re.I)
+                tags.extend(re.findall(r'\b#(.*?)\b', f['content'], re.I))
             if not tags:
                 continue
             else:
-                # TODO: handle multi tags
                 for t in search_tags:
                     if t in tags:
                         matched_list.append(f)

@@ -20,8 +20,13 @@ if option == "open":
     # U.output(arg)
     U.open(arg)
 elif option == "new":
-    genre, title = arg.strip('[]').split(", ")
-    path = New.new(title, genre)
+    genre, arg = arg.strip('[]').split(">")
+    U.log('genre')
+    if genre == "Snippet":
+        language, title = arg.split(", ")
+    else:
+        language, title = "", arg
+    path = New.new(title, genre, language)
     # U.output(path)
     U.open(path)
 elif option == "delete":
@@ -52,6 +57,8 @@ elif option == "refresh":
 
     U.json_dump(synonyms, U.path_join(C.CONFIG_DIR, "synonyms.json"))
     U.notify("Done! Synonyms.json has been updated.")
+    # update backlinks
+    sorted_note_list = S.get_sorted_files(C.NOTES_PATH)
 
 # config's submenu
 elif option == "reset_config":

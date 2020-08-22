@@ -1,13 +1,7 @@
 ---
 title: {title}
-tags: {tag}
-language: {language}
+id: {id}
 date: {datetime}
 updated: {datetime}
 ---
-
-
-```{language}
-
-```
 

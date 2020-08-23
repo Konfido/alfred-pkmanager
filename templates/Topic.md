@@ -1,7 +1,7 @@
 ---
 title: {title}
 id: {id}
-date: {datetime}
-updated: {datetime}
+date: {date_time}
+updated: {date_time}
 ---
 

@@ -63,6 +63,11 @@ elif option == "show_configs":
             "arg": f"show_editable_configs|"
         },
         {
+            "title": "Refresh YAML",
+            "subtitle": "'updated time', 'synonyms'",
+            "arg": f'refresh|'
+        },
+        {
             "title": "Open config file",
             "subtitle": "Open & Modify a JSON formatted config file",
             "arg": f"open_config_file|{C.CONFIG_PATH}"
@@ -101,11 +106,6 @@ elif option == "show_editable_configs":
             "subtitle": str(C["result_nums"]),
             "arg": "show_receive_config|result_nums"
         },
-        {
-            "title": "Date format used in templates",
-            "subtitle": C["date_format"],
-            "arg": "show_receive_config|date_format"
-        }
     ])
 
     for i in C["templates"]:

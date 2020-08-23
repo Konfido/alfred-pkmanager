@@ -35,8 +35,6 @@ DEFAULTS = {
     'todo_order': 'newest',
     # quantity of results: Int
     'result_nums': 20,
-    # default date format used by templates's YAML info
-    'date_format': '%Y-%m-%d %H:%M:%S',
     # template list: ['wiki', 'note', 'todo', 'journal', 'snippet', ...]
     'templates': TEMPLATES
 }

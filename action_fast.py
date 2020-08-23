@@ -46,6 +46,7 @@ elif option == "back":
         """.format(input_str))
 elif option == "refresh":
     # refresh updated time
+    # TODO: Bug!
     os.system('bash ./update_meta.sh')
     # update synonyms
     sorted_wiki_list = S.get_sorted_files(C.WIKI_PATH)

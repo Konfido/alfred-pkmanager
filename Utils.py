@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # ------------------------------------------------
-# Author:        Konfido <konfido.du@outlook.com>
+# Author:        Konfido
 # Created Date:  July 26th 2020
 # ------------------------------------------------
 
@@ -166,3 +166,15 @@ class Utils():
     def copy(cls, source, target):
         """copy source file to target """
         shutil.copy(source, target)
+
+    # ---------------------
+    #    Advanced Utils
+    # ---------------------
+    @staticmethod
+    def get_corelocation():
+        """Return a dict of corelocation's info"""
+        corelocation = os.popen('swift ./corelocation.swift -json').read()
+        null = ''
+        loc_dict = eval(corelocation)
+        loc_dict['address'] = loc_dict['address'].replace('\n', ',')
+        return loc_dict

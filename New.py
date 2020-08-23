@@ -65,13 +65,22 @@ class New():
         _id = U.get_now("%Y%m%d%H%M%S")
         file_name = title if genre == "Topic" else _id
         new_file_path = U.path_join(file_dir, file_name+'.md')
-
+        loc_dict = U.get_corelocation()
+        if loc_dict['subLocality']:
+            location = f'{loc_dict["address"]},{loc_dict["subLocality"]}'
+        else:
+            location = loc_dict["address"]
         content_replace_map = {
             '{title}': title,
-            '{tag}': "[]",
-            '{datetime}': U.get_now(C.Config().configs["date_format"]),
+            '{tags}': "[]",
+            '{date_time}': U.get_now("%Y-%m-%d %H:%M:%S"),
+            '{date_journal}': U.get_now("%B %d, %A"),
+            '{date}': U.get_now("%Y-%m-%d"),
+            '{time}': U.get_now("%H:%M:%S"),
             '{language}': language,
             '{id}': _id,
+            '{location}': location,
+            '{weather}': ""
         }
 
         template_path = U.path_join(C.TEMPLATE_DIR, genre+".md")

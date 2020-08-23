@@ -1,9 +1,9 @@
 ---
 title: {title}
-tags: {tag}
+tags: {tags}
 language: {language}
-date: {datetime}
-updated: {datetime}
+date: {date_time}
+updated: {date_time}
 ---
 
 

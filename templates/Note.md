@@ -1,11 +1,12 @@
 ---
 title: {title}
 synonyms: []
-tags: {tag}
+tags: {tags}
 typora-root-url: ..
 typora-copy-images-to: ../images
-date: {datetime}
-updated: {datetime}
+date: {date_time}
+updated: {date_time}
 ---
 
-# {title}
+
+

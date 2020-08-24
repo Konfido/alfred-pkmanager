@@ -2,14 +2,14 @@
 
 A handy **Alfred Workflow** which helps to manage your personal knowledge Markdown notes. `Typora` is the recommended Markdown editor.
 
-> Note: Working in Process, some content may differ between versions.
+> Note: Working in Process, some content may differ among versions.
 
 ### Main Features:
 
 - Search / Open your Markdown notes with ease
     - Search by Wiki's name, keywords, tags or synonyms.
 - Create notes with templates
-  - Wiki, Note, Todo, Snippet, Journal
+  - Note, Todo, Snippet, Journal
   - Also support customized templates
 - Others
     - Manually refresh the Markdown YAML metadata: 'updated time', 'synonyms' and so on.
@@ -19,13 +19,12 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
 ### Usage
 - **NOTE**: `␣` means `Press the space bar`; Adopted searching method is case-insensitive
 - `s`: **S**earch and open ( if existing ) or create a new wiki/note.
-    - `s␣`: List recent `notes` which sorted in reverse order by modification time
-
-    - `s␣test`: Search the exact `Wiki` "test"
-    - `s␣test␣`: Search all notes with the `keyword` "test"
-    - `s␣test␣alfred`: Search all notes with the `keyword` "test" and "alfred"
-    - `s␣,test`: Search all notes with the `tag` "test"
-    - `s␣k1␣k2,t1␣t2`: Search all notes with the `keyword`"k1", "k2" and the `tag` "t1","t2"
+    - `s␣`: List recent files which are sorted in reverse order by modification time
+    - `s␣test`: Fast Match. Only search `Note` by `keyword` "test" of its **title**
+    - `s␣test␣`: Search all files by `keyword` "test" of its **content**
+    - `s␣test␣alfred`: Search all files by `keyword` "test" and "alfred" of their **contents**
+    - `s␣,test`: Search all files by `tag` "test"
+    - `s␣k1␣k2,t1␣t2`: Search all files by `keyword`"k1", "k2" and `tag` "t1","t2"
 - Once you get the result, you can:
   - Press `Enter` to open the file
   - Press `Command+Enter` to select your further actions on the file
@@ -45,9 +44,14 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
 
 - Set Workflow variables
 
-    - `NOTES_PATH`: folder's path to your notes files. Multi paths and sub-folder is supported, but it goes with the increasing of consuming time. Use comma `,` to separate your paths.
+    - `notes_path`: dir of your notes. Only one folder is allowed.
+      - It's highly recommended to put all your notes into one folder and give it an unique time ID (e.g. 20200824181348).
+      - Check out [this](https://zettelkasten.de/posts/overview/#knowledge-management) blog to learn how to use the method of Zettelkasten to handle your knowledge management.
 
-    - `WIKI_PATH`: folder's path to your wiki files. Mutil path is supported, but only setting one path is recommended.
+    - `files_path`: dir of your whole files. It supports multi dirs and sub-folders.
+      - In case you really need multi folders, here is the solution. Use comma `,` to separate your paths.
+      - Shallow your folder's depth to enhance searching performance.
+      - 'full text search' is supported for these folders, while 'fast search' (title matching) is not.
 
     <details>
     <summary>An example setting for the a possible folder tree. ( Click to expand! )</summary>
@@ -55,28 +59,23 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
     ```
     ~
     └── Documents/
-        └── My_Notes/
-            ├── Wiki/
-            │   ├── foo.py
-            │   └── foo2.py
-            ├── Develop/
+        └── My_Files/
+            ├── Notes/
+            │   ├── foo.md
+            │   └── foo2.md
+            ├── Archives/
             │   ├── Programming/
             │   └── Ideas/
             └── Others/
     ```
 
     ```
-    WIKI_PATH: ~/Documents/My_Notes/Wiki/
-    NOTES_PATH: [~/Documents/My_Notes/Develop/, ~/Documents/My_Notes/Others/, ~/Documents/My_Notes/Wiki/]
+    NOTES_PATH: ~/Documents/My_Notes/Notes/
+    FILES_PATH: [~/Documents/My_Notes/Notes/, ~/Documents/My_Notes/Archives/, ~/Documents/My_Notes/Others/]
     ```
     </details>
 
-
-- Terms explanation
-
-    - `wiki`: A Wiki for any vital terms/concept (without space in its name), which can be linked to other notes. It's stored as a Markdown file and should be placed in one independent folder.
-
-    - `notes`: Normal Markdown files
+- Customise your configs through workflow of `PKManger Configuration`
 
     - `template`: A markdown file with formatted content used to generate new notes.
 
@@ -136,8 +135,8 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
   - [ ] update backlinks
 - [ ] Others
     - [ ] Autoupdate
-    - [ ] Integrated with "Dewey Decimal Classification"
     - [ ] Auto bump version in Workflow by operating info.plist
+    - [ ] Notification icon: [yo](https://github.com/sheagcraig/yo)
 
 
 

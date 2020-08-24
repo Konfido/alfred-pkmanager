@@ -9,25 +9,42 @@
 from Utils import Utils as U
 from Items import Items, Display
 # from Config import Config
-import Config as C
+import Config
+import threading
+
+
+C = Config.Config().configs
 
 
 class New():
 
     @classmethod
     def show_templates(cls):
-        C.Config().templates_checked()
-        items = []
-        for template_path in U.get_all_files_path(C.TEMPLATE_DIR):
-            genre = U.get_file_name(template_path)
-            name = query if query else U.get_now()
-            subtitle = query if query else U.get_now()+" (Default)"
+        """Show available templates.
+        The input content `query` are accepted as the name of new file.
 
-            items.append({
-                "title": f"Create a new {genre}",
-                "subtitle": f'Name: {subtitle}',
-                "arg": f"new|[{genre}, {name}]"
-            })
+        But once ',' appears in it, `Snippet` will be selected as target templates,
+        and `query` will be seperated to be language's name and title accrodingly.
+        """
+        query = U.get_query()
+        arg = query if query else U.get_now()
+        (language, title) = arg.split(', ') if ',' in arg else ("<blank>", arg)
+        items = []
+        for template_path in U.get_all_files_path(Config.TEMPLATE_DIR):
+            genre = U.get_file_name(template_path)
+            if genre == "Snippet":
+                items.append({
+                    "title": "Create a new Snippet: Input \"<languag>, <title>\"",
+                    "subtitle": f"Language: {language}, Name: {title}",
+                    "arg": f"new|[Snippet>{arg}]"
+                })
+            elif ',' not in arg:
+                subtitle = query if query else U.get_now()+" (Default)"
+                items.append({
+                    "title": f"Create a new {genre}",
+                    "subtitle": f'Name: {subtitle}',
+                    "arg": f"new|[{genre}>{arg}]"
+                })
 
         Display.show(items)
 
@@ -37,7 +54,6 @@ class New():
 
         # illigal characters for the file name
         title_replace_map = {
-            # ' ': '_',
             ',': '-',
             '，': '-',
             '.': '_',
@@ -46,18 +62,56 @@ class New():
             '#': '-'
         }
 
-        file_dir = C.Config().configs[f'path_to_new_{genre}']
+        # get new file's title and path
+        file_dir = C[f'path_to_new_{genre}']
+        file_dir = U.path_join(file_dir, U.get_now("%Y/%m/")) \
+            if genre == 'Journal' else file_dir
+        U.mkdir(file_dir)      # Create month's subfolder for Journal
+
         title = U.str_replace(title.strip(), title_replace_map)
-        new_file_path = U.path_join(file_dir, title+'.md')
+        _id = U.get_now("%Y%m%d%H%M%S")
+        file_name = {
+            "Journal": U.get_now("%Y-%m-%d"),
+            "Topic": title
+        }
+        file_name = file_name[genre] if genre in file_name else _id
+        new_file_path = U.path_join(file_dir, file_name+'.md')
+        if U.path_exists(new_file_path):
+            return new_file_path
+
+        # get date
+        date = U.get_now("%Y-%m-%d")
+        time = U.get_now("%H:%M:%S")
+        date_time = U.get_now("%Y-%m-%d %H:%M:%S")
+        date_journal = U.get_now("%B %d, %A")
+
+        # get location
+        loc_dict = U.get_corelocation()
+        if loc_dict['subLocality']:
+            location = f'{loc_dict["address"]},{loc_dict["subLocality"]}'
+        else:
+            location = loc_dict["address"]
+
+        # get weather
+        lat = loc_dict["latitude"]
+        lon = loc_dict["longitude"]
+        api = C["weather_api"]
+        weather = U.get_weather(lat, lon, api, C["locale"]) if api else ""
 
         content_replace_map = {
             '{title}': title,
-            '{tag}': "[]",
-            '{datetime}': U.get_now(C.Config().configs["date_format"]),
+            '{tags}': "[]",
+            '{date_time}': date_time,
+            '{date_journal}': date_journal,
+            '{date}': date,
+            '{time}': time,
             '{language}': language,
+            '{id}': _id,
+            '{location}': location,
+            '{weather}': weather,
         }
 
-        template_path = U.path_join(C.TEMPLATE_DIR, genre+".md")
+        template_path = U.path_join(Config.TEMPLATE_DIR, genre+".md")
 
         with open(template_path, 'r') as f:
             content = U.str_replace(f.read(), content_replace_map)
@@ -69,5 +123,5 @@ class New():
 
 
 if __name__ == "__main__":
-    query = U.get_query()
+    Config.Config().templates_checked()
     New().show_templates()

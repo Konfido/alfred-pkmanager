@@ -19,11 +19,11 @@ TEMPLATE_DIR = U.path_join(CONFIG_DIR, "templates")
 TEMPLATES = [U.get_file_name(f) for f in U.get_all_files_path(TEMPLATE_DIR)]
 
 # list of abs_path to your notes, multi-path & sub-path is allowed
-NOTES_PATH = U.get_abspath(U.get_env("notes_path")).split(",")
+FILES_PATH = U.get_abspath(U.get_env("files_path")).split(",")
 # list of abs_path to your Wiki
-WIKI_PATH = U.get_abspath(U.get_env("wiki_path")).split(",")
-# default path to the file created by templates: wiki_path[0]
-DEFAULT_PATH = WIKI_PATH[0]
+NOTES_PATH = U.get_abspath(U.get_env("notes_path")).split(",")
+# default path to the file created by templates: notes_path[0]
+DEFAULT_PATH = NOTES_PATH[0]
 
 
 DEFAULTS = {
@@ -35,10 +35,12 @@ DEFAULTS = {
     'todo_order': 'newest',
     # quantity of results: Int
     'result_nums': 20,
-    # default date format used by templates's YAML info
-    'date_format': '%Y-%m-%d %H:%M:%S',
     # template list: ['wiki', 'note', 'todo', 'journal', 'snippet', ...]
-    'templates': TEMPLATES
+    'templates': TEMPLATES,
+    # open weather api
+    'weather_api': "",
+    # language of auto-completed text in templates
+    'locale': U.get_locale()[0],
 }
 
 DEFAULTS.update(
@@ -46,6 +48,7 @@ DEFAULTS.update(
 
 
 class Config():
+    """ Use `Config().configs` to fetch curent config dict"""
 
     def __init__(self):
         self.configs = self._load_all()

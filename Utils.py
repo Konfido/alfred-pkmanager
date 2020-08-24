@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # ------------------------------------------------
-# Author:        Konfido <konfido.du@outlook.com>
+# Author:        Konfido
 # Created Date:  July 26th 2020
 # ------------------------------------------------
 
@@ -13,6 +13,8 @@ import time
 import json
 import ast
 import shutil
+import urllib.request
+import locale
 
 class Utils():
 
@@ -29,13 +31,18 @@ class Utils():
     def get_cwd():
         return os.getcwd()
 
-    @staticmethod
-    def path_exists(path):
+    @classmethod
+    def path_exists(cls, path):
         return os.path.exists(path)
 
-    @staticmethod
-    def mkdir(path):
-        return os.makedirs(path)
+    @classmethod
+    def mkdir(cls, path):
+        """Check if dir exists and recursively mkdir"""
+        if not cls.path_exists(path):
+            os.makedirs(path)
+            return 1
+        else:
+            return 0
 
     @staticmethod
     def path_join(root, file):
@@ -133,6 +140,11 @@ class Utils():
         now = datetime.datetime.now()
         return now.strftime(fmt)
 
+    @classmethod
+    def get_locale(cls):
+        loc = locale.getlocale()
+        return loc
+
     @staticmethod
     def format_date(float_date, fmt="%Y-%m-%d %H:%M:%S"):
         """ float time to string """
@@ -166,3 +178,24 @@ class Utils():
     def copy(cls, source, target):
         """copy source file to target """
         shutil.copy(source, target)
+
+    # ---------------------
+    #    Advanced Utils
+    # ---------------------
+    @staticmethod
+    def get_corelocation():
+        """Return a dict of corelocation's info"""
+        corelocation = os.popen('swift ./corelocation.swift -json').read()
+        null = ''
+        loc_dict = eval(corelocation)
+        loc_dict['address'] = loc_dict['address'].replace('\n', ',')
+        return loc_dict
+
+    @classmethod
+    def get_weather(cls, lat, lon, api, lang=""):
+        lang = cls.get_locale()[0] if not lang else lang
+        url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api}&lang={lang}"
+        response = urllib.request.urlopen(url)
+        html = response.read().decode("utf-8")
+        weather = json.loads(html)
+        return weather["weather"][0]['description']

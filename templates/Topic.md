@@ -1,8 +1,7 @@
 ---
 title: {title}
-tags: {tags}
+id: {id}
 date: {date_time}
 updated: {date_time}
 ---
 
-- [ ]

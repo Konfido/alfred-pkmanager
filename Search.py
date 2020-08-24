@@ -8,9 +8,11 @@
 
 import re
 
-import Config as C
+import Config
 from Items import Items
 from Utils import Utils as U
+
+C = Config.Config().configs
 
 
 class File():
@@ -103,13 +105,12 @@ class Search():
             tags = []
             match = U.get_yaml_item('tags', f["content"])
             if match:
-                tags.extend(match.strip('[]').split(','))
-            if not C.Config().configs["search_yaml_tag_only"]:
-                tags.extend(re.findall(r'\b#(.*?)\b', f['content']), re.I)
+                tags.extend(match.strip('[]').split(', '))
+            if not C["search_yaml_tag_only"]:
+                tags.extend(re.findall(r'\b#(.*?)\b', f['content'], re.I))
             if not tags:
                 continue
             else:
-                # TODO: handle multi tags
                 for t in search_tags:
                     if t in tags:
                         matched_list.append(f)
@@ -124,7 +125,7 @@ class Search():
 
     @classmethod
     def synonyms_search(cls, search_terms):
-        synonyms = U.json_load(U.path_join(C.CONFIG_DIR, 'synonyms.json'))
+        synonyms = U.json_load(U.path_join(Config.CONFIG_DIR, 'synonyms.json'))
         out = []
         for k in list(synonyms.keys()):
             for s in synonyms[k]:

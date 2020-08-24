@@ -48,7 +48,7 @@ elif option == "refresh":
     # TODO: Bug!
     os.system('bash ./update_meta.sh')
     # update synonyms
-    sorted_wiki_list = S.get_sorted_files(Config.WIKI_PATH)
+    sorted_wiki_list = S.get_sorted_files(Config.NOTES_PATH)
     synonyms = {}
     for wiki in sorted_wiki_list:
         synonym = U.get_yaml_item("synonyms", wiki['content'])
@@ -58,7 +58,7 @@ elif option == "refresh":
     U.json_dump(synonyms, U.path_join(Config.CONFIG_DIR, "synonyms.json"))
     U.notify("Done! Synonyms.json has been updated.")
     # update backlinks
-    sorted_note_list = S.get_sorted_files(Config.NOTES_PATH)
+    sorted_note_list = S.get_sorted_files(Config.FILES_PATH)
 
 # config's submenu
 elif option == "reset_config":

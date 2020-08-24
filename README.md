@@ -2,14 +2,14 @@
 
 A handy **Alfred Workflow** which helps to manage your personal knowledge Markdown notes. `Typora` is the recommended Markdown editor.
 
-> Note: Working in Process, some content may differ between versions.
+> Note: Working in Process, some content may differ among versions.
 
 ### Main Features:
 
 - Search / Open your Markdown notes with ease
     - Search by Wiki's name, keywords, tags or synonyms.
 - Create notes with templates
-  - Wiki, Note, Todo, Snippet, Journal
+  - Note, Todo, Snippet, Journal
   - Also support customized templates
 - Others
     - Manually refresh the Markdown YAML metadata: 'updated time', 'synonyms' and so on.
@@ -19,13 +19,12 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
 ### Usage
 - **NOTE**: `␣` means `Press the space bar`; Adopted searching method is case-insensitive
 - `s`: **S**earch and open ( if existing ) or create a new wiki/note.
-    - `s␣`: List recent `notes` which sorted in reverse order by modification time
-
-    - `s␣test`: Search the exact `Wiki` "test"
-    - `s␣test␣`: Search all notes with the `keyword` "test"
-    - `s␣test␣alfred`: Search all notes with the `keyword` "test" and "alfred"
-    - `s␣,test`: Search all notes with the `tag` "test"
-    - `s␣k1␣k2,t1␣t2`: Search all notes with the `keyword`"k1", "k2" and the `tag` "t1","t2"
+    - `s␣`: List recent files which are sorted in reverse order by modification time
+    - `s␣test`: Fast Match. Only search `Note` by `keyword` "test" of its **title**
+    - `s␣test␣`: Search all files by `keyword` "test" of its **content**
+    - `s␣test␣alfred`: Search all files by `keyword` "test" and "alfred" of their **contents**
+    - `s␣,test`: Search all files by `tag` "test"
+    - `s␣k1␣k2,t1␣t2`: Search all files by `keyword`"k1", "k2" and `tag` "t1","t2"
 - Once you get the result, you can:
   - Press `Enter` to open the file
   - Press `Command+Enter` to select your further actions on the file
@@ -138,6 +137,7 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
     - [ ] Autoupdate
     - [ ] Integrated with "Dewey Decimal Classification"
     - [ ] Auto bump version in Workflow by operating info.plist
+    - [ ] Notification icon: [yo](https://github.com/sheagcraig/yo)
 
 
 

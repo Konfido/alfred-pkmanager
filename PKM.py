@@ -22,8 +22,8 @@ def main():
         return 0
 
     # Get all sorted wikis and notes
-    sorted_wiki_list = S.get_sorted_files(Config.WIKI_PATH)
-    sorted_file_list = S.get_sorted_files(Config.NOTES_PATH)
+    sorted_wiki_list = S.get_sorted_files(Config.NOTES_PATH)
+    sorted_file_list = S.get_sorted_files(Config.FILES_PATH)
 
     # Parse input
     mode, keywords, tags = get_parsed_arg()
@@ -76,19 +76,19 @@ def main():
 def varibles_checked():
     all_set = True
     # Check validity of Workflow env variables
-    for env in ["markdown_app", "notes_path", "wiki_path"]:
+    for env in ["markdown_app", "files_path", "notes_path"]:
         if not U.get_env(env):
             Display.show(("ERROR: Find empty environt varibles!",
                           f"Please check: \"{env}\"."))
             all_set = False
-    for path in U.get_env("notes_path").split(","):
+    for path in U.get_env("files_path").split(","):
         if not(U.path_exists(U.get_abspath(path))):
             Display.show(("ERROR: Find invalid directory!",
-                          f"Please check \"notes_path\": {path}"))
+                          f"Please check \"files_path\": {path}"))
             all_set = False
-    if not U.get_env("wiki_path"):
+    if not U.get_env("notes_path"):
         Display.show(("ERROR: Find invalid directory!",
-                      "Please check \"wiki_path\""))
+                      "Please check \"notes_path\""))
         all_set = False
 
     # Check validity of config file

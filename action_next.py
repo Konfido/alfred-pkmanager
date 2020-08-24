@@ -8,7 +8,7 @@
 
 import re
 
-import Config as C
+import Config
 from Items import Display, Items
 from Utils import Utils as U
 from Search import File as F
@@ -18,6 +18,7 @@ from Search import Search as S
 inputs = U.get_query()
 option = U.get_env('next_1')
 arg = U.get_env('next_2')
+C = Config.Config().configs
 
 
 if option == "show_error":
@@ -70,12 +71,12 @@ elif option == "show_configs":
         {
             "title": "Open config file",
             "subtitle": "Open & Modify a JSON formatted config file",
-            "arg": f"open_config_file|{C.CONFIG_PATH}"
+            "arg": f"open_config_file|{Config.CONFIG_PATH}"
         },
         {
             "title": "Open templates folder",
             "subtitle": "Put your Markdown templates files in the folder",
-            "arg": f"open_template|{C.TEMPLATE_DIR}"
+            "arg": f"open_template|{Config.TEMPLATE_DIR}"
         },
         {
             "title": "Reset all configurations",
@@ -85,7 +86,6 @@ elif option == "show_configs":
     )
 
 elif option == "show_editable_configs":
-    C = C.Config().configs
     _tag = str(not C["search_yaml_tag_only"])
     _todo = "newest" if C["todo_order"] == "oldest" else "newest"
 

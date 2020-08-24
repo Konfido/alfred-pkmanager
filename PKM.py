@@ -8,20 +8,22 @@
 
 import re
 
-import Config as C
+import Config
 from Items import Display, Items
 from Search import File as F
 from Search import Search as S
 from Utils import Utils as U
 
 
+C = Config.Config().configs
+
 def main():
     if not varibles_checked():
         return 0
 
     # Get all sorted wikis and notes
-    sorted_wiki_list = S.get_sorted_files(C.WIKI_PATH)
-    sorted_file_list = S.get_sorted_files(C.NOTES_PATH)
+    sorted_wiki_list = S.get_sorted_files(Config.WIKI_PATH)
+    sorted_file_list = S.get_sorted_files(Config.NOTES_PATH)
 
     # Parse input
     mode, keywords, tags = get_parsed_arg()
@@ -43,7 +45,7 @@ def main():
     # Generate ScriptFilter Output
     if result:
         # show matched results
-        num = int(C.Config().configs["result_nums"])
+        num = int(C["result_nums"])
         items = []
         for r in result[:num]:
             items.append({
@@ -90,13 +92,13 @@ def varibles_checked():
         all_set = False
 
     # Check validity of config file
-    if not U.path_exists(C.CONFIG_DIR):
-        U.mkdir(C.CONFIG_DIR)
-    if not U.path_exists(C.CONFIG_PATH):
-        C.Config.reset_all()
+    if not U.path_exists(Config.CONFIG_DIR):
+        U.mkdir(Config.CONFIG_DIR)
+    if not U.path_exists(Config.CONFIG_PATH):
+        Config.Config.reset_all()
     else:
         try:
-            C.Config._load_all()
+            Config.Config._load_all()
         except Exception as e:
             U.output(f'error|[search, {e}]')
             #TODO: reset all config/go check?

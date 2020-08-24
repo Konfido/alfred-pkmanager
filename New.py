@@ -9,11 +9,11 @@
 from Utils import Utils as U
 from Items import Items, Display
 # from Config import Config
-import Config as C
+import Config
 import threading
 
 
-Confs = C.Config().configs
+C = Config.Config().configs
 
 
 class New():
@@ -30,7 +30,7 @@ class New():
         arg = query if query else U.get_now()
         (language, title) = arg.split(', ') if ',' in arg else ("<blank>", arg)
         items = []
-        for template_path in U.get_all_files_path(C.TEMPLATE_DIR):
+        for template_path in U.get_all_files_path(Config.TEMPLATE_DIR):
             genre = U.get_file_name(template_path)
             if genre == "Snippet":
                 items.append({
@@ -63,7 +63,7 @@ class New():
         }
 
         # get new file's title and path
-        file_dir = C.Config().configs[f'path_to_new_{genre}']
+        file_dir = C[f'path_to_new_{genre}']
         file_dir = U.path_join(file_dir, U.get_now("%Y/%m/")) \
             if genre == 'Journal' else file_dir
         U.mkdir(file_dir)      # Create month's subfolder for Journal
@@ -95,8 +95,8 @@ class New():
         # get weather
         lat = loc_dict["latitude"]
         lon = loc_dict["longitude"]
-        api = C.Config().configs["weather_api"]
-        weather = U.get_weather(lat, lon, api, Confs["locale"]) if api else ""
+        api = C["weather_api"]
+        weather = U.get_weather(lat, lon, api, C["locale"]) if api else ""
 
         content_replace_map = {
             '{title}': title,
@@ -111,7 +111,7 @@ class New():
             '{weather}': weather,
         }
 
-        template_path = U.path_join(C.TEMPLATE_DIR, genre+".md")
+        template_path = U.path_join(Config.TEMPLATE_DIR, genre+".md")
 
         with open(template_path, 'r') as f:
             content = U.str_replace(f.read(), content_replace_map)
@@ -123,5 +123,5 @@ class New():
 
 
 if __name__ == "__main__":
-    C.Config().templates_checked()
+    Config.Config().templates_checked()
     New().show_templates()

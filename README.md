@@ -44,9 +44,14 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
 
 - Set Workflow variables
 
-    - `NOTES_PATH`: folder's path to your notes files. Multi paths and sub-folder is supported, but it goes with the increasing of consuming time. Use comma `,` to separate your paths.
+    - `notes_path`: dir of your notes. Only one folder is allowed.
+      - It's highly recommended to put all your notes into one folder and give it an unique time ID (e.g. 20200824181348).
+      - Check out [this](https://zettelkasten.de/posts/overview/#knowledge-management) blog to learn how to use the method of Zettelkasten to handle your knowledge management.
 
-    - `WIKI_PATH`: folder's path to your wiki files. Mutil path is supported, but only setting one path is recommended.
+    - `files_path`: dir of your whole files. It supports multi dirs and sub-folders.
+      - In case you really need multi folders, here is the solution. Use comma `,` to separate your paths.
+      - Shallow your folder's depth to enhance searching performance.
+      - 'full text search' is supported for these folders, while 'fast search' (title matching) is not.
 
     <details>
     <summary>An example setting for the a possible folder tree. ( Click to expand! )</summary>
@@ -54,28 +59,23 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
     ```
     ~
     └── Documents/
-        └── My_Notes/
-            ├── Wiki/
-            │   ├── foo.py
-            │   └── foo2.py
-            ├── Develop/
+        └── My_Files/
+            ├── Notes/
+            │   ├── foo.md
+            │   └── foo2.md
+            ├── Archives/
             │   ├── Programming/
             │   └── Ideas/
             └── Others/
     ```
 
     ```
-    WIKI_PATH: ~/Documents/My_Notes/Wiki/
-    NOTES_PATH: [~/Documents/My_Notes/Develop/, ~/Documents/My_Notes/Others/, ~/Documents/My_Notes/Wiki/]
+    NOTES_PATH: ~/Documents/My_Notes/Notes/
+    FILES_PATH: [~/Documents/My_Notes/Notes/, ~/Documents/My_Notes/Archives/, ~/Documents/My_Notes/Others/]
     ```
     </details>
 
-
-- Terms explanation
-
-    - `wiki`: A Wiki for any vital terms/concept (without space in its name), which can be linked to other notes. It's stored as a Markdown file and should be placed in one independent folder.
-
-    - `notes`: Normal Markdown files
+- Customise your configs through workflow of `PKManger Configuration`
 
     - `template`: A markdown file with formatted content used to generate new notes.
 
@@ -135,7 +135,6 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
   - [ ] update backlinks
 - [ ] Others
     - [ ] Autoupdate
-    - [ ] Integrated with "Dewey Decimal Classification"
     - [ ] Auto bump version in Workflow by operating info.plist
     - [ ] Notification icon: [yo](https://github.com/sheagcraig/yo)
 

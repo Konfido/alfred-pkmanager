@@ -21,7 +21,6 @@ if option == "open":
     U.open(arg)
 elif option == "new":
     genre, arg = arg.strip('[]').split(">")
-    U.log('genre')
     if genre == "Snippet":
         language, title = arg.split(", ")
     else:
@@ -89,6 +88,10 @@ elif option == "set_config":
     else:
         U.notify("Not a valid value. Please retry.")
 
+elif option == "create_weather_api":
+    app = "/Applications/Safari.app"
+    url = "https://home.openweathermap.org/users/sign_up"
+    os.system(f"open -a {app} {url}")
 
 else:
     U.notify(f"Error! {option}: {arg}", log=True)

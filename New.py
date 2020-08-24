@@ -13,6 +13,9 @@ import Config as C
 import threading
 
 
+Confs = C.Config().configs
+
+
 class New():
 
     @classmethod
@@ -63,24 +66,46 @@ class New():
         file_dir = C.Config().configs[f'path_to_new_{genre}']
         title = U.str_replace(title.strip(), title_replace_map)
         _id = U.get_now("%Y%m%d%H%M%S")
-        file_name = title if genre == "Topic" else _id
+        file_name = {
+            "Journal": U.get_now("%Y-%m-%d"),
+            "Topic": title
+        }
+        file_name = file_name[genre] if genre in file_name else _id
         new_file_path = U.path_join(file_dir, file_name+'.md')
+
+        # get date
+        date = U.get_now("%Y-%m-%d")
+        time = U.get_now("%H:%M:%S")
+        date_time = U.get_now("%Y-%m-%d %H:%M:%S")
+        day = int(U.get_now("%d"))
+        day_suffix = ["st", "nd", "rd"][day] if day<4 else "th"
+        date_journal = U.get_now(f"%B %d{day_suffix}, %A")
+
+        # get location
         loc_dict = U.get_corelocation()
         if loc_dict['subLocality']:
             location = f'{loc_dict["address"]},{loc_dict["subLocality"]}'
         else:
             location = loc_dict["address"]
+
+        # get weather
+        lat = loc_dict["latitude"]
+        lon = loc_dict["longitude"]
+        api = C.Config().configs["weather_api"]
+        U.log(Confs["locale"])
+        weather = U.get_weather(lat, lon, api, Confs["locale"]) if api else ""
+
         content_replace_map = {
             '{title}': title,
             '{tags}': "[]",
-            '{date_time}': U.get_now("%Y-%m-%d %H:%M:%S"),
-            '{date_journal}': U.get_now("%B %d, %A"),
-            '{date}': U.get_now("%Y-%m-%d"),
-            '{time}': U.get_now("%H:%M:%S"),
+            '{date_time}': date_time,
+            '{date_journal}': date_journal,
+            '{date}': date,
+            '{time}': time,
             '{language}': language,
             '{id}': _id,
             '{location}': location,
-            '{weather}': ""
+            '{weather}': weather,
         }
 
         template_path = U.path_join(C.TEMPLATE_DIR, genre+".md")

@@ -8,5 +8,6 @@ typora-copy-images-to: ../images
 ---
 
 ## {date_journal}
-***{time}***
+
+
 

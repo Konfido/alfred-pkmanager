@@ -13,6 +13,8 @@ import time
 import json
 import ast
 import shutil
+import urllib.request
+import locale
 
 class Utils():
 
@@ -133,6 +135,11 @@ class Utils():
         now = datetime.datetime.now()
         return now.strftime(fmt)
 
+    @classmethod
+    def get_locale(cls):
+        loc = locale.getlocale()
+        return loc
+
     @staticmethod
     def format_date(float_date, fmt="%Y-%m-%d %H:%M:%S"):
         """ float time to string """
@@ -178,3 +185,12 @@ class Utils():
         loc_dict = eval(corelocation)
         loc_dict['address'] = loc_dict['address'].replace('\n', ',')
         return loc_dict
+
+    @classmethod
+    def get_weather(cls, lat, lon, api, lang=""):
+        lang = cls.get_locale()[0] if not lang else lang
+        url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api}&lang={lang}"
+        response = urllib.request.urlopen(url)
+        html = response.read().decode("utf-8")
+        weather = json.loads(html)
+        return weather["weather"][0]['description']

@@ -36,7 +36,11 @@ DEFAULTS = {
     # quantity of results: Int
     'result_nums': 20,
     # template list: ['wiki', 'note', 'todo', 'journal', 'snippet', ...]
-    'templates': TEMPLATES
+    'templates': TEMPLATES,
+    # open weather api
+    'weather_api': "",
+    # language of auto-completed text in templates
+    'locale': U.get_locale()[0],
 }
 
 DEFAULTS.update(
@@ -44,6 +48,7 @@ DEFAULTS.update(
 
 
 class Config():
+    """ Use `Config().configs` to fetch curent config dict"""
 
     def __init__(self):
         self.configs = self._load_all()

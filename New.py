@@ -54,7 +54,6 @@ class New():
 
         # illigal characters for the file name
         title_replace_map = {
-            # ' ': '_',
             ',': '-',
             '，': '-',
             '.': '_',
@@ -63,7 +62,12 @@ class New():
             '#': '-'
         }
 
+        # get new file's title and path
         file_dir = C.Config().configs[f'path_to_new_{genre}']
+        file_dir = U.path_join(file_dir, U.get_now("%Y/%m/")) \
+            if genre == 'Journal' else file_dir
+        U.mkdir(file_dir)      # Create month's subfolder for Journal
+
         title = U.str_replace(title.strip(), title_replace_map)
         _id = U.get_now("%Y%m%d%H%M%S")
         file_name = {
@@ -72,14 +76,14 @@ class New():
         }
         file_name = file_name[genre] if genre in file_name else _id
         new_file_path = U.path_join(file_dir, file_name+'.md')
+        if U.path_exists(new_file_path):
+            return new_file_path
 
         # get date
         date = U.get_now("%Y-%m-%d")
         time = U.get_now("%H:%M:%S")
         date_time = U.get_now("%Y-%m-%d %H:%M:%S")
-        day = int(U.get_now("%d"))
-        day_suffix = ["st", "nd", "rd"][day] if day<4 else "th"
-        date_journal = U.get_now(f"%B %d{day_suffix}, %A")
+        date_journal = U.get_now("%B %d, %A")
 
         # get location
         loc_dict = U.get_corelocation()
@@ -92,7 +96,6 @@ class New():
         lat = loc_dict["latitude"]
         lon = loc_dict["longitude"]
         api = C.Config().configs["weather_api"]
-        U.log(Confs["locale"])
         weather = U.get_weather(lat, lon, api, Confs["locale"]) if api else ""
 
         content_replace_map = {

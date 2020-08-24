@@ -31,13 +31,18 @@ class Utils():
     def get_cwd():
         return os.getcwd()
 
-    @staticmethod
-    def path_exists(path):
+    @classmethod
+    def path_exists(cls, path):
         return os.path.exists(path)
 
-    @staticmethod
-    def mkdir(path):
-        return os.makedirs(path)
+    @classmethod
+    def mkdir(cls, path):
+        """Check if dir exists and recursively mkdir"""
+        if not cls.path_exists(path):
+            os.makedirs(path)
+            return 1
+        else:
+            return 0
 
     @staticmethod
     def path_join(root, file):

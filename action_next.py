@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# ------------------------------------------------
-# Author:        Konfido <konfido.du@outlook.com>
-# Created Date:  July 27th 2020
-# ------------------------------------------------
+# --------------------------------------
+# Created by Konfido on 2020-07-27
+# --------------------------------------
 
 
 import re
@@ -27,7 +26,7 @@ if option == "show_error":
 
 elif option == "show_actions":
     path, query = arg.strip('[]').split(", ")
-    file_name = U.get_file_name(path)
+    file_title = F().get_file_title(path)
     m_path, m_type = "icon", "image"
 
     Display.show(
@@ -39,8 +38,8 @@ elif option == "show_actions":
         },
         {
             "title": "Copy Markdown Link",
-            "subtitle": f"Copy MD Link for \"{file_name}\" to the Clipboard",
-            "arg": f"link|[{file_name}]({path})",
+            "subtitle": f"Copy MD Link for \"{file_title}\" to the Clipboard",
+            "arg": f"link|[{file_title}]({path})",
             # "icon": "icons/link.png",
         },
         {
@@ -50,8 +49,8 @@ elif option == "show_actions":
         },
         {
             "title": "Delete Note",
-            "subtitle": f"delete \"{file_name}\". This action cannot be undone!",
-            "arg": f"delete|[{path}, {file_name}]",
+            "subtitle": f"delete \"{file_title}\". This action cannot be undone!",
+            "arg": f"delete|[{path}, {file_title}]",
             # "icon": "icons/delete.png",
         })
 

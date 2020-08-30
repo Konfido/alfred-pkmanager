@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# ------------------------------------------------
-# Author:        Konfido <konfido.du@outlook.com>
-# Created Date:  July 28th 2020
-# ------------------------------------------------
+# --------------------------------------
+# Created by Konfido on 2020-07-28
+# --------------------------------------
 
 
 from Items import Display
@@ -29,9 +28,9 @@ elif option == "new":
     # U.output(path)
     U.open(path)
 elif option == "delete":
-    path, file_name = arg.strip('[]').split(", ")
+    path, file_title = arg.strip('[]').split(", ")
     U.delete(path)
-    U.notify(f"{file_name} has been successfully deleted!")
+    U.notify(f"{file_title} has been successfully deleted!")
 elif option == "link":
     link = arg
     U.to_clipboard(link)
@@ -45,7 +44,6 @@ elif option == "back":
         """.format(input_str))
 elif option == "refresh":
     # refresh updated time
-    # TODO: Bug!
     os.system('bash ./update_meta.sh')
     # update synonyms
     sorted_wiki_list = S.get_sorted_files(Config.NOTES_PATH)

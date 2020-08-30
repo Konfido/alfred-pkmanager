@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# ------------------------------------------------
-# Author:        Konfido <konfido.du@outlook.com>
-# Created Date:  July 16th 2020
-# ------------------------------------------------
+# --------------------------------------
+# Created by Konfido on 2020-07-16
+# --------------------------------------
 
 
 import re
@@ -16,23 +15,27 @@ C = Config.Config().configs
 
 
 class File():
-    def __init__(self, path):
+    def __init__(self):
+        self.path = ""
+        self.filename = ""
+        self.content = ""
+        self.title = ""
+
+    def get_file_title(self, path):
+        """ yaml_title > level_one_title > file_name """
         self.path = path
         self.file_name = U.get_file_name(self.path).lower()
         self.content = U.get_file_content(self.path).lower()
-        self.title = self._get_file_title(self).lower()
 
-    def _get_file_title(self):
-        """ yaml_title > level_one_title > file_name """
         yaml_title = U.get_yaml_item("title", self.content)
         level_one_title = re.search(r'^# (\s+)', self.content)
-        title = yaml_title or level_one_title or self.file_name or ""
-        return title
+        self.title = yaml_title or level_one_title or self.file_name or ""
+        return self.title
 
     @classmethod
     def get_file_info(cls, path):
         """ get file's info in a dict """
-        cls.__init__(cls, path)
+        cls.get_file_title(cls, path)
         size = U.get_file_meta(cls.path, "st_size")
         ctime_float = U.get_file_meta(cls.path, "st_birthtime")
         mtime_float = U.get_file_meta(cls.path, "st_mtime")

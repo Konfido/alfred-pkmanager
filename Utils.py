@@ -5,23 +5,66 @@
 # Created Date:  July 26th 2020
 # ------------------------------------------------
 
+import ast
 import datetime
+import json
+import locale
 import os
 import re
+import shutil
 import sys
 import time
-import json
-import ast
-import shutil
 import urllib.request
-import locale
+
 
 class Utils():
 
+    # ---------------------
+    #     Basic Utils
+    # ---------------------
+
     @staticmethod
-    def get_env(var):
-        """ Reads environment variable """
-        return os.getenv(var) if os.getenv(var) is not None else str()
+    def open(path):
+        """ open file / folder """
+        os.system("open \"{}\"".format(path))
+
+    @staticmethod
+    def delete(path):
+        os.remove(path)
+
+    @classmethod
+    def copy(cls, source, target):
+        """copy source file to target """
+        shutil.copy(source, target)
+
+    @staticmethod
+    def format_date(float_date, fmt="%Y-%m-%d %H:%M:%S"):
+        """ float time to string """
+        return time.strftime(fmt, time.localtime(float_date))
+
+    @staticmethod
+    def get_now(fmt="%Y-%m-%d %H:%M:%S"):
+        """ Get formated current date&time string """
+        now = datetime.datetime.now()
+        return now.strftime(fmt)
+
+    @classmethod
+    def get_locale(cls):
+        loc = locale.getlocale()
+        return loc
+
+    @classmethod
+    def mkdir(cls, path):
+        """Check if dir exists and recursively mkdir"""
+        if not cls.path_exists(path):
+            os.makedirs(path)
+            return 1
+        else:
+            return 0
+
+    @staticmethod
+    def get_cwd():
+        return os.getcwd()
 
     @classmethod
     def get_abspath(cls, path):
@@ -34,22 +77,9 @@ class Utils():
             abs_path = path
         return abs_path
 
-    @staticmethod
-    def get_cwd():
-        return os.getcwd()
-
     @classmethod
     def path_exists(cls, path):
         return os.path.exists(path)
-
-    @classmethod
-    def mkdir(cls, path):
-        """Check if dir exists and recursively mkdir"""
-        if not cls.path_exists(path):
-            os.makedirs(path)
-            return 1
-        else:
-            return 0
 
     @staticmethod
     def path_join(root, file):
@@ -65,6 +95,34 @@ class Utils():
     def json_dump(var, file):
         with open(file, 'w') as f:
             json.dump(var, f, indent=4, ensure_ascii=False)
+
+    @staticmethod
+    def str_replace(string, replace_map):
+        for r in replace_map.keys():
+            string = string.replace(r, replace_map[r])
+        return string
+
+    @staticmethod
+    def literal_eval(var):
+        return ast.literal_eval(var)
+        # return eval(var)
+
+    # ------------------------------------------------
+    #    Advanced Utils: fetch information
+    # ------------------------------------------------
+
+    @staticmethod
+    def get_env(var):
+        """ Reads environment variable """
+        return os.getenv(var) if os.getenv(var) is not None else str()
+
+    @staticmethod
+    def get_query(lower=False):
+        try:
+            query = sys.argv[1].lower() if lower else sys.argv[1]
+        except:
+            query = ""
+        return query
 
     @staticmethod
     def get_file_meta(path, key):
@@ -100,14 +158,6 @@ class Utils():
             r'^---.*?\b{}: (.*?)\n.*?---'.format(item), content, re.I | re.S)
         return match.group(1) if match is not None else None
 
-    @staticmethod
-    def get_query(lower=False):
-        try:
-            query = sys.argv[1].lower() if lower else sys.argv[1]
-        except:
-            query = ""
-        return query
-
     @classmethod
     def get_all_files_path(cls, paths):
         """ support multi note paths """
@@ -122,6 +172,32 @@ class Utils():
                     if name.endswith(".md"):
                         file_paths_list.append(os.path.join(root, name))
         return file_paths_list
+
+    @staticmethod
+    def get_corelocation():
+        """Return a dict of corelocation's info"""
+        corelocation = os.popen('swift ./corelocation.swift -json').read()
+        null = ''
+        loc_dict = eval(corelocation)
+        loc_dict['address'] = loc_dict['address'].replace('\n', ',')
+        return loc_dict
+
+    @classmethod
+    def get_weather(cls, lat, lon, api, lang=""):
+        lang = cls.get_locale()[0] if not lang else lang
+        url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api}&lang={lang}"
+        response = urllib.request.urlopen(url)
+        html = response.read().decode("utf-8")
+        weather = json.loads(html)
+        return weather["weather"][0]['description']
+
+    # ------------------------------------------------
+    #    Advanced Utils: perform operation
+    # ------------------------------------------------
+
+    @staticmethod
+    def output(string):
+        sys.stdout.write(string)
 
     @staticmethod
     def log(message):
@@ -141,69 +217,3 @@ class Utils():
             """osascript -e \
             'tell application "System Events" to set the clipboard to "{}"'
             """.format(content))
-
-    @staticmethod
-    def get_now(fmt="%Y-%m-%d %H:%M:%S"):
-        """ Get formated current date&time string """
-        now = datetime.datetime.now()
-        return now.strftime(fmt)
-
-    @classmethod
-    def get_locale(cls):
-        loc = locale.getlocale()
-        return loc
-
-    @staticmethod
-    def format_date(float_date, fmt="%Y-%m-%d %H:%M:%S"):
-        """ float time to string """
-        return time.strftime(fmt, time.localtime(float_date))
-
-    @staticmethod
-    def str_replace(string, replace_map):
-        for r in replace_map.keys():
-            string = string.replace(r, replace_map[r])
-        return string
-
-    @staticmethod
-    def output(string):
-        sys.stdout.write(string)
-
-    @staticmethod
-    def open(path):
-        """ open file / folder """
-        os.system("open \"{}\"".format(path))
-
-    @staticmethod
-    def delete(path):
-        os.remove(path)
-
-    @staticmethod
-    def literal_eval(var):
-        return ast.literal_eval(var)
-        # return eval(var)
-
-    @classmethod
-    def copy(cls, source, target):
-        """copy source file to target """
-        shutil.copy(source, target)
-
-    # ---------------------
-    #    Advanced Utils
-    # ---------------------
-    @staticmethod
-    def get_corelocation():
-        """Return a dict of corelocation's info"""
-        corelocation = os.popen('swift ./corelocation.swift -json').read()
-        null = ''
-        loc_dict = eval(corelocation)
-        loc_dict['address'] = loc_dict['address'].replace('\n', ',')
-        return loc_dict
-
-    @classmethod
-    def get_weather(cls, lat, lon, api, lang=""):
-        lang = cls.get_locale()[0] if not lang else lang
-        url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api}&lang={lang}"
-        response = urllib.request.urlopen(url)
-        html = response.read().decode("utf-8")
-        weather = json.loads(html)
-        return weather["weather"][0]['description']

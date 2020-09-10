@@ -8,7 +8,7 @@
 import re
 
 import Config
-from Items import Items
+from Items import Items, Display
 from Utils import Utils as U
 
 C = Config.Config().configs
@@ -81,6 +81,22 @@ class Search():
             sorted_files = sorted(
                 matched_list, key=lambda k: k['mtime'], reverse=reverse)
             return sorted_files
+
+    @staticmethod
+    def show_search_result(query, matched_list):
+        items = []
+        for m in matched_list:
+            items.append({
+                "title": m['title'],
+                "subtitle": f"{m['mdate']}, (\u2318-Actions, \u21E7-Quicklook)",
+                "type": 'file',
+                "arg": f'open|{m["path"]}',
+                "mods": {
+                    "cmd": {
+                        "arg": f'show_actions|[{m["path"]}, {query}]',
+                        "subtitle": "Press 'Enter' to select your next action"
+                    }}})
+        Display.show(items)
 
     @classmethod
     def wiki_search(cls, search_terms, dicted_files):

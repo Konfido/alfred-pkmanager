@@ -22,7 +22,7 @@ def main():
         return 0
 
     # Get all sorted wikis and notes
-    sorted_wiki_list = S.get_sorted_files(Config.NOTES_PATH)
+    sorted_note_list = S.get_sorted_files(Config.NOTES_PATH)
     sorted_file_list = S.get_sorted_files(Config.FILES_PATH)
 
     # Parse input
@@ -31,7 +31,7 @@ def main():
     if mode == "Recent":
         result = sorted_file_list
     elif mode == "Wiki":
-        result = S.wiki_search(keywords, sorted_wiki_list)
+        result = S.wiki_search(keywords, sorted_note_list)
     elif mode == "Keywords":
         result = S.notes_search(keywords, sorted_file_list)
     elif mode == "Tags":
@@ -46,19 +46,7 @@ def main():
     if result:
         # show matched results
         num = int(C["result_nums"])
-        items = []
-        for r in result[:num]:
-            items.append({
-                "title": r['title'],
-                "subtitle": f"{r['mdate']}, (\u2318-Actions, \u21E7-Quicklook)",
-                "type": 'file',
-                "arg": f'open|{r["path"]}',
-                "mods": {
-                    "cmd": {
-                        "arg": f'show_actions|[{r["path"]}, {query}]',
-                        "subtitle": "Press 'Enter' to select your next action"
-                    }}})
-        Display.show(items)
+        S.show_search_result(query, result[:num])
     else:
         # show none matched info
         genre = "wiki" if mode == "Wiki" else "note"

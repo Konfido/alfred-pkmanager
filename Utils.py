@@ -23,9 +23,16 @@ class Utils():
         """ Reads environment variable """
         return os.getenv(var) if os.getenv(var) is not None else str()
 
-    @staticmethod
-    def get_abspath(path):
-        return os.path.expanduser(path)
+    @classmethod
+    def get_abspath(cls, path):
+        if path.startswith('~/'):
+            abs_path = os.path.expanduser(path)
+        elif path.startswith('/Users'):
+            abs_path = path
+        else:
+            # TODO: convert relative path to abs_path
+            abs_path = path
+        return abs_path
 
     @staticmethod
     def get_cwd():
@@ -79,6 +86,7 @@ class Utils():
     @staticmethod
     def get_file_content(path):
         # only process Markdown file
+        # TODO: exclude YAML data
         if str(path).endswith(".md"):
             with open(path, 'r') as f:
                 content = f.read()

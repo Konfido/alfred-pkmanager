@@ -11,18 +11,19 @@ from Utils import Utils as U
 import json
 
 
-
 CONFIG_DIR = U.get_env("alfred_workflow_data")
 CONFIG_PATH = U.path_join(CONFIG_DIR, "config.json")
 TEMPLATE_DIR = U.path_join(CONFIG_DIR, "templates")
 # templates exist in the folder
 TEMPLATES = [U.get_file_name(f) for f in U.get_all_files_path(TEMPLATE_DIR)]
 
-# list of abs_path to your notes, multi-path & sub-path is allowed
-FILES_PATH = U.get_abspath(U.get_env("files_path")).split(",")
-# list of abs_path to your Wiki
-NOTES_PATH = U.get_abspath(U.get_env("notes_path")).split(",")
-# default path to the file created by templates: notes_path[0]
+# root dir to all your files, which is a must to resolve relative paths in Markdown Links or Back Links.
+# ROOT_PATH = [U.get_abspath(p) for p in U.get_env("root_path").split(",")]
+# abs_path to your notes, only one path is allowed
+NOTES_PATH = [U.get_abspath(p) for p in U.get_env("notes_path").split(",")]
+# list of abs_path to your files, multi-path & sub-path is allowed
+FILES_PATH = [U.get_abspath(p) for p in U.get_env("files_path").split(",")]
+# default path to the file created by templates: notes_path
 DEFAULT_PATH = NOTES_PATH[0]
 
 
@@ -49,7 +50,7 @@ DEFAULTS.update(
 
 class Config():
     """ Use `Config().configs` to fetch curent config dict"""
-
+    # TODO: refraction is needed
     def __init__(self):
         self.configs = self._load_all()
 
@@ -92,6 +93,7 @@ class Config():
 
     @classmethod
     def templates_checked(cls):
+        # FIX: It takes twice input of 'n' to succeed.
         # Move templates to local folder
         if not U.path_exists(TEMPLATE_DIR):
             U.mkdir(TEMPLATE_DIR)

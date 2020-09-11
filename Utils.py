@@ -67,13 +67,18 @@ class Utils():
         return os.getcwd()
 
     @classmethod
-    def get_abspath(cls, path):
+    def get_abspath(cls, path, relative_path=False):
         if path.startswith('~/'):
             abs_path = os.path.expanduser(path)
         elif path.startswith('/Users'):
             abs_path = path
+        elif relative_path == True:
+            # check path's dict to convert relative path to abs_path
+            file_name = os.path.basename(path)
+            paths_dict = cls.json_load(cls.path_join(
+                cls.get_env("alfred_workflow_data"), 'paths.json'))
+            abs_path = paths_dict[file_name]
         else:
-            # TODO: convert relative path to abs_path
             abs_path = path
         return abs_path
 
@@ -151,6 +156,14 @@ class Utils():
         else:
             content = str()
         return content
+
+    @staticmethod
+    def get_typora_filename():
+        filename = os.popen("""osascript <<EOF
+        tell application "System Events"
+	        get name of front window of process "Typora"
+        end tell\nEOF""")
+        return filename.read().strip()
 
     @staticmethod
     def get_yaml_item(item, content):

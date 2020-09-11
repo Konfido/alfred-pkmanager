@@ -151,6 +151,32 @@ elif option == "show_receive_config":
         }
     )
 
+elif option == "show_markdown_links":
+    """Show MarkDown links occurred in the file of front Typora window"""
+    filename = U.get_typora_filename()
+    if filename:
+        U.log(filename)
+        content = U.get_file_content(U.get_abspath(filename, relative_path=True))
+        # exclude images's links: ![]()
+        links_info = re.findall(
+            r'(?<!!)(\[(.*?)\]\((.*?)\))', content)
+        matched_list = []
+        for link in [l[2] for l in links_info]:
+            U.log(link)
+            path = U.get_abspath(link, relative_path=True)
+            matched_list.append(F.get_file_info(path))
+        if len(matched_list) == 0:
+            Display.show({
+                "title": "No MarkDown Link is found in the current file.",
+                "subtitle": ""
+            })
+        else:
+            S.show_search_result(filename, matched_list)
+    else:
+        Display.show({
+            "title": "Error!",
+            "subtitle": "No file is opened in Typora."
+        })
 
 else:
     U.notify("Error")

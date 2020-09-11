@@ -43,6 +43,13 @@ elif option == "back":
         with argument "{}"'
         """.format(input_str))
 elif option == "refresh":
+    # Update stored dict of note's pathes
+    paths_list = U.get_all_files_path(Config.FILES_PATH)
+    paths = {}
+    for p in paths_list:
+        file_name = os.path.basename(p)
+        paths[file_name] = p
+    U.json_dump(paths, U.path_join(Config.CONFIG_DIR, 'paths.json'))
     # refresh updated time
     os.system('bash ./update_meta.sh')
     # update synonyms
@@ -52,7 +59,6 @@ elif option == "refresh":
         synonym = U.get_yaml_item("synonyms", wiki['content'])
         if synonym and synonym != '[]':
             synonyms.update({wiki['title']: synonym.strip('[]').split(',')})
-
     U.json_dump(synonyms, U.path_join(Config.CONFIG_DIR, "synonyms.json"))
     U.notify("Done! Synonyms.json has been updated.")
     # update backlinks

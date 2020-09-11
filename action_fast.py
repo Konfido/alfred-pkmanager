@@ -43,13 +43,25 @@ elif option == "back":
         with argument "{}"'
         """.format(input_str))
 elif option == "refresh":
-    # Update stored dict of note's pathes
+    # Update the stored lookup for note's pathes
     paths_list = U.get_all_files_path(Config.FILES_PATH)
     paths = {}
     for p in paths_list:
         file_name = os.path.basename(p)
         paths[file_name] = p
     U.json_dump(paths, U.path_join(Config.CONFIG_DIR, 'paths.json'))
+    U.notify("paths.json updated.")
+    # Update the stored lookup for backlinks
+    backlinks = {}
+    for path in paths_list:
+        links = S.markdown_links_search(path)
+        if links:
+            for link in links:
+                name = os.path.basename(link)
+                backlinks[name] = backlinks[name] + \
+                    [path] if backlinks.__contains__(name) else [path]
+    U.json_dump(backlinks, U.path_join(Config.CONFIG_DIR, "backlinks.json"))
+    U.notify("backlinks.json updated.")
     # refresh updated time
     os.system('bash ./update_meta.sh')
     # update synonyms
@@ -60,9 +72,8 @@ elif option == "refresh":
         if synonym and synonym != '[]':
             synonyms.update({wiki['title']: synonym.strip('[]').split(',')})
     U.json_dump(synonyms, U.path_join(Config.CONFIG_DIR, "synonyms.json"))
-    U.notify("Done! Synonyms.json has been updated.")
-    # update backlinks
-    sorted_note_list = S.get_sorted_files(Config.FILES_PATH)
+    U.notify("synonyms.json updated.")
+    U.notify("Done!")
 
 # config's submenu
 elif option == "reset_config":

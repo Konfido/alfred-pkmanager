@@ -57,6 +57,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>3B69C9EB-77DA-413E-952C-B4E2926C160A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>7693C965-06FF-4C8C-9194-8EE0F4BC6C6A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>40FAF977-FF27-4A96-8657-DDC6E3EB4B66</key>
 		<array>
 			<dict>
@@ -101,6 +114,32 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>FCBE6F87-6FFF-4D6C-938B-87588E77E108</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>6A6851EF-1516-44F2-A2F6-73AD50E33E16</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>F6EA4B04-7578-4F5B-94E7-E8FF02CC1971</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>7693C965-06FF-4C8C-9194-8EE0F4BC6C6A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6A6851EF-1516-44F2-A2F6-73AD50E33E16</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -578,7 +617,7 @@
 				<key>subtext</key>
 				<string></string>
 				<key>text</key>
-				<string>Show markdown links</string>
+				<string>Show markdown links of current note</string>
 				<key>withspace</key>
 				<true/>
 			</dict>
@@ -644,6 +683,82 @@
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>37</integer>
+				<key>hotmod</key>
+				<integer>1572864</integer>
+				<key>hotstring</key>
+				<string>L</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedApps</key>
+				<array>
+					<string>abnerworks.Typora</string>
+				</array>
+				<key>relatedAppsMode</key>
+				<integer>1</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>3B69C9EB-77DA-413E-952C-B4E2926C160A</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>sbl</string>
+				<key>subtext</key>
+				<string></string>
+				<key>text</key>
+				<string>Show backlinks of current note</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>7693C965-06FF-4C8C-9194-8EE0F4BC6C6A</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>passthroughargument</key>
+				<false/>
+				<key>variables</key>
+				<dict>
+					<key>next_1</key>
+					<string>show_backlinks</string>
+				</dict>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>6A6851EF-1516-44F2-A2F6-73AD50E33E16</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Handle your personal knowledge management with ease!
@@ -677,6 +792,15 @@
 			<key>ypos</key>
 			<integer>135</integer>
 		</dict>
+		<key>3B69C9EB-77DA-413E-952C-B4E2926C160A</key>
+		<dict>
+			<key>note</key>
+			<string>Back Links</string>
+			<key>xpos</key>
+			<integer>50</integer>
+			<key>ypos</key>
+			<integer>530</integer>
+		</dict>
 		<key>40FAF977-FF27-4A96-8657-DDC6E3EB4B66</key>
 		<dict>
 			<key>xpos</key>
@@ -708,6 +832,20 @@
 			<integer>860</integer>
 			<key>ypos</key>
 			<integer>245</integer>
+		</dict>
+		<key>6A6851EF-1516-44F2-A2F6-73AD50E33E16</key>
+		<dict>
+			<key>xpos</key>
+			<integer>390</integer>
+			<key>ypos</key>
+			<integer>560</integer>
+		</dict>
+		<key>7693C965-06FF-4C8C-9194-8EE0F4BC6C6A</key>
+		<dict>
+			<key>xpos</key>
+			<integer>220</integer>
+			<key>ypos</key>
+			<integer>530</integer>
 		</dict>
 		<key>7B0264D7-E3F1-4C35-82E5-7080DA5D08EE</key>
 		<dict>
@@ -802,7 +940,7 @@
 		<string>notes_path</string>
 	</array>
 	<key>version</key>
-	<string>1.6.0</string>
+	<string>1.7.0</string>
 	<key>webaddress</key>
 	<string>https://github.com/Konfido/alfred-pkmanager</string>
 </dict>

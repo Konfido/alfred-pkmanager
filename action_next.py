@@ -152,23 +152,39 @@ elif option == "show_receive_config":
     )
 
 elif option == "show_markdown_links":
-    """Show MarkDown links occurred in the file of front Typora window"""
+    """Show MarkDown links contained in currently opened file"""
     filename = U.get_typora_filename()
     if filename:
-        U.log(filename)
-        content = U.get_file_content(U.get_abspath(filename, relative_path=True))
-        # exclude images's links: ![]()
-        links_info = re.findall(
-            r'(?<!!)(\[(.*?)\]\((.*?)\))', content)
+        link_list = S.markdown_links_search(filename, filename=True)
         matched_list = []
-        for link in [l[2] for l in links_info]:
-            U.log(link)
+        for link in link_list:
             path = U.get_abspath(link, relative_path=True)
             matched_list.append(F.get_file_info(path))
-        if len(matched_list) == 0:
+        if not matched_list:
             Display.show({
                 "title": "No MarkDown Link is found in the current file.",
                 "subtitle": ""
+            })
+        else:
+            S.show_search_result(filename, matched_list)
+    else:
+        Display.show({
+            "title": "Error!",
+            "subtitle": "No file is opened in Typora."
+        })
+
+elif option == "show_backlinks":
+    filename = U.get_typora_filename()
+    if filename:
+        link_list = S.backlinks_search(filename)
+        matched_list = []
+        for link in link_list:
+            path = U.get_abspath(link, relative_path=True)
+            matched_list.append(F.get_file_info(path))
+        if not matched_list:
+            Display.show({
+                "title": "Not found related Backlinks",
+                "subtitle": "No other notes links to current file"
             })
         else:
             S.show_search_result(filename, matched_list)

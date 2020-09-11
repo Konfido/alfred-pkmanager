@@ -152,3 +152,24 @@ class Search():
                 if search_terms[0] in s:
                     out.append(k)
         return out
+
+    @staticmethod
+    def markdown_links_search(path, filename=False):
+        "Query dict with path/filename to get a link_list contained in this file"
+        abs_path = path if not filename else U.get_abspath(path, relative_path=True)
+        content = U.get_file_content(abs_path)
+        # exclude images link: ![]() and url: [](https://)
+        links_info = re.findall(
+            r'(?<!!)(\[(.*?)\]\(((?!http).*?md)\))', content)
+        link_list = [l[2] for l in links_info]
+        return link_list
+
+    @staticmethod
+    def backlinks_search(filename):
+        "Query dict with path/filename to get a backlink list"
+        # TODO: decouple with synonyms_search()
+        # Only query the dict with filename
+        filename = U.get_file_name(filename, with_ext=True)
+        backlinks = U.json_load(U.path_join(Config.CONFIG_DIR, 'backlinks.json'))
+        matched_list = backlinks[filename] if backlinks.__contains__(filename) else []
+        return matched_list

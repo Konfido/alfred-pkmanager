@@ -128,7 +128,59 @@ def get_parsed_arg():
 
     return mode, keywords, tags
 
+def show_markdown_links():
+    """Show MarkDown links contained in currently opened file"""
+    filename = U.get_typora_filename()
+    if filename:
+        link_list = S.markdown_links_search(filename, filename=True)
+        matched_list = []
+        for link in link_list:
+            path = U.get_abspath(link, relative_path=True)
+            matched_list.append(F.get_file_info(path))
+        if not matched_list:
+            Display.show({
+                "title": "No MarkDown Link is found in the current file.",
+                "subtitle": ""
+            })
+        else:
+            S.show_search_result(filename, matched_list)
+    else:
+        Display.show({
+            "title": "Error!",
+            "subtitle": "No file is opened in Typora."
+        })
+
+def show_backlinks():
+    filename = U.get_typora_filename()
+    if filename:
+        link_list = S.backlinks_search(filename)
+        matched_list = []
+        for link in link_list:
+            path = U.get_abspath(link, relative_path=True)
+            matched_list.append(F.get_file_info(path))
+        if not matched_list:
+            Display.show({
+                "title": "Not found related Backlinks",
+                "subtitle": "No other notes links to current file"
+            })
+        else:
+            S.show_search_result(filename, matched_list)
+    else:
+        Display.show({
+            "title": "Error!",
+            "subtitle": "No file is opened in Typora."
+        })
+
 
 if __name__ == "__main__":
     query = U.get_query(lower=True)
-    main()
+    search_type = U.get_search_type()
+
+    if search_type == 'normal':
+        main()
+    elif search_type == 'markdown_links':
+        show_markdown_links()
+    elif search_type == 'backlinks':
+        show_backlinks()
+    else:
+        Display.show("Error!")

@@ -130,6 +130,14 @@ class Utils():
         return query
 
     @staticmethod
+    def get_search_type():
+        try:
+            search_type = sys.argv[2]
+        except:
+            search_type = 'normal'
+        return search_type
+
+    @staticmethod
     def get_file_meta(path, key):
         metas = os.stat(path)
         try:

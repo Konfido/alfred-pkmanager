@@ -99,7 +99,7 @@ class Search():
         Display.show(items)
 
     @classmethod
-    def wiki_search(cls, search_terms, dicted_files):
+    def title_search(cls, search_terms, dicted_files):
         matched_list = []
         for f in dicted_files:
             if f['title'] in cls.synonyms_search(search_terms):

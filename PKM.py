@@ -32,11 +32,11 @@ def main():
 
     if mode == "Recent":
         result = sorted_note_list
-    elif mode == "Wiki":
-        result = S.wiki_search(keywords, sorted_note_list)
-    elif mode == "Keywords":
+    elif mode == "Title":
+        result = S.title_search(keywords, sorted_note_list)
+    elif mode == "Args_1":
         result = S.notes_search(keywords, sorted_note_list)
-    elif mode == "Tags":
+    elif mode == "Args_2":
         result = S.tag_search(tags, sorted_note_list)
     elif mode == "Both":
         result = S.both_search(keywords, tags, sorted_note_list)
@@ -99,36 +99,42 @@ def varibles_checked():
 def get_parsed_arg():
     # no string
     if not query.strip():
-        mode, keywords, tags = "Recent", [], []
+        mode, args_1, args_2 = "Recent", [], []
     else:
         commas = re.findall('[,，]', query)
         # no comma
         if not commas:
-            keys = re.findall(r'(\S+)', query)
+            args = re.findall(r'(\S+)', query)
             # 1 word with no space tail
-            if keys.__len__() == 1 and query[-1:] != " ":
-                mode, keywords, tags = "Wiki", [query.strip()], []
+            if args.__len__() == 1 and query[-1:] != " ":
+                mode, args_1, args_2 = "Title", [query.strip()], []
             # 1 word with space tail & >= 2 words
             else:
-                mode, keywords, tags = "Keywords", keys, []
+                mode, args_1, args_2 = "Args_1", args, []
         # 1 comma
         elif commas.__len__() == 1:
-            kstring, tstring = re.match(r'(.*)[,，](.*)', query).groups()
-            keywords = [k for k in kstring.split(" ") if k is not ""]
-            tags = [t for t in tstring.split(" ") if t is not ""]
-            if not tags:
-                mode = "Keywords"
-            elif not keywords:
-                mode = "Tags"
+            a1string, a2string = re.match(r'(.*)[,，](.*)', query).groups()
+            args_1 = [k for k in a1string.split(" ") if k is not ""]
+            args_2 = [t for t in a2string.split(" ") if t is not ""]
+            if not args_2:
+                mode = "Args_1"
+            elif not args_1:
+                mode = "Args_2"
             else:
                 mode = "Both"
         # >= 2 comma
         elif commas.__len__() >= 2:
-            mode, keywords, tags = "GT2", [], []
+            mode, args_1, args_2 = "GT2", [], []
         else:
             U.output(f'error|parse_arg')
 
-    return mode, keywords, tags
+    return mode, args_1, args_2
+
+def search_snippets():
+    if C['search_all_folders']:
+        sorted_files = []
+    else:
+        sorted_files = []
 
 def show_markdown_links():
     """Show MarkDown links contained in currently opened file"""

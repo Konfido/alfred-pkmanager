@@ -21,23 +21,25 @@ def main():
     if not varibles_checked():
         return 0
 
-    # Get all sorted wikis and notes
-    sorted_note_list = S.get_sorted_files(Config.NOTES_PATH)
-    sorted_file_list = S.get_sorted_files(Config.FILES_PATH)
+    # Get all sorted notes
+    if C['search_all_folders']:
+        sorted_note_list = S.get_sorted_files(Config.FILES_PATH)
+    else:
+        sorted_note_list = S.get_sorted_files(Config.NOTES_PATH)
 
     # Parse input
     mode, keywords, tags = get_parsed_arg()
 
     if mode == "Recent":
-        result = sorted_file_list
+        result = sorted_note_list
     elif mode == "Wiki":
         result = S.wiki_search(keywords, sorted_note_list)
     elif mode == "Keywords":
-        result = S.notes_search(keywords, sorted_file_list)
+        result = S.notes_search(keywords, sorted_note_list)
     elif mode == "Tags":
-        result = S.tag_search(tags, sorted_file_list)
+        result = S.tag_search(tags, sorted_note_list)
     elif mode == "Both":
-        result = S.both_search(keywords, tags, sorted_file_list)
+        result = S.both_search(keywords, tags, sorted_note_list)
     elif mode == "GT2":
         Display.show(("Error!", "Having 2 (>=) commas is not allowed!"))
         exit()

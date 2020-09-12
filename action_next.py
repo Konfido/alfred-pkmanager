@@ -85,7 +85,7 @@ elif option == "show_configs":
     )
 
 elif option == "show_editable_configs":
-    _tag = str(not C["search_yaml_tag_only"])
+    _tag = str(not C["search_tag_yaml_only"])
     _todo = "newest" if C["todo_order"] == "oldest" else "newest"
 
     items = []
@@ -94,7 +94,7 @@ elif option == "show_editable_configs":
         {
             "title": "Only search the tags in YAML frontier",
             "subtitle": "Change to \"{}\"".format(_tag),
-            "arg": "swap_config|search_yaml_tag_only"
+            "arg": "swap_config|search_tag_yaml_only"
         },
         {
             "title": "Show {} TODOs in the top".format(C["todo_order"]),

@@ -125,7 +125,7 @@ class Search():
             match = U.get_yaml_item('tags', f["content"])
             if match:
                 tags.extend(match.strip('[]').split(', '))
-            if not C["search_yaml_tag_only"]:
+            if not C["search_tag_yaml_only"]:
                 tags.extend(re.findall(r'\b#(.*?)\b', f['content'], re.I))
             if not tags:
                 continue

@@ -31,11 +31,13 @@ DEFAULTS = {
     # path to your Markdown App
     # 'app_path': '/Applications/Typora.app',
     # search tags in yaml only or in full content: True/False
-    'search_yaml_tag_only': True,
+    'search_tag_yaml_only': True,
     # present which todo in the top: newest/oldest
     'todo_order': 'newest',
     # quantity of results: Int
     'result_nums': 20,
+    # search scope: only search [Todo/Snippet/Notes] in its own folders or in all files_path: True/False
+    'search_all_folders': False,
     # template list: ['wiki', 'note', 'todo', 'journal', 'snippet', ...]
     'templates': TEMPLATES,
     # open weather api
@@ -71,7 +73,7 @@ class Config():
         U.json_dump(self.configs, CONFIG_PATH)
 
     def swap(self, key):
-        if key == "search_yaml_tag_only":
+        if key == "search_tag_yaml_only":
             value = not self.get(key)
         elif key == "todo_order":
             value = "nearest" if self.get(key) == "oldest" else "oldest"

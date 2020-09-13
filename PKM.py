@@ -17,52 +17,6 @@ from Utils import Utils as U
 
 C = Config.Config().configs
 
-def main():
-    if not varibles_checked():
-        return 0
-
-    # Get all sorted notes
-    if C['search_all_folders']:
-        sorted_note_list = S.get_sorted_files(Config.FILES_PATH)
-    else:
-        sorted_note_list = S.get_sorted_files(Config.NOTES_PATH)
-
-    # Parse input
-    mode, keywords, tags = get_parsed_arg()
-
-    if mode == "Recent":
-        result = sorted_note_list
-    elif mode == "Title":
-        result = S.title_search(keywords, sorted_note_list)
-    elif mode == "Args_1":
-        result = S.notes_search(keywords, sorted_note_list)
-    elif mode == "Args_2":
-        result = S.tag_search(tags, sorted_note_list)
-    elif mode == "Both":
-        result = S.both_search(keywords, tags, sorted_note_list)
-    elif mode == "GT2":
-        Display.show(("Error!", "Having 2 (>=) commas is not allowed!"))
-        exit()
-
-    # Generate ScriptFilter Output
-    if result:
-        # show matched results
-        num = int(C["result_nums"])
-        S.show_search_result(query, result[:num])
-    else:
-        # show none matched info
-        genre = "wiki" if mode == "Wiki" else "note"
-        Display.show({
-            "title": "Nothing found ..",
-            "subtitle": f'Presh "\u2318" to create a new \"{genre}\" with title \"{query}\"',
-            "arg": '',
-            "mods": {
-                "cmd": {
-                    "arg": f'new|[{genre}, {query}]',
-                    "subtitle": "Press 'Enter' to complete"}}})
-
-    return
-
 def varibles_checked():
     all_set = True
     # Check validity of Workflow env variables
@@ -130,11 +84,100 @@ def get_parsed_arg():
 
     return mode, args_1, args_2
 
-def search_snippets():
+def show_notes():
+    if not varibles_checked():
+        return 0
+
+    # Get all sorted notes
     if C['search_all_folders']:
-        sorted_files = []
+        sorted_note_list = S.get_sorted_files(Config.FILES_PATH)
     else:
-        sorted_files = []
+        sorted_note_list = S.get_sorted_files(Config.NOTES_PATH)
+
+    # Parse input
+    mode, keywords, tags = get_parsed_arg()
+
+    if mode == "Recent":
+        result = sorted_note_list
+    elif mode == "Title":
+        result = S.title_search(keywords, sorted_note_list)
+    elif mode == "Args_1":
+        result = S.notes_search(keywords, sorted_note_list)
+    elif mode == "Args_2":
+        result = S.metric_search("tag", tags, sorted_note_list)
+    elif mode == "Both":
+        result = S.both_search(keywords, ["tag", tags], sorted_note_list)
+    elif mode == "GT2":
+        Display.show(("Error!", "Having 2 (>=) commas is not allowed!"))
+        exit()
+
+    # Generate ScriptFilter Output
+    if result:
+        # show matched results
+        num = int(C["result_nums"])
+        S.show_search_result(query, result[:num])
+    else:
+        # show none matched info
+        genre = "wiki" if mode == "Wiki" else "note"
+        Display.show({
+            "title": "Nothing found ..",
+            "subtitle": f'Presh "\u2318" to create a new \"{genre}\" with title \"{query}\"',
+            "arg": '',
+            "mods": {
+                "cmd": {
+                    "arg": f'new|[{genre}, {query}]',
+                    "subtitle": "Press 'Enter' to complete"}}})
+
+    return
+
+def show_snippets():
+    "Input format: `key1 key2, language1 language2`"
+    if not varibles_checked():
+        return 0
+
+    # Get all sorted snippets
+    if not ['search_all_folders']:
+        sorted_note_list = S.get_sorted_files(C["path_to_new_Snippet"])
+    else:
+        all_files = S.get_sorted_files(Config.NOTES_PATH)
+        # only search notes with code fences
+        sorted_note_list = list(filter(lambda x: "```" in x['content'], all_files))
+
+    # Parse input
+    mode, keywords, languages = get_parsed_arg()
+
+    if mode == "Recent":
+        result = sorted_note_list
+    elif mode == "Title":
+        result = S.title_search(keywords, sorted_note_list)
+    elif mode == "Args_1":
+        result = S.notes_search(keywords, sorted_note_list)
+    elif mode == "Args_2":
+        result = S.metric_search("language", languages, sorted_note_list)
+    elif mode == "Both":
+        result = S.both_search(keywords, ["language", languages], sorted_note_list)
+    elif mode == "GT2":
+        Display.show(("Error!", "Having 2 (>=) commas is not allowed!"))
+        exit()
+
+    # Generate ScriptFilter Output
+    if result:
+        # show matched results
+        num = int(C["result_nums"])
+        S.show_search_result(query, result[:num])
+    else:
+        # show none matched info
+        genre = "wiki" if mode == "Wiki" else "note"
+        Display.show({
+            "title": "Nothing found ..",
+            "subtitle": f'Presh "\u2318" to create a new \"{genre}\" with title \"{query}\"',
+            "arg": '',
+            "mods": {
+                "cmd": {
+                    "arg": f'new|[{genre}, {query}]',
+                    "subtitle": "Press 'Enter' to complete"}}})
+
+    return
 
 def show_markdown_links():
     """Show MarkDown links contained in currently opened file"""
@@ -185,10 +228,12 @@ if __name__ == "__main__":
     search_type = U.get_search_type()
 
     if search_type == 'normal':
-        main()
+        show_notes()
     elif search_type == 'markdown_links':
         show_markdown_links()
     elif search_type == 'backlinks':
         show_backlinks()
+    elif search_type == 'snippet':
+        show_snippets()
     else:
         Display.show("Error!")

@@ -32,6 +32,10 @@ DEFAULTS = {
     # 'app_path': '/Applications/Typora.app',
     # search tags in yaml only or in full content: True/False
     'search_tag_yaml_only': True,
+    # search snippets by languages specified in yaml only or including code fences: True/False
+    'search_snippet_yaml_only': True,
+    # snippet searching result will be combined and returned same when language appears in a synonyms tuple.
+    'language_synonyms': [('sh','bash','shell'), ('python','py')],
     # present which todo in the top: newest/oldest
     'todo_order': 'newest',
     # quantity of results: Int
@@ -73,7 +77,7 @@ class Config():
         U.json_dump(self.configs, CONFIG_PATH)
 
     def swap(self, key):
-        if key == "search_tag_yaml_only":
+        if key in ["search_tag_yaml_only", "search_snippet_yaml_only", "search_all_folders"]:
             value = not self.get(key)
         elif key == "todo_order":
             value = "nearest" if self.get(key) == "oldest" else "oldest"

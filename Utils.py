@@ -176,7 +176,7 @@ class Utils():
     @staticmethod
     def get_yaml_item(item, content):
         match = re.search(
-            r'^---.*?\b{}: (.*?)\n.*?---'.format(item), content, re.I | re.S)
+            r'^---.*?\b{}s?: (.*?)\n.*?---'.format(item), content, re.I | re.S)
         return match.group(1) if match is not None else None
 
     @classmethod

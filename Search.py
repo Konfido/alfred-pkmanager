@@ -118,28 +118,35 @@ class Search():
         return matched_list
 
     @classmethod
-    def tag_search(cls, search_tags, dicted_files):
-        matched_list = []
+    def metric_search(cls, metric, keys, dicted_files):
+        # Search notes by keys of specific metrics (tag, snippet ...)
+        matched_notes = []
         for f in dicted_files:
-            tags = []
-            match = U.get_yaml_item('tags', f["content"])
+            has_keys = []
+            # Check YAML frontier to get note's assigned metrics
+            match = U.get_yaml_item(metric, f["content"])
             if match:
-                tags.extend(match.strip('[]').split(', '))
-            if not C["search_tag_yaml_only"]:
-                tags.extend(re.findall(r'\b#(.*?)\b', f['content'], re.I))
-            if not tags:
+                has_keys.extend(match.strip('[]').split(', '))
+            # Check content to get note's specific metrics
+            if metric in ["tag","tags"] and not C["search_tag_yaml_only"]:
+                has_keys.extend(re.findall(r'\b#(.*?)\b', f['content'], re.I))
+            elif metric is "language" and not C["search_snippet_yaml_only"]:
+                has_keys.extend(re.findall(r'```(\S+)', f['content'], re.I))
+
+            if not has_keys:
                 continue
             else:
-                for t in search_tags:
-                    if t in tags:
-                        matched_list.append(f)
-        return matched_list
+                for k in keys:
+                    if k in has_keys:
+                        matched_notes.append(f)
+        return matched_notes
 
     @classmethod
-    def both_search(cls, keywords, tags, dicted_files):
-        # TODO: alter between `and` and `or`
+    def both_search(cls, keywords, metrics, dicted_files):
+        "metrics: [metric, keys]"
+        metric, keys = metrics
         matched_list = cls.notes_search(keywords, dicted_files)
-        matched_list = cls.tag_search(tags, matched_list)
+        matched_list = cls.metric_search(metric, keys, matched_list)
         return matched_list
 
     @classmethod

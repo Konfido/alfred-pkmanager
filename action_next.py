@@ -85,7 +85,7 @@ elif option == "show_configs":
     )
 
 elif option == "show_editable_configs":
-    _tag = str(not C["search_tag_yaml_only"])
+
     _todo = "newest" if C["todo_order"] == "oldest" else "newest"
 
     items = []
@@ -93,13 +93,23 @@ elif option == "show_editable_configs":
     items.extend([
         {
             "title": "Only search the tags in YAML frontier",
-            "subtitle": "Change to \"{}\"".format(_tag),
+            "subtitle": "Change to \"{}\"".format(str(not C["search_tag_yaml_only"])),
             "arg": "swap_config|search_tag_yaml_only"
+        },
+        {
+            "title": "Language used in snippet searching",
+            "subtitle": "Change to \"{}\"?    [ Only specified in YAML (true) | Code fences included (false) ]".format(str(not C["search_snippet_yaml_only"])),
+            "arg": "swap_config|search_snippet_yaml_only"
         },
         {
             "title": "Show {} TODOs in the top".format(C["todo_order"]),
             "subtitle": "List \"{}\" TODOs in the top?".format(_todo),
             "arg": "swap_config|todo_order"
+        },
+        {
+            "title": "Search [Snippet/Notes] in all files_path or in its own folders",
+            "subtitle": "Change to \"{}\"?    [ All folders (true) | Own (false) ]".format(str(not C["search_all_folders"])),
+            "arg": "swap_config|search_all_folders"
         },
     ])
     # configs - new value needed

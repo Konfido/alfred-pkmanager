@@ -76,10 +76,10 @@ Once the desired results are showed in Alfred Filter, you can:
       - In case you really need multi folders, here is the solution. Use comma `,` to separate your paths.
       - Shallow your folder's depth to enhance searching performance.
 
-<details>
+    <details>
     <summary>An example setting for the a possible folder tree. ( Click to expand! )</summary>
 
-```
+    ```
     ~
     └── Documents/
         └── My_Files/
@@ -93,7 +93,7 @@ Once the desired results are showed in Alfred Filter, you can:
             └── Others/
     ```
 
-```
+    ```
     notes_path: ~/Documents/My_Notes/Notes/
     files_path: [~/Documents/My_Notes/Notes/, ~/Documents/My_Notes/Archives/]
     ```

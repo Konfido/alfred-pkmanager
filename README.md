@@ -1,82 +1,105 @@
-## PKManager - Personal Knowledge Manager
+# PKManager - Personal Knowledge Manager
 
-A handy **Alfred Workflow** which helps to manage your personal knowledge Markdown notes. `Typora` is the recommended Markdown editor.
+A handy **Alfred Workflow** which helps to manage your personal knowledge Markdown notes.
 
-> Note: Working in Process, some content may differ between versions.
 
-### Main Features:
 
-- Search / Open your Markdown notes with ease
-    - Search by Wiki's name, keywords, tags or synonyms.
+## Main Features:
+
+- Search and open different type of your Markdown files with ease.
+    - Notes: Search by title, keywords or tags.
+    - Synonyms Redirect: Synonyms is defined in YMAL metadata, which helps to find out the same notes with different keywords.
+        - For example, if you create a Note with title `test` and with `synonyms: [tmp, 测试]` in YAML metadata, you can get the exact same note when you search for "test", "tmp" or "测试".
+    - Snippets: Search by code's language and keywords
+    - Backlinks: To show which note links to the current one. It's an interesting feature motivated by [Roam](https://roamresearch.com/) and [Obsidian](https://obsidian.md/).
+        - We use Markdown links `[name](../xx.md)` with a relative path to capture notes' internal connections (and this can avoid syntax issues when using `[[ ]]` ).
+        - You can also show every links contained in the current note.
 - Create notes with templates
-  - Wiki, Note, Todo, Snippet, Journal
-  - Also support customized templates
+  - Templates: Note, Todo, Snippet, Journal (with location and weather automatically logged)
+  - Customized templates are supported.
 - Others
-    - Manually refresh the Markdown YAML metadata: 'updated time', 'synonyms' and so on.
+    - Manually refresh the Markdown YAML metadata.
 
 
 
-### Usage
-- **NOTE**: `␣` means `Press the space bar`; Adopted searching method is case-insensitive
-- `s`: **S**earch and open ( if existing ) or create a new wiki/note.
-    - `s␣`: List recent `notes` which sorted in reverse order by modification time
+## Usage
 
-    - `s␣test`: Search the exact `Wiki` "test"
-    - `s␣test␣`: Search all notes with the `keyword` "test"
-    - `s␣test␣alfred`: Search all notes with the `keyword` "test" and "alfred"
-    - `s␣,test`: Search all notes with the `tag` "test"
-    - `s␣k1␣k2,t1␣t2`: Search all notes with the `keyword`"k1", "k2" and the `tag` "t1","t2"
-- Once you get the result, you can:
-  - Press `Enter` to open the file
-  - Press `Command+Enter` to select your further actions on the file
-    - Copy inter-link (`[xxx](./?/xxx.md)`) to clipboard
-    - Refresh file's metadata
-    - Delete this file
+### How to search?
+
+> **NOTE**: The following `␣` means `Press the Space bar`.
+
+- `s`: **S**earch and open ( if existing ) a new note. All searching method involved is case-insensitive.
+    - `s␣`: List recently modified files sorted in reverse order by modification time.
+    - `s␣test`: Fast match the title by `keyword` "test"
+    - `s␣test␣`: Full text search by `keyword` "test"
+    - `s␣test␣alfred`: Full text search by `keyword` "test" and "alfred"
+    - `s␣,test`: Full text search by `tag` "test"
+    - `s␣k1␣k2,t1␣t2`: Full text search by `keyword`"k1", "k2" and `tag` "t1","t2"
+- `sl␣`: Search and show Markdown links contained in the current note which is opened in the front Typora window.
+- `sbl␣`: Search and show **Backlinks** related to the current opened note.
+
+### How to process my notes?
+
+Once the desired results are showed in Alfred Filter, you can:
+
+- Press `Enter` to open the file.
+- Press `Command+Enter` to select your further actions over the file.
+  - Copy Markdown link (`[xxx](./?/xxx.md)`) to clipboard.
+  - Refresh file's metadata: 'updated time', 'synonyms' and so on.
+  - Delete this file.
+
+### How to create new notes?
+
 - `n␣`: Create **N**ew file by selected templates
-- `⌘⌥R`: **R**efresh YAML metadata of the current Markdown file and update `synonyms.json` in the background.
-- `PKManager Configuration` Config your preference.
+
+### Other operations
+
+- `⌘⌥R`: **R**efresh YAML metadata of the current Markdown file and update all files' "synonyms"&"backlinks" in the background.
+- `PKManager Configuration`: Config your preference
   - Set specific config
+  - Refresh YAML and update searching cache
   - Open config file
   - Open templates folder
   - Reset all configs to default
 
 
-### Configuration
+
+## Configuration
 
 - Set Workflow variables
 
-    - `NOTES_PATH`: folder's path to your notes files. Multi paths and sub-folder is supported, but it goes with the increasing of consuming time. Use comma `,` to separate your paths.
+    - `notes_path`: dir of your notes. Only one folder is allowed.
+      - It's highly recommended to put all your notes into one folder and give it an unique time ID (e.g. 20200824181348).
+      - Check out [this](https://zettelkasten.de/posts/overview/#knowledge-management) blog to learn how to use the method of Zettelkasten to handle your knowledge management.
 
-    - `WIKI_PATH`: folder's path to your wiki files. Mutil path is supported, but only setting one path is recommended.
+    - `files_path`: dir of your whole files. It supports multi dirs which include sub-folders.
+      - In case you really need multi folders, here is the solution. Use comma `,` to separate your paths.
+      - Shallow your folder's depth to enhance searching performance.
 
-    <details>
+<details>
     <summary>An example setting for the a possible folder tree. ( Click to expand! )</summary>
 
-    ```
+```
     ~
     └── Documents/
-        └── My_Notes/
-            ├── Wiki/
-            │   ├── foo.py
-            │   └── foo2.py
-            ├── Develop/
+        └── My_Files/
+            ├── Notes/
+            │   ├── 20200102030405.md
+            │   └── 20200102030522.md
+            ├── Archives/
             │   ├── Programming/
             │   └── Ideas/
+            ├── images/
             └── Others/
     ```
 
-    ```
-    WIKI_PATH: ~/Documents/My_Notes/Wiki/
-    NOTES_PATH: [~/Documents/My_Notes/Develop/, ~/Documents/My_Notes/Others/, ~/Documents/My_Notes/Wiki/]
+```
+    notes_path: ~/Documents/My_Notes/Notes/
+    files_path: [~/Documents/My_Notes/Notes/, ~/Documents/My_Notes/Archives/]
     ```
     </details>
 
-
-- Terms explanation
-
-    - `wiki`: A Wiki for any vital terms/concept (without space in its name), which can be linked to other notes. It's stored as a Markdown file and should be placed in one independent folder.
-
-    - `notes`: Normal Markdown files
+- Customise your configs through workflow of `PKManger Configuration`
 
     - `template`: A markdown file with formatted content used to generate new notes.
 
@@ -101,52 +124,34 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
         Content
         ```
 
-    - `synonyms`: An item defined in metadata which is used to find out the same result in Wiki searching
-      - Example: If you create a Wiki with title `test` and with `synonyms: [tmp, 测试]` in metadata, you can get the exact same note when you search for wiki "test", "tmp" or "测试".
 
 
+## Dependencies
 
-### Dependencies
-
-- [Typora](https://typora.io/): A powerful Markdown editor with WYSIWYM feature. Highly recommended.
+- [Typora](https://typora.io/): A neat yet powerful Markdown editor with WYSIWYM feature. Highly recommended.
 - [Glance](https://github.com/samuelmeuli/glance): All-in-one Quick Look plugin for Mac, which provide perfect preview for Markdown files for dismissing its meta info of YAML frontier.
-- Python 3: A Python 3 env is needed for some internal scripts, so make sure you've installed it in your env.
+- Python3: A Python 3 env is needed for some internal scripts, so make sure you've installed it in your env.
 
 
 
-
-
-### Roadmap
+## Roadmap
 
 - [ ] Search
-    - [x] Full-text search
-    - [x] Tag search
-    - [x] Synonyms redirect
-      - [ ] Auto-update data of synonyms
-    - [ ] Backlink searching
-    - [ ] Snippet Search
+    - [ ] Tags auto-completion
+
     - [ ] Search algorithm: And | Or | Recommendation
     - [ ] Hide / Block files
     - [ ] Preview the first match in filtered result
-- [ ] Local storage
-    - [x] Preferences
-    - [x] Templates
-    - [ ] Recent hit
-- [ ] Rename current file
-  - [ ] update backlinks
+    - [ ] Improve searching performance
 - [ ] Others
-    - [ ] Autoupdate
-    - [ ] Integrated with "Dewey Decimal Classification"
+    - [ ] Autoupdate: synonyms, backlinks ...
     - [ ] Auto bump version in Workflow by operating info.plist
+    - [ ] Notification icon: [yo](https://github.com/sheagcraig/yo)
 
 
 
+## Acknowledgement
 
-
-
-
-### Acknowledgement
-
-- Many thanks to the project [`Alfred Markdown Notes`](https://github.com/Acidham/alfred-markdown-notes) ! It's a fantastic workflow but just sadly does not support searching in subdirectories ([ Issue #1](https://github.com/Acidham/alfred-markdown-notes/issues/1#issuecomment-489371014)). Instead of cloning the whole project ( its python code looks too decoupled for me), I decided to partly adopt and refactor its code, which make it much easier to accomplish my own customized features.
+- Many thanks to the project [`Alfred Markdown Notes`](https://github.com/Acidham/alfred-markdown-notes) ! It's a fantastic workflow but just sadly does not support searching in subdirectories ([ Issue #1](https://github.com/Acidham/alfred-markdown-notes/issues/1#issuecomment-489371014)). Instead of cloning the whole project ( its python code looks too decoupled for me), I decided to partly adopt and refactor its code, which make it much easier to add my own customized features.
 
 - The workflow icon is made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com.</a>

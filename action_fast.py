@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# ------------------------------------------------
-# Author:        Konfido <konfido.du@outlook.com>
-# Created Date:  July 28th 2020
-# ------------------------------------------------
+# --------------------------------------
+# Created by Konfido on 2020-07-28
+# --------------------------------------
 
 
 from Items import Display
 from New import New
 from Utils import Utils as U
-import Config as C
+import Config
 import os
 from Search import Search as S
 
@@ -20,14 +19,18 @@ if option == "open":
     # U.output(arg)
     U.open(arg)
 elif option == "new":
-    genre, title = arg.strip('[]').split(", ")
-    path = New.new(title, genre)
+    genre, arg = arg.strip('[]').split(">")
+    if genre == "Snippet":
+        language, title = arg.split(", ")
+    else:
+        language, title = "", arg
+    path = New.new(title, genre, language)
     # U.output(path)
     U.open(path)
 elif option == "delete":
-    path, file_name = arg.strip('[]').split(", ")
+    path, file_title = arg.strip('[]').split(", ")
     U.delete(path)
-    U.notify(f"{file_name} has been successfully deleted!")
+    U.notify(f"{file_title} has been successfully deleted!")
 elif option == "link":
     link = arg
     U.to_clipboard(link)
@@ -40,27 +43,46 @@ elif option == "back":
         with argument "{}"'
         """.format(input_str))
 elif option == "refresh":
+    # Update the stored lookup for note's pathes
+    paths_list = U.get_all_files_path(Config.FILES_PATH)
+    paths = {}
+    for p in paths_list:
+        file_name = os.path.basename(p)
+        paths[file_name] = p
+    U.json_dump(paths, U.path_join(Config.CONFIG_DIR, 'paths.json'))
+    U.notify("paths.json updated.")
+    # Update the stored lookup for backlinks
+    backlinks = {}
+    for path in paths_list:
+        links = S.markdown_links_search(path)
+        if links:
+            for link in links:
+                name = os.path.basename(link)
+                backlinks[name] = backlinks[name] + \
+                    [path] if backlinks.__contains__(name) else [path]
+    U.json_dump(backlinks, U.path_join(Config.CONFIG_DIR, "backlinks.json"))
+    U.notify("backlinks.json updated.")
     # refresh updated time
     os.system('bash ./update_meta.sh')
     # update synonyms
-    sorted_wiki_list = S.get_sorted_files(C.WIKI_PATH)
+    sorted_wiki_list = S.get_sorted_files(Config.NOTES_PATH)
     synonyms = {}
     for wiki in sorted_wiki_list:
         synonym = U.get_yaml_item("synonyms", wiki['content'])
         if synonym and synonym != '[]':
             synonyms.update({wiki['title']: synonym.strip('[]').split(',')})
-
-    U.json_dump(synonyms, U.path_join(C.CONFIG_DIR, "synonyms.json"))
-    U.notify("Done! Synonyms.json has been updated.")
+    U.json_dump(synonyms, U.path_join(Config.CONFIG_DIR, "synonyms.json"))
+    U.notify("synonyms.json updated.")
+    U.notify("Done!")
 
 # config's submenu
 elif option == "reset_config":
     key = arg
-    value = C.Config().reset(key)
+    value = Config.Config().reset(key)
     U.notify("Done!", f"{key} is reset to default: {value}.")
 
 elif option == "reset_all_configs":
-    C.Config.reset_all()
+    Config.Config.reset_all()
     U.notify("Done!", "All configs have been reset to defaults.")
 
 elif option in ["open_config_file", "open_template"]:
@@ -70,17 +92,21 @@ elif option in ["open_config_file", "open_template"]:
 
 elif option == "swap_config":
     key = arg
-    value = C.Config().swap(key)
+    value = Config.Config().swap(key)
     U.notify("Done!", f"{key} is changed to {value}.")
 
 elif option == "set_config":
     key, value = arg.strip('[]').split(", ")
     if value:
-        C.Config().set(key, value)
+        Config.Config().set(key, value)
         U.notify("Done!", f"{key} is set to {value}.")
     else:
         U.notify("Not a valid value. Please retry.")
 
+elif option == "create_weather_api":
+    app = "/Applications/Safari.app"
+    url = "https://home.openweathermap.org/users/sign_up"
+    os.system(f"open -a {app} {url}")
 
 else:
     U.notify(f"Error! {option}: {arg}", log=True)

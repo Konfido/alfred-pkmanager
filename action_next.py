@@ -63,7 +63,7 @@ elif option == "show_configs":
             "arg": f"show_editable_configs|"
         },
         {
-            "title": "Refresh YAML",
+            "title": "Refresh YAML and update searching cache",
             "subtitle": "'updated time', 'synonyms'",
             "arg": f'refresh|'
         },

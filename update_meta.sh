@@ -23,7 +23,7 @@ EOF
 )
 
 dateTime=$(date +'%Y-%m-%d %T')
-updatedText=$(echo $TT | tr '\r' '\n'| sed "s/\(updated: \).*/\1$dateTime/")
+updatedText=$(echo $TT | tr '\r' '\n'| sed "s/\(updated:\).*/\1 $dateTime/")
 
 
 # echo $updatedText > ~/Desktop/text.txt

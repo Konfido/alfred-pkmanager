@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# ------------------------------------------------
-# Author:        Konfido <konfido.du@outlook.com>
-# Created Date:  July 27th 2020
-# ------------------------------------------------
+# --------------------------------------
+# Created by Konfido on 2020-07-27
+# --------------------------------------
 
 
 import re
@@ -27,7 +26,7 @@ if option == "show_error":
 
 elif option == "show_actions":
     path, query = arg.strip('[]').split(", ")
-    file_name = U.get_file_name(path)
+    file_title = F().get_file_title(path)
     m_path, m_type = "icon", "image"
 
     Display.show(
@@ -39,8 +38,8 @@ elif option == "show_actions":
         },
         {
             "title": "Copy Markdown Link",
-            "subtitle": f"Copy MD Link for \"{file_name}\" to the Clipboard",
-            "arg": f"link|[{file_name}]({path})",
+            "subtitle": f"Copy MD Link for \"{file_title}\" to the Clipboard",
+            "arg": f"link|[{file_title}]({path})",
             # "icon": "icons/link.png",
         },
         {
@@ -50,8 +49,8 @@ elif option == "show_actions":
         },
         {
             "title": "Delete Note",
-            "subtitle": f"delete \"{file_name}\". This action cannot be undone!",
-            "arg": f"delete|[{path}, {file_name}]",
+            "subtitle": f"delete \"{file_title}\". This action cannot be undone!",
+            "arg": f"delete|[{path}, {file_title}]",
             # "icon": "icons/delete.png",
         })
 
@@ -64,7 +63,7 @@ elif option == "show_configs":
             "arg": f"show_editable_configs|"
         },
         {
-            "title": "Refresh YAML",
+            "title": "Refresh YAML and update searching cache",
             "subtitle": "'updated time', 'synonyms'",
             "arg": f'refresh|'
         },
@@ -86,7 +85,7 @@ elif option == "show_configs":
     )
 
 elif option == "show_editable_configs":
-    _tag = str(not C["search_yaml_tag_only"])
+
     _todo = "newest" if C["todo_order"] == "oldest" else "newest"
 
     items = []
@@ -94,13 +93,23 @@ elif option == "show_editable_configs":
     items.extend([
         {
             "title": "Only search the tags in YAML frontier",
-            "subtitle": "Change to \"{}\"".format(_tag),
-            "arg": "swap_config|search_yaml_tag_only"
+            "subtitle": "Change to \"{}\"".format(str(not C["search_tag_yaml_only"])),
+            "arg": "swap_config|search_tag_yaml_only"
+        },
+        {
+            "title": "Language used in snippet searching",
+            "subtitle": "Change to \"{}\"?    [ Only specified in YAML (true) | Code fences included (false) ]".format(str(not C["search_snippet_yaml_only"])),
+            "arg": "swap_config|search_snippet_yaml_only"
         },
         {
             "title": "Show {} TODOs in the top".format(C["todo_order"]),
             "subtitle": "List \"{}\" TODOs in the top?".format(_todo),
             "arg": "swap_config|todo_order"
+        },
+        {
+            "title": "Search [Snippet/Notes] in all files_path or in its own folders",
+            "subtitle": "Change to \"{}\"?    [ All folders (true) | Own (false) ]".format(str(not C["search_all_folders"])),
+            "arg": "swap_config|search_all_folders"
         },
     ])
     # configs - new value needed
@@ -151,7 +160,6 @@ elif option == "show_receive_config":
             "mods": mods,
         }
     )
-
 
 else:
     U.notify("Error")

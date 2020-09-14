@@ -11,18 +11,19 @@ from Utils import Utils as U
 import json
 
 
-
 CONFIG_DIR = U.get_env("alfred_workflow_data")
 CONFIG_PATH = U.path_join(CONFIG_DIR, "config.json")
 TEMPLATE_DIR = U.path_join(CONFIG_DIR, "templates")
 # templates exist in the folder
 TEMPLATES = [U.get_file_name(f) for f in U.get_all_files_path(TEMPLATE_DIR)]
 
-# list of abs_path to your notes, multi-path & sub-path is allowed
-FILES_PATH = U.get_abspath(U.get_env("files_path")).split(",")
-# list of abs_path to your Wiki
-NOTES_PATH = U.get_abspath(U.get_env("notes_path")).split(",")
-# default path to the file created by templates: notes_path[0]
+# root dir to all your files, which is a must to resolve relative paths in Markdown Links or Back Links.
+# ROOT_PATH = [U.get_abspath(p) for p in U.get_env("root_path").split(",")]
+# abs_path to your notes, only one path is allowed
+NOTES_PATH = [U.get_abspath(p) for p in U.get_env("notes_path").split(",")]
+# list of abs_path to your files, multi-path & sub-path is allowed
+FILES_PATH = [U.get_abspath(p) for p in U.get_env("files_path").split(",")]
+# default path to the file created by templates: notes_path
 DEFAULT_PATH = NOTES_PATH[0]
 
 
@@ -30,11 +31,17 @@ DEFAULTS = {
     # path to your Markdown App
     # 'app_path': '/Applications/Typora.app',
     # search tags in yaml only or in full content: True/False
-    'search_yaml_tag_only': True,
+    'search_tag_yaml_only': True,
+    # search snippets by languages specified in yaml only or including code fences: True/False
+    'search_snippet_yaml_only': True,
+    # snippet searching result will be combined and returned same when language appears in a synonyms tuple.
+    'language_synonyms': [('sh','bash','shell'), ('python','py')],
     # present which todo in the top: newest/oldest
     'todo_order': 'newest',
     # quantity of results: Int
     'result_nums': 20,
+    # search scope: only search [Todo/Snippet/Notes] in its own folders or in all files_path: True/False
+    'search_all_folders': False,
     # template list: ['wiki', 'note', 'todo', 'journal', 'snippet', ...]
     'templates': TEMPLATES,
     # open weather api
@@ -49,7 +56,7 @@ DEFAULTS.update(
 
 class Config():
     """ Use `Config().configs` to fetch curent config dict"""
-
+    # TODO: refraction is needed
     def __init__(self):
         self.configs = self._load_all()
 
@@ -70,7 +77,7 @@ class Config():
         U.json_dump(self.configs, CONFIG_PATH)
 
     def swap(self, key):
-        if key == "search_yaml_tag_only":
+        if key in ["search_tag_yaml_only", "search_snippet_yaml_only", "search_all_folders"]:
             value = not self.get(key)
         elif key == "todo_order":
             value = "nearest" if self.get(key) == "oldest" else "oldest"
@@ -92,6 +99,7 @@ class Config():
 
     @classmethod
     def templates_checked(cls):
+        # FIX: It takes twice input of 'n' to succeed.
         # Move templates to local folder
         if not U.path_exists(TEMPLATE_DIR):
             U.mkdir(TEMPLATE_DIR)

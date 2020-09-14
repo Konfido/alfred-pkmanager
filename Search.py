@@ -1,38 +1,41 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# ------------------------------------------------
-# Author:        Konfido <konfido.du@outlook.com>
-# Created Date:  July 16th 2020
-# ------------------------------------------------
+# --------------------------------------
+# Created by Konfido on 2020-07-16
+# --------------------------------------
 
 
 import re
 
 import Config
-from Items import Items
+from Items import Items, Display
 from Utils import Utils as U
 
 C = Config.Config().configs
 
 
 class File():
-    def __init__(self, path):
+    def __init__(self):
+        self.path = ""
+        self.filename = ""
+        self.content = ""
+        self.title = ""
+
+    def get_file_title(self, path):
+        """ yaml_title > level_one_title > file_name """
         self.path = path
         self.file_name = U.get_file_name(self.path).lower()
         self.content = U.get_file_content(self.path).lower()
-        self.title = self._get_file_title(self).lower()
 
-    def _get_file_title(self):
-        """ yaml_title > level_one_title > file_name """
         yaml_title = U.get_yaml_item("title", self.content)
         level_one_title = re.search(r'^# (\s+)', self.content)
-        title = yaml_title or level_one_title or self.file_name or ""
-        return title
+        self.title = yaml_title or level_one_title or self.file_name or ""
+        return self.title
 
     @classmethod
     def get_file_info(cls, path):
         """ get file's info in a dict """
-        cls.__init__(cls, path)
+        cls.get_file_title(cls, path)
         size = U.get_file_meta(cls.path, "st_size")
         ctime_float = U.get_file_meta(cls.path, "st_birthtime")
         mtime_float = U.get_file_meta(cls.path, "st_mtime")
@@ -79,8 +82,24 @@ class Search():
                 matched_list, key=lambda k: k['mtime'], reverse=reverse)
             return sorted_files
 
+    @staticmethod
+    def show_search_result(query, matched_list):
+        items = []
+        for m in matched_list:
+            items.append({
+                "title": m['title'],
+                "subtitle": f"{m['mdate']}, (\u2318-Actions, \u21E7-Quicklook)",
+                "type": 'file',
+                "arg": f'open|{m["path"]}',
+                "mods": {
+                    "cmd": {
+                        "arg": f'show_actions|[{m["path"]}, {query}]',
+                        "subtitle": "Press 'Enter' to select your next action"
+                    }}})
+        Display.show(items)
+
     @classmethod
-    def wiki_search(cls, search_terms, dicted_files):
+    def title_search(cls, search_terms, dicted_files):
         matched_list = []
         for f in dicted_files:
             if f['title'] in cls.synonyms_search(search_terms):
@@ -99,28 +118,35 @@ class Search():
         return matched_list
 
     @classmethod
-    def tag_search(cls, search_tags, dicted_files):
-        matched_list = []
+    def metric_search(cls, metric, keys, dicted_files):
+        # Search notes by keys of specific metrics (tag, snippet ...)
+        matched_notes = []
         for f in dicted_files:
-            tags = []
-            match = U.get_yaml_item('tags', f["content"])
+            has_keys = []
+            # Check YAML frontier to get note's assigned metrics
+            match = U.get_yaml_item(metric, f["content"])
             if match:
-                tags.extend(match.strip('[]').split(', '))
-            if not C["search_yaml_tag_only"]:
-                tags.extend(re.findall(r'\b#(.*?)\b', f['content'], re.I))
-            if not tags:
+                has_keys.extend(match.strip('[]').split(', '))
+            # Check content to get note's specific metrics
+            if metric in ["tag","tags"] and not C["search_tag_yaml_only"]:
+                has_keys.extend(re.findall(r'\b#(.*?)\b', f['content'], re.I))
+            elif metric is "language" and not C["search_snippet_yaml_only"]:
+                has_keys.extend(re.findall(r'```(\S+)', f['content'], re.I))
+
+            if not has_keys:
                 continue
             else:
-                for t in search_tags:
-                    if t in tags:
-                        matched_list.append(f)
-        return matched_list
+                for k in keys:
+                    if k in has_keys:
+                        matched_notes.append(f)
+        return matched_notes
 
     @classmethod
-    def both_search(cls, keywords, tags, dicted_files):
-        # TODO: alter between `and` and `or`
+    def both_search(cls, keywords, metrics, dicted_files):
+        "metrics: [metric, keys]"
+        metric, keys = metrics
         matched_list = cls.notes_search(keywords, dicted_files)
-        matched_list = cls.tag_search(tags, matched_list)
+        matched_list = cls.metric_search(metric, keys, matched_list)
         return matched_list
 
     @classmethod
@@ -133,3 +159,24 @@ class Search():
                 if search_terms[0] in s:
                     out.append(k)
         return out
+
+    @staticmethod
+    def markdown_links_search(path, filename=False):
+        "Query dict with path/filename to get a link_list contained in this file"
+        abs_path = path if not filename else U.get_abspath(path, relative_path=True)
+        content = U.get_file_content(abs_path)
+        # exclude images link: ![]() and url: [](https://)
+        links_info = re.findall(
+            r'(?<!!)(\[(.*?)\]\(((?!http).*?md)\))', content)
+        link_list = [l[2] for l in links_info]
+        return link_list
+
+    @staticmethod
+    def backlinks_search(filename):
+        "Query dict with path/filename to get a backlink list"
+        # TODO: decouple with synonyms_search()
+        # Only query the dict with filename
+        filename = U.get_file_name(filename, with_ext=True)
+        backlinks = U.json_load(U.path_join(Config.CONFIG_DIR, 'backlinks.json'))
+        matched_list = backlinks[filename] if backlinks.__contains__(filename) else []
+        return matched_list

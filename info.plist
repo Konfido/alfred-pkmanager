@@ -537,6 +537,43 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>argumenttext</key>
+				<string>refresh|</string>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>15</integer>
+				<key>hotmod</key>
+				<integer>1310720</integer>
+				<key>hotstring</key>
+				<string>R</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedApps</key>
+				<array>
+					<string>abnerworks.Typora</string>
+				</array>
+				<key>relatedAppsMode</key>
+				<integer>1</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>613C3561-AFF4-4248-8716-69A09A528105</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
@@ -616,43 +653,6 @@ echo -n $out</string>
 			<string>alfred.workflow.trigger.hotkey</string>
 			<key>uid</key>
 			<string>1C6CB368-4C64-4594-B86F-BD9606FF50C0</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>3</integer>
-				<key>argumenttext</key>
-				<string>refresh|</string>
-				<key>focusedappvariable</key>
-				<false/>
-				<key>focusedappvariablename</key>
-				<string></string>
-				<key>hotkey</key>
-				<integer>15</integer>
-				<key>hotmod</key>
-				<integer>1310720</integer>
-				<key>hotstring</key>
-				<string>R</string>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedApps</key>
-				<array>
-					<string>abnerworks.Typora</string>
-				</array>
-				<key>relatedAppsMode</key>
-				<integer>1</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>613C3561-AFF4-4248-8716-69A09A528105</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -923,10 +923,11 @@ echo -n $out</string>
 	<key>readme</key>
 	<string>Handle your personal knowledge management with ease!
 
-- Create or open a Markdown note (inter-link, backlink)
 - Open recent notes
-- Search by keywords, tags, wiki's name ...
-- Refresh meta-data in YAML frontier</string>
+- Search notes by keywords, tags and title
+- Search Markdown links &amp; backlinks
+- Search Snippets by code's language and keywords
+- Create Markdown notes by templates</string>
 	<key>uidata</key>
 	<dict>
 		<key>1AEDAAAF-3EF3-4207-A4F7-E5526124CF0A</key>

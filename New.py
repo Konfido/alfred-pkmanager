@@ -30,8 +30,7 @@ class New():
         arg = query if query else U.get_now()
         (language, title) = arg.split(', ') if ',' in arg else ("<blank>", arg)
         items = []
-        for template_path in U.get_all_files_path(Config.TEMPLATE_DIR):
-            genre = U.get_file_name(template_path)
+        for genre in C["templates"]:
             if genre == "Snippet":
                 items.append({
                     "title": "Create a new Snippet: Input \"<languag>, <title>\"",

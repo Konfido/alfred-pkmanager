@@ -77,7 +77,7 @@ Once the desired results are showed in Alfred Filter, you can:
       - Shallow your folder's depth to enhance searching performance.
 
     <details>
-    <summary>An example setting for the a possible folder tree. ( Click to expand! )</summary>
+    <summary>An example setting of a possible folder tree. ( Click to expand! )</summary>
 
     ```
     ~
@@ -104,13 +104,12 @@ Once the desired results are showed in Alfred Filter, you can:
     - `template`: A markdown file with formatted content used to generate new notes.
 
         - Select `Open templates folder` in `PKManger Configuration`. Customize the templates in the folder or place your own template in it.
-        - Then, when you type `n_` to create a new file, the workflow will load your template and update your config automatically.
-        - The default templates can be restored when you delete any of them.
-        - The default path for new file created by these templates is the first path you've listed in the workflow env ``
-
-    - `metadata`: YAML frontier with important infos placed at the beginning of the Markdown document between two triple dashes. Example:
-
-        ```yaml
+        - When you type `n_` to create a new file, the workflow will load your templates and update your config automatically.
+        - You can modify the default templates, and they'll be restored when you delete any of them.
+        
+- `metadata`: YAML frontier with important infos placed at the beginning of the Markdown document between two triple dashes. Example:
+    
+    ```yaml
         ---
         title: An Example
         synonyms: []
@@ -120,8 +119,8 @@ Once the desired results are showed in Alfred Filter, you can:
         date: 2020-03-19 04:07:28
         updated: 2020-08-02 14:17:46
         ---
-
-        Content
+    
+    Content
         ```
 
 

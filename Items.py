@@ -32,6 +32,7 @@ class Items():
             #         "arg": "xxx",     # str, return to next
             #         "subtitle": "xxx" # str, subtitle showed under mod
             #     }
+            # "quicklookurl": "xxx"    # str, relative/abs path
             # }
         }
 

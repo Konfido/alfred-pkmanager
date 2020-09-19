@@ -118,15 +118,14 @@ def show_notes():
         S.show_search_result(query, result[:num])
     else:
         # show none matched info
-        genre = "wiki" if mode == "Wiki" else "note"
         Display.show({
-            "title": "Nothing found ..",
-            "subtitle": f'Presh "\u2318" to create a new \"{genre}\" with title \"{query}\"',
+            "title": "Nothing found ...",
+            "subtitle": f'Presh "⌘" to create a new Note with title \"{query}\"',
             "arg": '',
             "mods": {
                 "cmd": {
-                    "arg": f'new|[{genre}, {query}]',
-                    "subtitle": "Press 'Enter' to complete"}}})
+                    "arg": f'new|[Note>{query}]',
+                    "subtitle": "Press 'Enter' to confirm creating"}}})
 
     return
 
@@ -167,15 +166,14 @@ def show_snippets():
         S.show_search_result(query, result[:num])
     else:
         # show none matched info
-        genre = "wiki" if mode == "Wiki" else "note"
         Display.show({
             "title": "Nothing found ..",
-            "subtitle": f'Presh "\u2318" to create a new \"{genre}\" with title \"{query}\"',
+            "subtitle": f'Presh "⌘" to create a new Snippet with title \"{query}\"',
             "arg": '',
             "mods": {
                 "cmd": {
-                    "arg": f'new|[{genre}, {query}]',
-                    "subtitle": "Press 'Enter' to complete"}}})
+                    "arg": f'new|[Snippet>{query}]',
+                    "subtitle": "Press 'Enter' to confirm creating"}}})
 
     return
 

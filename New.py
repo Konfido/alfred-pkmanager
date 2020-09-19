@@ -19,35 +19,6 @@ C = Config.Config().configs
 class New():
 
     @classmethod
-    def show_templates(cls):
-        """Show available templates.
-        The input content `query` are accepted as the name of new file.
-
-        But once ',' appears in it, `Snippet` will be selected as target templates,
-        and `query` will be seperated to be language's name and title accrodingly.
-        """
-        query = U.get_query()
-        arg = query if query else U.get_now()
-        (language, title) = arg.split(', ') if ',' in arg else ("<blank>", arg)
-        items = []
-        for genre in C["templates"]:
-            if genre == "Snippet":
-                items.append({
-                    "title": "Create a new Snippet: Input \"<languag>, <title>\"",
-                    "subtitle": f"Language: {language}, Name: {title}",
-                    "arg": f"new|[Snippet>{arg}]"
-                })
-            elif ',' not in arg:
-                subtitle = query if query else U.get_now()+" (Default)"
-                items.append({
-                    "title": f"Create a new {genre}",
-                    "subtitle": f'Name: {subtitle}',
-                    "arg": f"new|[{genre}>{arg}]"
-                })
-
-        Display.show(items)
-
-    @classmethod
     def new(cls, title, genre='Note', language=''):
         """ create a new file accroding to template """
 
@@ -121,6 +92,35 @@ class New():
         return new_file_path
 
 
+def show_templates():
+    """ Show available templates.
+
+    If your input content (env $query) does not contain semicolon (',' or '，'), it will be taken as the name of new file.
+
+    Otherwise, it will be seperated into two part and be taken as language's name and note's title of the new Snippet.
+    """
+    query = U.get_query()
+    arg = query if query else U.get_now()
+    (language, title) = arg.split(',') if ',' in arg else ("<blank>", arg)
+    items = []
+    for genre in C["templates"]:
+        if genre == "Snippet":
+            items.append({
+                "title": 'Create a new Snippet: Use "," to seperate "language" and "title"',
+                "subtitle": f"Language: {language}, Name: {title.strip()}",
+                "arg": f"new|[Snippet>{arg}]"
+            })
+        elif ',' not in arg:
+            subtitle = query if query else U.get_now()+" (Default)"
+            items.append({
+                "title": f"Create a new {genre}",
+                "subtitle": f'Name: {subtitle}',
+                "arg": f"new|[{genre}>{arg}]"
+            })
+
+    Display.show(items)
+
+
 if __name__ == "__main__":
     Config.Config().templates_checked()
-    New().show_templates()
+    show_templates()

@@ -36,6 +36,7 @@ class File():
     def get_file_info(cls, path):
         """ get file's info in a dict """
         cls.get_file_title(cls, path)
+        folder = path.split("/")[-2] if len(path.split('/'))>2 else "<root>"
         size = U.get_file_meta(cls.path, "st_size")
         ctime_float = U.get_file_meta(cls.path, "st_birthtime")
         mtime_float = U.get_file_meta(cls.path, "st_mtime")
@@ -46,6 +47,7 @@ class File():
             'file_name': cls.file_name,
             'content': cls.content,
             'title': cls.title,
+            'folder': folder,
             'cdate': cdate_string,
             'mdate': mdate_string,
             'ctime': ctime_float,
@@ -61,7 +63,7 @@ class Search():
 
     @staticmethod
     def _matched(patterns, content):
-        """ Search for matches """
+        """ Check if the content matches all patterns (&) """
         for pattern in patterns:
             # ignore case
             if not re.search(r'{}'.format(pattern), content, re.I):
@@ -81,24 +83,6 @@ class Search():
             sorted_files = sorted(
                 matched_list, key=lambda k: k['mtime'], reverse=reverse)
             return sorted_files
-
-    @staticmethod
-    def show_search_result(query, matched_list):
-        items = []
-        for m in matched_list:
-            items.append({
-                "title": m['title'],
-                "subtitle": f"{m['mdate']}, (\u2318-Actions, \u21E7-Quicklook)",
-                "type": 'file',
-                "arg": f'open|{m["path"]}',
-                "mods": {
-                    "cmd": {
-                        "arg": f'show_actions|[{m["path"]}, {query}]',
-                        "subtitle": "Press 'Enter' to select your next action"
-                    }},
-                "quicklookurl": m["path"]
-                })
-        Display.show(items)
 
     @classmethod
     def title_search(cls, search_terms, dicted_files):
@@ -164,7 +148,7 @@ class Search():
 
     @staticmethod
     def markdown_links_search(path, filename=False):
-        "Query dict with path/filename to get a link_list contained in this file"
+        "Get a list of Markdown links which contained in the file (by given path/filename)"
         abs_path = path if not filename else U.get_abspath(path, relative_path=True)
         content = U.get_file_content(abs_path)
         # exclude images link: ![]() and url: [](https://)

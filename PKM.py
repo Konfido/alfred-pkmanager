@@ -115,7 +115,7 @@ def show_notes():
     if result:
         # show matched results
         num = int(C["result_nums"])
-        S.show_search_result(query, result[:num])
+        display_matched_result(query, result[:num])
     else:
         # show none matched info
         Display.show({
@@ -138,7 +138,7 @@ def show_snippets():
     if not ['search_all_folders']:
         sorted_note_list = S.get_sorted_files(C["path_to_new_Snippet"])
     else:
-        all_files = S.get_sorted_files(Config.NOTES_PATH)
+        all_files = S.get_sorted_files(Config.FILES_PATH)
         # only search notes with code fences
         sorted_note_list = list(filter(lambda x: "```" in x['content'], all_files))
 
@@ -163,7 +163,7 @@ def show_snippets():
     if result:
         # show matched results
         num = int(C["result_nums"])
-        S.show_search_result(query, result[:num])
+        display_matched_result(query, result[:num])
     else:
         # show none matched info
         Display.show({
@@ -173,7 +173,7 @@ def show_snippets():
             "mods": {
                 "cmd": {
                     "arg": f'new|[Snippet>{query}]',
-                    "subtitle": "Press 'Enter' to confirm creating"}}})
+                    "subtitle": "Press <Enter> to confirm creating"}}})
 
     return
 
@@ -192,7 +192,7 @@ def show_markdown_links():
                 "subtitle": ""
             })
         else:
-            S.show_search_result(filename, matched_list)
+            display_matched_result(filename, matched_list)
     else:
         Display.show({
             "title": "Error!",
@@ -213,13 +213,32 @@ def show_backlinks():
                 "subtitle": "No other notes links to current file"
             })
         else:
-            S.show_search_result(filename, matched_list)
+            display_matched_result(filename, matched_list)
     else:
         Display.show({
             "title": "Error!",
             "subtitle": "No file is opened in Typora."
         })
 
+def display_matched_result(query, matched_list):
+    items = []
+    for m in matched_list:
+        items.append({
+            "title": m['title'],
+            "subtitle": Config.WF_SHOW_SUBTITLE.format(
+                folder=m["folder"],
+                mdate=m["mdate"],
+            ),
+            "type": 'file',
+            "arg": f'open|{m["path"]}',
+            "mods": {
+                "cmd": {
+                    "arg": f'show_actions|[{m["path"]}, {query}]',
+                    "subtitle": "Press <Enter> to select your next action"
+                }},
+            "quicklookurl": m["path"]
+        })
+    Display.show(items)
 
 if __name__ == "__main__":
     query = U.get_query(lower=True)

@@ -8,89 +8,86 @@
 
 from Utils import Utils as U
 from Items import Items, Display
-# from Config import Config
 import Config
 import threading
-
 
 C = Config.Config().configs
 
 
-class New():
+def create_new_file(title, genre='Note', language=''):
+    """ create a new file accroding to the template """
 
-    @classmethod
-    def new(cls, title, genre='Note', language=''):
-        """ create a new file accroding to template """
+    # illigal characters for the file name
+    name_replace_map = {
+        ',': '-',
+        '，': '-',
+        '.': '_',
+        '/': '-',
+        ':': '-',
+        '#': '-'
+    }
+    name_dict = {
+        "Journal": U.get_now("%Y-%m-%d"),
+        "Topic": U.str_replace(title.strip(), name_replace_map)
+    }
+    _id = U.get_now("%Y%m%d%H%M%S")
+    file_name = name_dict[genre] if genre in name_dict else _id
+    # get date
+    date = U.get_now("%Y-%m-%d")
+    time = U.get_now("%H:%M:%S")
+    date_time = U.get_now("%Y-%m-%d %H:%M:%S")
 
-        # illigal characters for the file name
-        title_replace_map = {
-            ',': '-',
-            '，': '-',
-            '.': '_',
-            '/': '-',
-            ':': '-',
-            '#': '-'
-        }
+    content_replace_map = {
+        '{title}': title.strip(),
+        '{tags}': "[]",
+        '{date_time}': date_time,
+        '{date}': date,
+        '{time}': time,
+        '{language}': f'[{language}]',
+        '{id}': _id,
+    }
 
-        # get new file's title and path
-        file_dir = C[f'path_to_new_{genre}']
-        file_dir = U.path_join(file_dir, U.get_now("%Y/%m/")) \
-            if genre == 'Journal' else file_dir
-        U.mkdir(file_dir)      # Create month's subfolder for Journal
-
-        title = U.str_replace(title.strip(), title_replace_map)
-        _id = U.get_now("%Y%m%d%H%M%S")
-        file_name = {
-            "Journal": U.get_now("%Y-%m-%d"),
-            "Topic": title
-        }
-        file_name = file_name[genre] if genre in file_name else _id
-        new_file_path = U.path_join(file_dir, file_name+'.md')
-        if U.path_exists(new_file_path):
-            return new_file_path
-
-        # get date
-        date = U.get_now("%Y-%m-%d")
-        time = U.get_now("%H:%M:%S")
-        date_time = U.get_now("%Y-%m-%d %H:%M:%S")
+    if genre == "Journal":
+        # Create the month's subfolder for Journal
+        file_dir = U.path_join(file_dir, U.get_now("%Y/%m/"))
+        U.mkdir(file_dir)
+        # Get date of journal style
         date_journal = U.get_now("%B %d, %A")
 
-        # get location
+        # Get location
         loc_dict = U.get_corelocation()
         if loc_dict['subLocality']:
             location = f'{loc_dict["address"]},{loc_dict["subLocality"]}'
         else:
             location = loc_dict["address"]
 
-        # get weather
+        # Get weather
         lat = loc_dict["latitude"]
         lon = loc_dict["longitude"]
         api = C["weather_api"]
         weather = U.get_weather(lat, lon, api, C["locale"]) if api else ""
 
-        content_replace_map = {
-            '{title}': title,
-            '{tags}': "[]",
-            '{date_time}': date_time,
+        content_replace_map.update({
             '{date_journal}': date_journal,
-            '{date}': date,
-            '{time}': time,
-            '{language}': language,
-            '{id}': _id,
             '{location}': location,
             '{weather}': weather,
-        }
+        })
+    else:
+        file_dir = C[f'path_to_new_{genre}']
 
-        template_path = U.path_join(Config.TEMPLATE_DIR, genre+".md")
-
-        with open(template_path, 'r') as f:
-            content = U.str_replace(f.read(), content_replace_map)
-        if not U.path_exists(new_file_path):
-            with open(new_file_path, "w") as f:
-                f.write(content)
-
+    new_file_path = U.path_join(file_dir, file_name+'.md')
+    if U.path_exists(new_file_path):
         return new_file_path
 
+    # Create new file
+    template_path = U.path_join(Config.TEMPLATE_DIR, genre+".md")
+    with open(template_path, 'r') as f:
+        content = U.str_replace(f.read(), content_replace_map)
+    if not U.path_exists(new_file_path):
+        with open(new_file_path, "w") as f:
+            f.write(content)
+
+    return new_file_path
 
 def show_templates():
     """ Show available templates.

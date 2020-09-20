@@ -5,12 +5,14 @@
 # --------------------------------------
 
 
-from Items import Display
-from New import New
-from Utils import Utils as U
-import Config
 import os
+
+import Config
+import New
+from Items import Display
 from Search import Search as S
+from Utils import Utils as U
+
 
 query = U.get_query()
 option, arg = query.split('|')
@@ -24,7 +26,7 @@ elif option == "new":
         language, title = arg.split(", ")
     else:
         language, title = "", arg
-    path = New.new(title, genre, language)
+    path = New.create_new_file(title, genre, language)
     # U.output(path)
     U.open(path)
 elif option == "delete":

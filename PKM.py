@@ -68,8 +68,8 @@ def get_parsed_arg():
         # 1 comma
         elif commas.__len__() == 1:
             a1string, a2string = re.match(r'(.*)[,，](.*)', query).groups()
-            args_1 = [k for k in a1string.split(" ") if k is not ""]
-            args_2 = [t for t in a2string.split(" ") if t is not ""]
+            args_1 = [k for k in a1string.split(" ") if k != ""]
+            args_2 = [t for t in a2string.split(" ") if t != ""]
             if not args_2:
                 mode = "Args_1"
             elif not args_1:

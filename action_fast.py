@@ -10,6 +10,7 @@ import os
 import Config
 import New
 from Items import Display
+from Search import File
 from Search import Search as S
 from Utils import Utils as U
 
@@ -70,7 +71,7 @@ elif option == "refresh":
     sorted_wiki_list = S.get_sorted_files(Config.NOTES_PATH)
     synonyms = {}
     for wiki in sorted_wiki_list:
-        synonym = U.get_yaml_item("synonyms", wiki['content'])
+        synonym = File.get_yaml_item("synonyms", wiki['yaml'])
         if synonym and synonym != '[]':
             synonyms.update({wiki['title']: synonym.strip('[]').split(',')})
     U.json_dump(synonyms, U.path_join(Config.CONFIG_DIR, "synonyms.json"))

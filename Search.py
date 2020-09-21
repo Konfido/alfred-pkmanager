@@ -17,17 +17,30 @@ C = Config.Config().configs
 class File():
     def __init__(self):
         self.path = ""
-        self.filename = ""
+        self.file_name = ""
+        self.yaml = ""
         self.content = ""
         self.title = ""
+
+    @staticmethod
+    def get_yaml_item(item, content):
+        match = re.search(
+            r'^---.*?\b{}s?: (.*?)\n.*?---'.format(item), content, re.I | re.S)
+        return match.group(1) if match is not None else None
 
     def get_file_title(self, path):
         """ yaml_title > level_one_title > file_name """
         self.path = path
         self.file_name = U.get_file_name(self.path).lower()
-        self.content = U.get_file_content(self.path).lower()
-
-        yaml_title = U.get_yaml_item("title", self.content)
+        all_text = U.get_file_content(self.path).lower()
+        match = re.search(r'(---.*?---)([\s\S]+)', all_text, re.I | re.S)
+        if match and len(match.groups()) == 2:
+            self.yaml = match.group(1)
+            self.content = match.group(2).strip()
+        else:
+            U.log(self.file_name)
+            self.yaml, self.content = "", all_text
+        yaml_title = self.get_yaml_item("title", self.yaml)
         level_one_title = re.search(r'^# (\s+)', self.content)
         self.title = yaml_title or level_one_title or self.file_name or ""
         return self.title
@@ -45,6 +58,7 @@ class File():
         file_infos = {
             'path': cls.path,
             'file_name': cls.file_name,
+            'yaml': cls.yaml,
             'content': cls.content,
             'title': cls.title,
             'folder': folder,
@@ -53,7 +67,7 @@ class File():
             'ctime': ctime_float,
             'mtime': mtime_float,
             'size': size,
-            'synonyms': U.get_yaml_item('synonyms', cls.content)
+            'synonyms': cls.get_yaml_item('synonyms', cls.content)
         }
         return file_infos
 
@@ -110,7 +124,7 @@ class Search():
         for f in dicted_files:
             has_keys = []
             # Check YAML frontier to get note's assigned metrics
-            match = U.get_yaml_item(metric, f["content"])
+            match = File.get_yaml_item(metric, f["content"])
             if match:
                 has_keys.extend(match.strip('[]').split(', '))
             # Check content to get note's specific metrics

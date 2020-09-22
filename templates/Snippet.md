@@ -1,14 +1,16 @@
 ---
 title: {title}
 tags: {tags}
-language: {language}
+language: [{language}]
 date: {date_time}
 updated: {date_time}
 ---
 
 
 
-```{language}
+- {title}
 
-```
+    ```{language}
+
+    ```
 

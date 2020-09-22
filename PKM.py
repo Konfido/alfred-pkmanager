@@ -56,31 +56,35 @@ def get_parsed_arg():
         mode, args_1, args_2 = "Recent", [], []
     else:
         commas = re.findall('[,，]', query)
-        # no comma
         if not commas:
-            args = re.findall(r'(\S+)', query)
-            # 1 word with no space tail
-            if args.__len__() == 1 and query[-1:] != " ":
-                mode, args_1, args_2 = "Title", [query.strip()], []
-            # 1 word with space tail & >= 2 words
-            else:
-                mode, args_1, args_2 = "Args_1", args, []
-        # 1 comma
+            a1string, a2string = query, ""
         elif commas.__len__() == 1:
             a1string, a2string = re.match(r'(.*)[,，](.*)', query).groups()
-            args_1 = [k for k in a1string.split(" ") if k is not ""]
-            args_2 = [t for t in a2string.split(" ") if t is not ""]
-            if not args_2:
-                mode = "Args_1"
-            elif not args_1:
-                mode = "Args_2"
-            else:
-                mode = "Both"
-        # >= 2 comma
+        # include more that 2 commas
         elif commas.__len__() >= 2:
-            mode, args_1, args_2 = "GT2", [], []
+            Display.show(("Error!", "Having 2 (>=) commas is not allowed!"))
+            exit()
         else:
-            U.output(f'error|parse_arg')
+            Display.show("Error!","get_parsed_arg()")
+            exit()
+
+        # parse keywords
+        if '&' in a1string:
+            args_1 = [k for k in a1string.split("&") if k != ""]
+            mode = "And_Search"
+        elif '|' in a1string:
+            args_1 = [k for k in a1string.split("|") if k != ""]
+            mode = "Or_Search"
+        elif " " not in a1string and not commas:   # 1 word with no space tail
+            args_1 = [a1string]
+            mode = "Title_Search"
+        else:
+            args_1 = [a1string]
+            mode = "Exact_Search"
+
+        # parse tags
+        a2string = a2string.translate(str.maketrans("&|｜", "   "))
+        args_2 = [t for t in a2string.split(" ") if t != ""]
 
     return mode, args_1, args_2
 
@@ -99,34 +103,32 @@ def show_notes():
 
     if mode == "Recent":
         result = sorted_note_list
-    elif mode == "Title":
+    elif mode == "Title_Search":
         result = S.title_search(keywords, sorted_note_list)
-    elif mode == "Args_1":
-        result = S.notes_search(keywords, sorted_note_list)
-    elif mode == "Args_2":
-        result = S.metric_search("tag", tags, sorted_note_list)
-    elif mode == "Both":
-        result = S.both_search(keywords, ["tag", tags], sorted_note_list)
-    elif mode == "GT2":
-        Display.show(("Error!", "Having 2 (>=) commas is not allowed!"))
-        exit()
+    elif mode == "And_Search" or mode == "Exact_Search":
+        result = S.and_search(keywords, sorted_note_list)
+    elif mode == "Or_Search":
+        result = S.or_search(keywords, sorted_note_list)
+
+    # Parse tags if needed
+    if tags:
+        result = S.metric_search("tag", tags, result)
 
     # Generate ScriptFilter Output
     if result:
         # show matched results
         num = int(C["result_nums"])
-        S.show_search_result(query, result[:num])
+        display_matched_result(query, result[:num])
     else:
         # show none matched info
-        genre = "wiki" if mode == "Wiki" else "note"
         Display.show({
-            "title": "Nothing found ..",
-            "subtitle": f'Presh "\u2318" to create a new \"{genre}\" with title \"{query}\"',
+            "title": "Nothing found ...",
+            "subtitle": f'Presh "⌘" to create a new Note with title \"{query}\"',
             "arg": '',
             "mods": {
                 "cmd": {
-                    "arg": f'new|[{genre}, {query}]',
-                    "subtitle": "Press 'Enter' to complete"}}})
+                    "arg": f'new|[Note>{query}]',
+                    "subtitle": "Press 'Enter' to confirm creating"}}})
 
     return
 
@@ -139,7 +141,7 @@ def show_snippets():
     if not ['search_all_folders']:
         sorted_note_list = S.get_sorted_files(C["path_to_new_Snippet"])
     else:
-        all_files = S.get_sorted_files(Config.NOTES_PATH)
+        all_files = S.get_sorted_files(Config.FILES_PATH)
         # only search notes with code fences
         sorted_note_list = list(filter(lambda x: "```" in x['content'], all_files))
 
@@ -148,34 +150,31 @@ def show_snippets():
 
     if mode == "Recent":
         result = sorted_note_list
-    elif mode == "Title":
+    elif mode == "Title_Search":
         result = S.title_search(keywords, sorted_note_list)
-    elif mode == "Args_1":
-        result = S.notes_search(keywords, sorted_note_list)
-    elif mode == "Args_2":
+    elif mode == "And_Search" or mode == "Exact_Search":
+        result = S.and_search(keywords, sorted_note_list)
+    elif mode == "Or_Search":
+        result = S.or_search(keywords, sorted_note_list)
+
+    if languages:
         result = S.metric_search("language", languages, sorted_note_list)
-    elif mode == "Both":
-        result = S.both_search(keywords, ["language", languages], sorted_note_list)
-    elif mode == "GT2":
-        Display.show(("Error!", "Having 2 (>=) commas is not allowed!"))
-        exit()
 
     # Generate ScriptFilter Output
     if result:
         # show matched results
         num = int(C["result_nums"])
-        S.show_search_result(query, result[:num])
+        display_matched_result(query, result[:num])
     else:
         # show none matched info
-        genre = "wiki" if mode == "Wiki" else "note"
         Display.show({
             "title": "Nothing found ..",
-            "subtitle": f'Presh "\u2318" to create a new \"{genre}\" with title \"{query}\"',
+            "subtitle": f'Presh "⌘" to create a new Snippet with title \"{query}\"',
             "arg": '',
             "mods": {
                 "cmd": {
-                    "arg": f'new|[{genre}, {query}]',
-                    "subtitle": "Press 'Enter' to complete"}}})
+                    "arg": f'new|[Snippet>{query}]',
+                    "subtitle": "Press <Enter> to confirm creating"}}})
 
     return
 
@@ -194,7 +193,7 @@ def show_markdown_links():
                 "subtitle": ""
             })
         else:
-            S.show_search_result(filename, matched_list)
+            display_matched_result(filename, matched_list)
     else:
         Display.show({
             "title": "Error!",
@@ -215,13 +214,32 @@ def show_backlinks():
                 "subtitle": "No other notes links to current file"
             })
         else:
-            S.show_search_result(filename, matched_list)
+            display_matched_result(filename, matched_list)
     else:
         Display.show({
             "title": "Error!",
             "subtitle": "No file is opened in Typora."
         })
 
+def display_matched_result(query, matched_list):
+    items = []
+    for m in matched_list:
+        items.append({
+            "title": m['title'],
+            "subtitle": Config.WF_SHOW_SUBTITLE.format(
+                folder=m["folder"],
+                mdate=m["mdate"],
+            ),
+            "type": 'file',
+            "arg": f'open|{m["path"]}',
+            "mods": {
+                "cmd": {
+                    "arg": f'show_actions|[{m["path"]}, {query}]',
+                    "subtitle": "Press <Enter> to select your next action"
+                }},
+            "quicklookurl": m["path"]
+        })
+    Display.show(items)
 
 if __name__ == "__main__":
     query = U.get_query(lower=True)

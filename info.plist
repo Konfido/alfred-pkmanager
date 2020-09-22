@@ -1088,7 +1088,7 @@ echo -n $out</string>
 			<key>colorindex</key>
 			<integer>8</integer>
 			<key>note</key>
-			<string>Config</string>
+			<string>Configurate</string>
 			<key>xpos</key>
 			<integer>25</integer>
 			<key>ypos</key>
@@ -1128,7 +1128,7 @@ echo -n $out</string>
 		<string>notes_path</string>
 	</array>
 	<key>version</key>
-	<string>2.0.0</string>
+	<string>2.2.0</string>
 	<key>webaddress</key>
 	<string>https://github.com/Konfido/alfred-pkmanager</string>
 </dict>

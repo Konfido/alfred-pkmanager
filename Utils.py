@@ -73,7 +73,7 @@ class Utils():
         elif path.startswith('/Users'):
             abs_path = path
         elif relative_path == True:
-            # check path's dict to convert relative path to abs_path
+            # convert relative_path to abs_path by querying stored path's info
             file_name = os.path.basename(path)
             paths_dict = cls.json_load(cls.path_join(
                 cls.get_env("alfred_workflow_data"), 'paths.json'))
@@ -157,7 +157,6 @@ class Utils():
     @staticmethod
     def get_file_content(path):
         # only process Markdown file
-        # TODO: exclude YAML data
         if str(path).endswith(".md"):
             with open(path, 'r') as f:
                 content = f.read()
@@ -172,12 +171,6 @@ class Utils():
 	        get name of front window of process "Typora"
         end tell\nEOF""")
         return filename.read().strip()
-
-    @staticmethod
-    def get_yaml_item(item, content):
-        match = re.search(
-            r'^---.*?\b{}s?: (.*?)\n.*?---'.format(item), content, re.I | re.S)
-        return match.group(1) if match is not None else None
 
     @classmethod
     def get_all_files_path(cls, paths):

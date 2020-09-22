@@ -17,17 +17,30 @@ C = Config.Config().configs
 class File():
     def __init__(self):
         self.path = ""
-        self.filename = ""
+        self.file_name = ""
+        self.yaml = ""
         self.content = ""
         self.title = ""
+
+    @staticmethod
+    def get_yaml_item(item, content):
+        match = re.search(
+            r'^---.*?\b{}s?: (.*?)\n.*?---'.format(item), content, re.I | re.S)
+        return match.group(1) if match is not None else None
 
     def get_file_title(self, path):
         """ yaml_title > level_one_title > file_name """
         self.path = path
         self.file_name = U.get_file_name(self.path).lower()
-        self.content = U.get_file_content(self.path).lower()
-
-        yaml_title = U.get_yaml_item("title", self.content)
+        all_text = U.get_file_content(self.path).lower()
+        match = re.search(r'(---.*?---)([\s\S]+)', all_text, re.I | re.S)
+        if match and len(match.groups()) == 2:
+            self.yaml = match.group(1)
+            self.content = match.group(2).strip()
+        else:
+            U.log(self.file_name)
+            self.yaml, self.content = "", all_text
+        yaml_title = self.get_yaml_item("title", self.yaml)
         level_one_title = re.search(r'^# (\s+)', self.content)
         self.title = yaml_title or level_one_title or self.file_name or ""
         return self.title
@@ -36,6 +49,7 @@ class File():
     def get_file_info(cls, path):
         """ get file's info in a dict """
         cls.get_file_title(cls, path)
+        folder = path.split("/")[-2] if len(path.split('/'))>2 else "<root>"
         size = U.get_file_meta(cls.path, "st_size")
         ctime_float = U.get_file_meta(cls.path, "st_birthtime")
         mtime_float = U.get_file_meta(cls.path, "st_mtime")
@@ -44,29 +58,22 @@ class File():
         file_infos = {
             'path': cls.path,
             'file_name': cls.file_name,
+            'yaml': cls.yaml,
             'content': cls.content,
             'title': cls.title,
+            'folder': folder,
             'cdate': cdate_string,
             'mdate': mdate_string,
             'ctime': ctime_float,
             'mtime': mtime_float,
             'size': size,
-            'synonyms': U.get_yaml_item('synonyms', cls.content)
+            'synonyms': cls.get_yaml_item('synonyms', cls.content)
         }
         return file_infos
 
 
 class Search():
     """ handle all search procblems"""
-
-    @staticmethod
-    def _matched(patterns, content):
-        """ Search for matches """
-        for pattern in patterns:
-            # ignore case
-            if not re.search(r'{}'.format(pattern), content, re.I):
-                return False
-        return True
 
     @classmethod
     def get_sorted_files(cls, paths, reverse=True):
@@ -82,22 +89,6 @@ class Search():
                 matched_list, key=lambda k: k['mtime'], reverse=reverse)
             return sorted_files
 
-    @staticmethod
-    def show_search_result(query, matched_list):
-        items = []
-        for m in matched_list:
-            items.append({
-                "title": m['title'],
-                "subtitle": f"{m['mdate']}, (\u2318-Actions, \u21E7-Quicklook)",
-                "type": 'file',
-                "arg": f'open|{m["path"]}',
-                "mods": {
-                    "cmd": {
-                        "arg": f'show_actions|[{m["path"]}, {query}]',
-                        "subtitle": "Press 'Enter' to select your next action"
-                    }}})
-        Display.show(items)
-
     @classmethod
     def title_search(cls, search_terms, dicted_files):
         matched_list = []
@@ -109,11 +100,30 @@ class Search():
         return matched_list
 
     @classmethod
-    def notes_search(cls, search_terms, dicted_files):
-        """ Get a list of matched files """
+    def and_search(cls, search_terms, dicted_files):
+        def _matched(terms, file):
+            for term in terms:
+                if not re.search(term, file, re.I):
+                    return False
+            return True
+
         matched_list = []
         for f in dicted_files:
-            if cls._matched(search_terms, f['content']):
+            if _matched(search_terms, f['content']):
+                matched_list.append(f)
+        return matched_list
+
+    @classmethod
+    def or_search(cls, search_terms, dicted_files):
+        def _matched(terms, file):
+            for term in terms:
+                if re.search(term, file, re.I):
+                    return True
+            return False
+
+        matched_list = []
+        for f in dicted_files:
+            if _matched(search_terms, f['content']):
                 matched_list.append(f)
         return matched_list
 
@@ -124,7 +134,7 @@ class Search():
         for f in dicted_files:
             has_keys = []
             # Check YAML frontier to get note's assigned metrics
-            match = U.get_yaml_item(metric, f["content"])
+            match = File.get_yaml_item(metric, f["content"])
             if match:
                 has_keys.extend(match.strip('[]').split(', '))
             # Check content to get note's specific metrics
@@ -142,27 +152,19 @@ class Search():
         return matched_notes
 
     @classmethod
-    def both_search(cls, keywords, metrics, dicted_files):
-        "metrics: [metric, keys]"
-        metric, keys = metrics
-        matched_list = cls.notes_search(keywords, dicted_files)
-        matched_list = cls.metric_search(metric, keys, matched_list)
-        return matched_list
-
-    @classmethod
     def synonyms_search(cls, search_terms):
+        # Or_Search, TODO: match whole phrase
         synonyms = U.json_load(U.path_join(Config.CONFIG_DIR, 'synonyms.json'))
         out = []
         for k in list(synonyms.keys()):
             for s in synonyms[k]:
-                # TODO:
                 if search_terms[0] in s:
                     out.append(k)
         return out
 
     @staticmethod
     def markdown_links_search(path, filename=False):
-        "Query dict with path/filename to get a link_list contained in this file"
+        "Get a list of Markdown links which contained in the file (by given path/filename)"
         abs_path = path if not filename else U.get_abspath(path, relative_path=True)
         content = U.get_file_content(abs_path)
         # exclude images link: ![]() and url: [](https://)

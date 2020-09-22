@@ -29,55 +29,44 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
 > **NOTE**: The following `␣` means `Press the Space bar`.
 
 - `s`: **S**earch and open ( if existing ) a new note. All searching method involved is case-insensitive.
-    - `s␣`: List recently modified files sorted in reverse order by modification time.
-    - `s␣test`: Fast match the title by `keyword` "test"
-    - `s␣test␣`: Full text search by `keyword` "test"
-    - `s␣test␣alfred`: Full text search by `keyword` "test" and "alfred"
-    - `s␣,test`: Full text search by `tag` "test"
-    - `s␣k1␣k2,t1␣t2`: Full text search by `keyword`"k1", "k2" and `tag` "t1","t2"
+    - `s␣`: List ==recent notes== sorted in reverse order of modification time.
+    - `s␣test`: ==Title Search== by `keyword` "test"
+    - `s␣test␣` / `s␣test␣alfred`: ==Full-text search== by `keyword` "test" / the ==EXACT==  `phrase` "test alfred" (case ignored)
+    - `s␣test&alfred`: Full-text search by `keyword` "test" ==AND== "alfred"
+    - `s␣test|alfred`: Full-test search by `keyword` "test" ==OR== "alfred"
+    - `s␣,t1␣t2|t3&t4`: Full-text search by `tag` "t1" ==AND== "t2" ==AND== "t3" ==AND== "t4" (only the 'and' logic is considered in tag search)
+    - `s␣test␣alfred,t1␣t2`: Full-text search by the exact `phrase` "test alfred" and `tag` "t1" and "t2"
 - `sl␣`: Search and show Markdown links contained in the current note which is opened in the front Typora window.
 - `sbl␣`: Search and show **Backlinks** related to the current opened note.
 
 ### How to process my notes?
 
-Once the desired results are showed in Alfred Filter, you can:
-
-- Press `Enter` to open the file.
-- Press `Command+Enter` to select your further actions over the file.
-  - Copy Markdown link (`[xxx](./?/xxx.md)`) to clipboard.
-  - Refresh file's metadata: 'updated time', 'synonyms' and so on.
-  - Delete this file.
+- For the note in current Typora window
+    - `⌘⌥R`: **R**efresh YAML metadata of the current Markdown file and update all files' "synonyms"&"backlinks" in the background.
+- - Press `Enter` to open the file.
+    - Press `Command+Enter` to select your further actions over the file.
+      - Copy Markdown link (`[xxx](./?/xxx.md)`) to clipboard.
+      - Refresh file's metadata: 'updated time', 'synonyms' and so on.
+      - Delete this file.
 
 ### How to create new notes?
 
 - `n␣`: Create **N**ew file by selected templates
 
-### Other operations
-
-- `⌘⌥R`: **R**efresh YAML metadata of the current Markdown file and update all files' "synonyms"&"backlinks" in the background.
-- `PKManager Configuration`: Config your preference
-  - Set specific config
-  - Refresh YAML and update searching cache
-  - Open config file
-  - Open templates folder
-  - Reset all configs to default
-
-
-
-## Configuration
+### How to configure preference?
 
 - Set Workflow variables
 
     - `notes_path`: dir of your notes. Only one folder is allowed.
-      - It's highly recommended to put all your notes into one folder and give it an unique time ID (e.g. 20200824181348).
+      - It's highly recommended to put all your notes into one folder and give it a unique time ID (e.g. 20200824181348).
       - Check out [this](https://zettelkasten.de/posts/overview/#knowledge-management) blog to learn how to use the method of Zettelkasten to handle your knowledge management.
 
-    - `files_path`: dir of your whole files. It supports multi dirs which include sub-folders.
+    - `files_path`: dir of your whole files. It supports multi directories which include sub-folders.
       - In case you really need multi folders, here is the solution. Use comma `,` to separate your paths.
       - Shallow your folder's depth to enhance searching performance.
 
     <details>
-    <summary>An example setting for the a possible folder tree. ( Click to expand! )</summary>
+    <summary>An example setting of a possible folder tree. ( Click to expand! )</summary>
 
     ```
     ~
@@ -99,14 +88,23 @@ Once the desired results are showed in Alfred Filter, you can:
     ```
     </details>
 
-- Customise your configs through workflow of `PKManger Configuration`
 
-    - `template`: A markdown file with formatted content used to generate new notes.
 
-        - Select `Open templates folder` in `PKManger Configuration`. Customize the templates in the folder or place your own template in it.
-        - Then, when you type `n_` to create a new file, the workflow will load your template and update your config automatically.
-        - The default templates can be restored when you delete any of them.
-        - The default path for new file created by these templates is the first path you've listed in the workflow env ``
+- The workflow `PKManager Configuration`: Some operations you can do about customized preferences.
+
+    - Set specific config item
+    - Open the config file 'Config.json'
+    - Open templates folder
+    - Refresh YAML and update searching cache
+    - Reset all configs to default
+
+- Set your templates:
+
+    - Select `Open templates folder` in `PKManger Configuration`. Customize the templates in the folder or place your own template in it.
+    - When you type `n_` to create a new file, the workflow will load your templates and update your config automatically.
+    - You can modify the default templates, and they'll be restored when you delete any of them.
+
+- Terms explained
 
     - `metadata`: YAML frontier with important infos placed at the beginning of the Markdown document between two triple dashes. Example:
 
@@ -120,7 +118,7 @@ Once the desired results are showed in Alfred Filter, you can:
         date: 2020-03-19 04:07:28
         updated: 2020-08-02 14:17:46
         ---
-
+        
         Content
         ```
 
@@ -134,7 +132,7 @@ Once the desired results are showed in Alfred Filter, you can:
 
 
 
-## Roadmap
+## Roadmap 🚧
 
 - [ ] Search
     - [ ] Tags auto-completion

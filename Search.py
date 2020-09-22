@@ -75,15 +75,6 @@ class File():
 class Search():
     """ handle all search procblems"""
 
-    @staticmethod
-    def _matched(patterns, content):
-        """ Check if the content matches all patterns (&) """
-        for pattern in patterns:
-            # ignore case
-            if not re.search(r'{}'.format(pattern), content, re.I):
-                return False
-        return True
-
     @classmethod
     def get_sorted_files(cls, paths, reverse=True):
         """ Get all files sorted by modification time in reserve """
@@ -109,11 +100,30 @@ class Search():
         return matched_list
 
     @classmethod
-    def notes_search(cls, search_terms, dicted_files):
-        """ Get a list of matched files """
+    def and_search(cls, search_terms, dicted_files):
+        def _matched(terms, file):
+            for term in terms:
+                if not re.search(term, file, re.I):
+                    return False
+            return True
+
         matched_list = []
         for f in dicted_files:
-            if cls._matched(search_terms, f['content']):
+            if _matched(search_terms, f['content']):
+                matched_list.append(f)
+        return matched_list
+
+    @classmethod
+    def or_search(cls, search_terms, dicted_files):
+        def _matched(terms, file):
+            for term in terms:
+                if re.search(term, file, re.I):
+                    return True
+            return False
+
+        matched_list = []
+        for f in dicted_files:
+            if _matched(search_terms, f['content']):
                 matched_list.append(f)
         return matched_list
 
@@ -142,20 +152,12 @@ class Search():
         return matched_notes
 
     @classmethod
-    def both_search(cls, keywords, metrics, dicted_files):
-        "metrics: [metric, keys]"
-        metric, keys = metrics
-        matched_list = cls.notes_search(keywords, dicted_files)
-        matched_list = cls.metric_search(metric, keys, matched_list)
-        return matched_list
-
-    @classmethod
     def synonyms_search(cls, search_terms):
+        # Or_Search, TODO: match whole phrase
         synonyms = U.json_load(U.path_join(Config.CONFIG_DIR, 'synonyms.json'))
         out = []
         for k in list(synonyms.keys()):
             for s in synonyms[k]:
-                # TODO:
                 if search_terms[0] in s:
                     out.append(k)
         return out

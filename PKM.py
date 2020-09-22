@@ -56,31 +56,35 @@ def get_parsed_arg():
         mode, args_1, args_2 = "Recent", [], []
     else:
         commas = re.findall('[,，]', query)
-        # no comma
         if not commas:
-            args = re.findall(r'(\S+)', query)
-            # 1 word with no space tail
-            if args.__len__() == 1 and query[-1:] != " ":
-                mode, args_1, args_2 = "Title", [query.strip()], []
-            # 1 word with space tail & >= 2 words
-            else:
-                mode, args_1, args_2 = "Args_1", args, []
-        # 1 comma
+            a1string, a2string = query, ""
         elif commas.__len__() == 1:
             a1string, a2string = re.match(r'(.*)[,，](.*)', query).groups()
-            args_1 = [k for k in a1string.split(" ") if k != ""]
-            args_2 = [t for t in a2string.split(" ") if t != ""]
-            if not args_2:
-                mode = "Args_1"
-            elif not args_1:
-                mode = "Args_2"
-            else:
-                mode = "Both"
-        # >= 2 comma
+        # include more that 2 commas
         elif commas.__len__() >= 2:
-            mode, args_1, args_2 = "GT2", [], []
+            Display.show(("Error!", "Having 2 (>=) commas is not allowed!"))
+            exit()
         else:
-            U.output(f'error|parse_arg')
+            Display.show("Error!","get_parsed_arg()")
+            exit()
+
+        # parse keywords
+        if '&' in a1string:
+            args_1 = [k for k in a1string.split("&") if k != ""]
+            mode = "And_Search"
+        elif '|' in a1string:
+            args_1 = [k for k in a1string.split("|") if k != ""]
+            mode = "Or_Search"
+        elif " " not in a1string and not commas:   # 1 word with no space tail
+            args_1 = [a1string]
+            mode = "Title_Search"
+        else:
+            args_1 = [a1string]
+            mode = "Exact_Search"
+
+        # parse tags
+        a2string = a2string.translate(str.maketrans("&|｜", "   "))
+        args_2 = [t for t in a2string.split(" ") if t != ""]
 
     return mode, args_1, args_2
 
@@ -99,17 +103,16 @@ def show_notes():
 
     if mode == "Recent":
         result = sorted_note_list
-    elif mode == "Title":
+    elif mode == "Title_Search":
         result = S.title_search(keywords, sorted_note_list)
-    elif mode == "Args_1":
-        result = S.notes_search(keywords, sorted_note_list)
-    elif mode == "Args_2":
-        result = S.metric_search("tag", tags, sorted_note_list)
-    elif mode == "Both":
-        result = S.both_search(keywords, ["tag", tags], sorted_note_list)
-    elif mode == "GT2":
-        Display.show(("Error!", "Having 2 (>=) commas is not allowed!"))
-        exit()
+    elif mode == "And_Search" or mode == "Exact_Search":
+        result = S.and_search(keywords, sorted_note_list)
+    elif mode == "Or_Search":
+        result = S.or_search(keywords, sorted_note_list)
+
+    # Parse tags if needed
+    if tags:
+        result = S.metric_search("tag", tags, result)
 
     # Generate ScriptFilter Output
     if result:
@@ -147,17 +150,15 @@ def show_snippets():
 
     if mode == "Recent":
         result = sorted_note_list
-    elif mode == "Title":
+    elif mode == "Title_Search":
         result = S.title_search(keywords, sorted_note_list)
-    elif mode == "Args_1":
-        result = S.notes_search(keywords, sorted_note_list)
-    elif mode == "Args_2":
+    elif mode == "And_Search" or mode == "Exact_Search":
+        result = S.and_search(keywords, sorted_note_list)
+    elif mode == "Or_Search":
+        result = S.or_search(keywords, sorted_note_list)
+
+    if languages:
         result = S.metric_search("language", languages, sorted_note_list)
-    elif mode == "Both":
-        result = S.both_search(keywords, ["language", languages], sorted_note_list)
-    elif mode == "GT2":
-        Display.show(("Error!", "Having 2 (>=) commas is not allowed!"))
-        exit()
 
     # Generate ScriptFilter Output
     if result:

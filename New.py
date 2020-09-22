@@ -43,7 +43,7 @@ def create_new_file(title, genre='Note', language=''):
         '{date_time}': date_time,
         '{date}': date,
         '{time}': time,
-        '{language}': f'[{language}]',
+        '{language}': language,
         '{id}': _id,
     }
 

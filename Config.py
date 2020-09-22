@@ -53,8 +53,8 @@ DEFAULTS = {
 DEFAULTS.update(
     dict([(f'path_to_new_{t}', DEFAULT_PATH) for t in TEMPLATES_NAME_DEFAULT]))
 
-#   Workflow Filter's format
-WF_SHOW_SUBTITLE = "{mdate} | {folder} | <\u2318-Actions, \u21E7-Quicklook>"
+# Workflow Filter's format
+WF_SHOW_SUBTITLE = "{folder} | {mdate} | <\u2318-Actions, \u21E7-Quicklook>"
 # WF_NEW_CONFIG = "new|{genre}>{title}"
 
 class Config():

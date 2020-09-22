@@ -2,7 +2,7 @@
 title: {title}
 synonyms: []
 tags: {tags}
-typora-root-url: ..
+categories: []
 typora-copy-images-to: ../images
 date: {date_time}
 updated: {date_time}

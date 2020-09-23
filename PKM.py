@@ -191,7 +191,7 @@ def show_markdown_links():
         link_list = S.markdown_links_search(filename, filename=True)
         matched_list = []
         for link in link_list:
-            path = U.get_abspath(link, relative_path=True)
+            path = U.get_abspath(link, query_dict=True)
             matched_list.append(F.get_file_info(path))
         if not matched_list:
             Display.show({
@@ -212,7 +212,7 @@ def show_backlinks():
         link_list = S.backlinks_search(filename)
         matched_list = []
         for link in link_list:
-            path = U.get_abspath(link, relative_path=True)
+            path = U.get_abspath(link, query_dict=True)
             matched_list.append(F.get_file_info(path))
         if not matched_list:
             Display.show({

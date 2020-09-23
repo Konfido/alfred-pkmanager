@@ -165,7 +165,7 @@ class Search():
     @staticmethod
     def markdown_links_search(path, filename=False):
         "Get a list of Markdown links which contained in the file (by given path/filename)"
-        abs_path = path if not filename else U.get_abspath(path, relative_path=True)
+        abs_path = path if not filename else U.get_abspath(path, query_dict=True)
         content = U.get_file_content(abs_path)
         # exclude images link: ![]() and url: [](https://)
         links_info = re.findall(

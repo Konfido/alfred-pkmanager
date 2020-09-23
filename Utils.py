@@ -73,20 +73,29 @@ class Utils():
         return os.getcwd()
 
     @classmethod
-    def get_abspath(cls, path, relative_path=False):
+    def get_abspath(cls, path, query_dict=False):
+        """Return str() if get error """
         if path.startswith('~/'):
             abs_path = os.path.expanduser(path)
         elif path.startswith('/Users'):
             abs_path = path
-        elif relative_path == True:
+        elif query_dict == True:
             # convert relative_path to abs_path by querying stored path's info
             file_name = os.path.basename(path)
             paths_dict = cls.json_load(cls.path_join(
                 cls.get_env("alfred_workflow_data"), 'paths.json'))
-            abs_path = paths_dict[file_name]
+            try:
+                abs_path = paths_dict[file_name]
+            except ValueError:
+                abs_path = ""
         else:
             abs_path = path
         return abs_path
+
+    @classmethod
+    def get_relpath(cls, path, start):
+        relpath = os.path.relpath(path, start)
+        return relpath
 
     @classmethod
     def path_exists(cls, path):

@@ -26,8 +26,17 @@ if option == "show_error":
 
 elif option == "show_actions":
     path, query = arg.strip('[]').split(", ")
+    # Get relative path to selected note from current opened note
+    filename = U.get_typora_filename()
+    if filename:
+        start_path = U.get_abspath(filename, query_dict=True)
+        rel_path = U.get_relpath(path, start_path)
+    else:
+        rel_path = "Not found opened note in Typora."
+
     file_title = F().get_file_title(path)
     m_path, m_type = "icon", "image"
+
     Display.show(
         {
             "title": "Back",
@@ -36,8 +45,13 @@ elif option == "show_actions":
             # "icon": "icons/back.png",
         },
         {
+            "title": "Copy relative path",
+            "subtitle": f"{rel_path}",
+            "arg": f"link|{rel_path}",
+        },
+        {
             "title": "Copy Markdown Link",
-            "subtitle": f"Copy MD Link of \"{file_title}\" to the Clipboard",
+            "subtitle": f"[{file_title}]({path})",
             "arg": f"link|[{file_title}]({path})",
             # "icon": "icons/link.png",
         },

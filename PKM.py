@@ -51,6 +51,13 @@ def varibles_checked():
     return all_set
 
 def get_parsed_arg():
+    """Parse the input query into two groups of args
+
+    Returns:
+        mode: str, "And_Search"|"Or_Search"|"Title_Search"|"Exact_Search"
+        args_1: list
+        args_2: list
+    """
     # no string
     if not query.strip():
         mode, args_1, args_2 = "Recent", [], []
@@ -79,7 +86,7 @@ def get_parsed_arg():
             args_1 = [a1string]
             mode = "Title_Search"
         else:
-            args_1 = [a1string]
+            args_1 = [a1string.strip()]
             mode = "Exact_Search"
 
         # parse tags
@@ -100,7 +107,6 @@ def show_notes():
 
     # Parse input
     mode, keywords, tags = get_parsed_arg()
-
     if mode == "Recent":
         result = sorted_note_list
     elif mode == "Title_Search":

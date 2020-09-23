@@ -21,6 +21,8 @@ option, arg = query.split('|')
 if option == "open":
     # U.output(arg)
     U.open(arg)
+elif option == "reveal":
+    U.open(arg, finder=True)
 elif option == "new":
     genre, arg = arg.strip('[]').split(">")
     if genre == "Snippet":

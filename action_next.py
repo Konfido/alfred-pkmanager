@@ -28,7 +28,6 @@ elif option == "show_actions":
     path, query = arg.strip('[]').split(", ")
     file_title = F().get_file_title(path)
     m_path, m_type = "icon", "image"
-
     Display.show(
         {
             "title": "Back",
@@ -38,7 +37,7 @@ elif option == "show_actions":
         },
         {
             "title": "Copy Markdown Link",
-            "subtitle": f"Copy MD Link for \"{file_title}\" to the Clipboard",
+            "subtitle": f"Copy MD Link of \"{file_title}\" to the Clipboard",
             "arg": f"link|[{file_title}]({path})",
             # "icon": "icons/link.png",
         },
@@ -48,8 +47,13 @@ elif option == "show_actions":
             "arg": f'refresh|'
         },
         {
-            "title": "Delete Note",
-            "subtitle": f"delete \"{file_title}\". This action cannot be undone!",
+            "title": "Reveal in Finder",
+            "subtitle": f"{path}",
+            "arg": f"reveal|{path}",
+        },
+        {
+            "title": "Delete",
+            "subtitle": f"Move this note to Trash",
             "arg": f"delete|[{path}, {file_title}]",
             # "icon": "icons/delete.png",
         })

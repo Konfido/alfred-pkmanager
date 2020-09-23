@@ -101,9 +101,9 @@ class Search():
 
     @classmethod
     def and_search(cls, search_terms, dicted_files):
-        def _matched(terms, file):
+        def _matched(terms, string):
             for term in terms:
-                if not re.search(term, file, re.I):
+                if not re.search(term, string, re.I):
                     return False
             return True
 

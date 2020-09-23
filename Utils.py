@@ -24,13 +24,19 @@ class Utils():
     # ---------------------
 
     @staticmethod
-    def open(path):
+    def open(path, finder=False):
         """ open file / folder """
-        os.system("open \"{}\"".format(path))
+        if finder:
+            os.system("open -R \"{}\"".format(path))
+        else:
+            os.system("open \"{}\"".format(path))
 
     @staticmethod
     def delete(path):
-        os.remove(path)
+        """ Move a file to Trash """
+        # os.remove(path)
+        if os.path.isfile(path):
+            os.system(f"mv {path} ~/.Trash")
 
     @classmethod
     def copy(cls, source, target):

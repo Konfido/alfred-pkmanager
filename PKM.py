@@ -7,6 +7,7 @@
 
 
 import re
+import os
 
 import Config
 from Items import Display, Items
@@ -248,6 +249,7 @@ def display_matched_result(query, matched_list):
     Display.show(items)
 
 if __name__ == "__main__":
+    os.system("bash ./update_lookup.sh")
     query = U.get_query(lower=True)
     search_type = U.get_search_type()
 

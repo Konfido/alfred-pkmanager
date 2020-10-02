@@ -32,7 +32,7 @@ elif option == "show_actions":
         start_path = U.get_abspath(filename, query_dict=True)
         rel_path = U.get_relpath(path, start_path)
     else:
-        rel_path = "Not found opened note in Typora."
+        rel_path = "Failed. Not found opened note in Typora."
 
     file_title = F().get_file_title(path)
     m_path, m_type = "icon", "image"
@@ -57,7 +57,7 @@ elif option == "show_actions":
         },
         {
             "title": "Refresh YAML",
-            "subtitle": "'updated time', 'synonyms'",
+            "subtitle": "updated: ...",
             "arg": f'refresh|'
         },
         {
@@ -81,9 +81,9 @@ elif option == "show_configs":
             "arg": f"show_editable_configs|"
         },
         {
-            "title": "Refresh YAML and update searching cache",
-            "subtitle": "'updated time', 'synonyms'",
-            "arg": f'refresh|'
+            "title": "Update lookup dicts",
+            "subtitle": "'synonyms', 'backlinks',  ...",
+            "arg": f'update|'
         },
         {
             "title": "Open config file",

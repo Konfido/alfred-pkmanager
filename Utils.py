@@ -31,17 +31,19 @@ class Utils():
         else:
             os.system("open \"{}\"".format(path))
 
-    @staticmethod
-    def delete(path):
-        """ Move a file to Trash """
-        # os.remove(path)
-        if os.path.isfile(path):
-            os.system(f"mv {path} ~/.Trash")
+    @classmethod
+    def delete(cls, path):
+        """ Delete the selected file"""
+        # Files can only be detected as `Removed` in `fswatch` when
+        # you conduct the `rm` command. Hence we copy the file to Trash
+        # before the actual removal to avoid incorrect deletion.
+        cls.copy(path, "~/.Trash")
+        os.remove(path)
 
     @classmethod
     def copy(cls, source, target):
-        """copy source file to target """
-        shutil.copy(source, target)
+        """copy source file/folder to target """
+        shutil.copy(cls.get_abspath(source), cls.get_abspath(target))
 
     @staticmethod
     def format_date(float_date, fmt="%Y-%m-%d %H:%M:%S"):
@@ -86,7 +88,7 @@ class Utils():
                 cls.get_env("alfred_workflow_data"), 'paths.json'))
             try:
                 abs_path = paths_dict[file_name]
-            except ValueError:
+            except KeyError:
                 abs_path = ""
         else:
             abs_path = path
@@ -154,6 +156,7 @@ class Utils():
 
     @staticmethod
     def get_file_meta(path, key):
+        """Get file's size, ctime, mtime"""
         metas = os.stat(path)
         try:
             return metas.__getattribute__(key)
@@ -179,8 +182,14 @@ class Utils():
             content = str()
         return content
 
-    @staticmethod
-    def get_typora_filename():
+    # @staticmethod
+    @classmethod
+    def get_typora_filename(cls):
+        """
+        Return
+            file's name,    if any note opened in Typora
+            "",          if otherwise
+        """
         filename = os.popen("""osascript <<EOF
         tell application "System Events"
 	        get name of front window of process "Typora"

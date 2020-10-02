@@ -599,10 +599,25 @@
 				<key>runningsubtext</key>
 				<string></string>
 				<key>script</key>
-				<string>query=$1
+				<string>PATH=$PATH:/usr/local/bin/;
+
+query=$1
 if [ -z $query ]; then
 	query=""
 fi
+
+num=$(pgrep fswatch| wc -l)
+data_dir="$alfred_workflow_data"
+monitor_path="$files_path"
+date=$(date +"%Y-%m-%d %H:%M:%S")
+logfile=${data_dir}/log.txt
+
+if [ "$num" -eq 0 ]; then
+fswatch -r0 --format="%t %p %f" "$HOME/Documents/Sync/Docs_Wiki/" | while read -d "" event; do echo "${date} ${event}" &gt;&gt; "${logfile}"; done
+else
+echo "$date running" &gt;&gt; "${logfile}"
+fi
+
 out=$(python3 ./PKM.py "$query" "normal")
 echo -n $out</string>
 				<key>scriptargtype</key>
@@ -614,7 +629,7 @@ echo -n $out</string>
 				<key>title</key>
 				<string></string>
 				<key>type</key>
-				<integer>5</integer>
+				<integer>8</integer>
 				<key>withspace</key>
 				<true/>
 			</dict>
@@ -1128,7 +1143,7 @@ echo -n $out</string>
 		<string>notes_path</string>
 	</array>
 	<key>version</key>
-	<string>2.2.0</string>
+	<string>2.3.0</string>
 	<key>webaddress</key>
 	<string>https://github.com/Konfido/alfred-pkmanager</string>
 </dict>

@@ -83,6 +83,9 @@ elif option == "update":
     U.notify("synonyms.json updated.")
     U.notify("Done!")
 
+elif option == "auto_update":
+    os.system(f"bash ./update_lookup.sh {arg} >/dev/null 2>&1 &")
+
 elif option == "reset_config":
     key = arg
     value = Config.Config().reset(key)

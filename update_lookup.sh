@@ -4,10 +4,6 @@
 # --------------------------------------
 
 
-"""
-Auto-update lookup dict
-"""
-
 # Add env to use `fswatch`
 PATH=$PATH:/usr/local/bin/
 
@@ -27,12 +23,8 @@ date=$(date +"%Y-%m-%d %H:%M:%S")
 monitor_path=$(realpath $(eval echo $files_path))
 
 
-# Check if the monitor is running in the background
-num=$(pgrep fswatch| wc -l)
-
-if [ "$num" -eq 0 ] || [[ $(ps -ef|grep -v "grep"|grep fswatch) != *$monitor_path* ]]
-then
-    echo "$date Start to monitor" >> "${logfile}"
+if [ "$1" = "Start" ]; then
+    echo "$date Start to monitor ..." >> "${logfile}"
     fswatch -rxv0 "${monitor_path}" | while read -d "" event; do
         active_file=$(grep -o "/Users.*md" <<< "$event")
         # Escape Typora's renaming process
@@ -60,6 +52,9 @@ then
                 ;;
         esac
     done &
+elif [ "$1" = "Stop" ]; then
+    echo "$date Stop monitoring ..." >> "${logfile}"
+    kill $(ps -ef | grep -v "grep" | grep fswatch | grep "${monitor_path}" | awk '{print $2}')
 else
-    echo "$date monitoring" >> "${logfile}"
+    echo "$date Error: $1" >> "${logfile}"
 fi

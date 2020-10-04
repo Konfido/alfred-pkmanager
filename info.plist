@@ -537,43 +537,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>3</integer>
-				<key>argumenttext</key>
-				<string>refresh|</string>
-				<key>focusedappvariable</key>
-				<false/>
-				<key>focusedappvariablename</key>
-				<string></string>
-				<key>hotkey</key>
-				<integer>15</integer>
-				<key>hotmod</key>
-				<integer>1310720</integer>
-				<key>hotstring</key>
-				<string>R</string>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedApps</key>
-				<array>
-					<string>abnerworks.Typora</string>
-				</array>
-				<key>relatedAppsMode</key>
-				<integer>1</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>613C3561-AFF4-4248-8716-69A09A528105</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
@@ -599,10 +562,25 @@
 				<key>runningsubtext</key>
 				<string></string>
 				<key>script</key>
-				<string>query=$1
+				<string>PATH=$PATH:/usr/local/bin/;
+
+query=$1
 if [ -z $query ]; then
 	query=""
 fi
+
+num=$(pgrep fswatch| wc -l)
+data_dir="$alfred_workflow_data"
+monitor_path="$files_path"
+date=$(date +"%Y-%m-%d %H:%M:%S")
+logfile=${data_dir}/log.txt
+
+if [ "$num" -eq 0 ]; then
+fswatch -r0 --format="%t %p %f" "$HOME/Documents/Sync/Docs_Wiki/" | while read -d "" event; do echo "${date} ${event}" &gt;&gt; "${logfile}"; done
+else
+echo "$date running" &gt;&gt; "${logfile}"
+fi
+
 out=$(python3 ./PKM.py "$query" "normal")
 echo -n $out</string>
 				<key>scriptargtype</key>
@@ -614,7 +592,7 @@ echo -n $out</string>
 				<key>title</key>
 				<string></string>
 				<key>type</key>
-				<integer>5</integer>
+				<integer>8</integer>
 				<key>withspace</key>
 				<true/>
 			</dict>
@@ -653,6 +631,43 @@ echo -n $out</string>
 			<string>alfred.workflow.trigger.hotkey</string>
 			<key>uid</key>
 			<string>1C6CB368-4C64-4594-B86F-BD9606FF50C0</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>argumenttext</key>
+				<string>refresh|</string>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>15</integer>
+				<key>hotmod</key>
+				<integer>1310720</integer>
+				<key>hotstring</key>
+				<string>R</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedApps</key>
+				<array>
+					<string>abnerworks.Typora</string>
+				</array>
+				<key>relatedAppsMode</key>
+				<integer>1</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>613C3561-AFF4-4248-8716-69A09A528105</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -1128,7 +1143,7 @@ echo -n $out</string>
 		<string>notes_path</string>
 	</array>
 	<key>version</key>
-	<string>2.2.0</string>
+	<string>2.3.3</string>
 	<key>webaddress</key>
 	<string>https://github.com/Konfido/alfred-pkmanager</string>
 </dict>

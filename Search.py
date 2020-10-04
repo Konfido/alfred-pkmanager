@@ -67,7 +67,7 @@ class File():
             'ctime': ctime_float,
             'mtime': mtime_float,
             'size': size,
-            'synonyms': cls.get_yaml_item('synonyms', cls.content)
+            'synonyms': cls.get_yaml_item('synonyms', cls.yaml)
         }
         return file_infos
 
@@ -77,13 +77,13 @@ class Search():
 
     @classmethod
     def get_sorted_files(cls, paths, reverse=True):
-        """ Get all files sorted by modification time in reserve """
-        all_files = U.get_all_files_path(paths)
-        if not all_files:
+        """Get info_list of all files sorted by modification time in reserve """
+        all_paths = U.get_all_files_path(paths)
+        if not all_paths:
             return None
         else:
             matched_list = list()
-            for path in all_files:
+            for path in all_paths:
                 matched_list.append(File.get_file_info(path))
             sorted_files = sorted(
                 matched_list, key=lambda k: k['mtime'], reverse=reverse)
@@ -101,9 +101,9 @@ class Search():
 
     @classmethod
     def and_search(cls, search_terms, dicted_files):
-        def _matched(terms, file):
+        def _matched(terms, string):
             for term in terms:
-                if not re.search(term, file, re.I):
+                if not re.search(term, string, re.I):
                     return False
             return True
 
@@ -165,7 +165,7 @@ class Search():
     @staticmethod
     def markdown_links_search(path, filename=False):
         "Get a list of Markdown links which contained in the file (by given path/filename)"
-        abs_path = path if not filename else U.get_abspath(path, relative_path=True)
+        abs_path = path if not filename else U.get_abspath(path, query_dict=True)
         content = U.get_file_content(abs_path)
         # exclude images link: ![]() and url: [](https://)
         links_info = re.findall(

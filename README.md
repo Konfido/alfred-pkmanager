@@ -18,6 +18,7 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
   - Templates: Note, Todo, Snippet, Journal (with location and weather automatically logged)
   - Customized templates are supported.
 - Others
+    - Auto-update lookups of synonyms, Markdown links, backlinks ...
     - Manually refresh the Markdown YAML metadata.
 
 
@@ -29,25 +30,26 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
 > **NOTE**: The following `␣` means `Press the Space bar`.
 
 - `s`: **S**earch and open ( if existing ) a new note. All searching method involved is case-insensitive.
-    - `s␣`: List ==recent notes== sorted in reverse order of modification time.
-    - `s␣test`: ==Title Search== by `keyword` "test"
-    - `s␣test␣` / `s␣test␣alfred`: ==Full-text search== by `keyword` "test" / the ==EXACT==  `phrase` "test alfred" (case ignored)
-    - `s␣test&alfred`: Full-text search by `keyword` "test" ==AND== "alfred"
-    - `s␣test|alfred`: Full-test search by `keyword` "test" ==OR== "alfred"
-    - `s␣,t1␣t2|t3&t4`: Full-text search by `tag` "t1" ==AND== "t2" ==AND== "t3" ==AND== "t4" (only the 'and' logic is considered in tag search)
+    - `s␣`: List **RECENT NOTES** sorted in reverse order of modification time.
+    - `s␣test`: **TITLE SEARCH** by `keyword` "test"
+    - `s␣test␣` / `s␣test␣alfred`: **FULL-TEXT SEARCH** by the **EXACT** `keyword` "test" / `phrase` "test alfred" (case ignored)
+    - `s␣test&alfred`: Full-text search by `keyword` "test" **AND** "alfred"
+    - `s␣test|alfred`: Full-test search by `keyword` "test" **OR** "alfred"
+    - `s␣,t1␣t2|t3&t4`: Full-text search by `tag` "t1" **AND** "t2" **AND** "t3" **AND** "t4" (only the 'and' logic is considered in tag search)
     - `s␣test␣alfred,t1␣t2`: Full-text search by the exact `phrase` "test alfred" and `tag` "t1" and "t2"
-- `sl␣`: Search and show Markdown links contained in the current note which is opened in the front Typora window.
-- `sbl␣`: Search and show **Backlinks** related to the current opened note.
+- `sl␣`: Search and show **MARKDOWN LINKS** contained in the current note which is opened in the front Typora window.
+- `sbl␣`: Search and show **BACKLINKS** related to the current opened note.
 
 ### How to process my notes?
 
-- For the note in current Typora window
-    - `⌘⌥R`: **R**efresh YAML metadata of the current Markdown file and update all files' "synonyms"&"backlinks" in the background.
-- - Press `Enter` to open the file.
-    - Press `Command+Enter` to select your further actions over the file.
-      - Copy Markdown link (`[xxx](./?/xxx.md)`) to clipboard.
-      - Refresh file's metadata: 'updated time', 'synonyms' and so on.
-      - Delete this file.
+- For notes listed in the Alfred Filter as searching results
+  - Press `Enter` to open the file.
+  - Press `Command+Enter` to select your further actions over the file.
+    - Copy Markdown link (`[xxx](./?/xxx.md)`) to clipboard.
+    - Refresh file's metadata: 'updated time', 'synonyms' and so on.
+    - Delete this file.
+- For the note opened in current Typora window
+  - `⌘⌥R`: **R**efresh YAML metadata of the current Markdown file
 
 ### How to create new notes?
 
@@ -92,10 +94,11 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
 
 - The workflow `PKManager Configuration`: Some operations you can do about customized preferences.
 
-    - Set specific config item
+    - `Configure`: Set specific config item
+        - `Toggle Modification Monitoring` : Manually/Automatically update notes' lookups of "paths", "synonyms" and "backlinks"
+    - `Update Lookups`: Refresh YAML and update searching lookups
     - Open the config file 'Config.json'
     - Open templates folder
-    - Refresh YAML and update searching cache
     - Reset all configs to default
 
 - Set your templates:
@@ -118,7 +121,7 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
         date: 2020-03-19 04:07:28
         updated: 2020-08-02 14:17:46
         ---
-        
+
         Content
         ```
 
@@ -128,6 +131,8 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
 
 - [Typora](https://typora.io/): A neat yet powerful Markdown editor with WYSIWYM feature. Highly recommended.
 - [Glance](https://github.com/samuelmeuli/glance): All-in-one Quick Look plugin for Mac, which provide perfect preview for Markdown files for dismissing its meta info of YAML frontier.
+- [fswatch](https://github.com/emcrisostomo/fswatch):  A file change monitor with multiple backends. It's used in auto-updating lookups as you modify your notes, which will improve search performance.
+    - Install: `brew install fswatch`
 - Python3: A Python 3 env is needed for some internal scripts, so make sure you've installed it in your env.
 
 
@@ -136,13 +141,10 @@ A handy **Alfred Workflow** which helps to manage your personal knowledge Markdo
 
 - [ ] Search
     - [ ] Tags auto-completion
-
-    - [ ] Search algorithm: And | Or | Recommendation
     - [ ] Hide / Block files
     - [ ] Preview the first match in filtered result
     - [ ] Improve searching performance
 - [ ] Others
-    - [ ] Autoupdate: synonyms, backlinks ...
     - [ ] Auto bump version in Workflow by operating info.plist
     - [ ] Notification icon: [yo](https://github.com/sheagcraig/yo)
 

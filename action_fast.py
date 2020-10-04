@@ -31,7 +31,7 @@ def update_synonyms_lookup(path="", all=False):
         synonyms = _update(path, synonyms)
     else:
         synonyms = {}
-        for path in U.get_all_files_path(Config.NOTES_PATH):
+        for path in U.get_all_files_path(Config.FILES_PATH):
             synonyms = _update(path, synonyms)
     U.json_dump(synonyms, U.path_join(Config.CONFIG_DIR, "synonyms.json"))
 
@@ -67,7 +67,7 @@ def update_backlinks_lookup(path="", all=False):
         backlinks = _update(path, backlinks)
     else:
         backlinks = {}
-        for path in U.get_all_files_path(Config.NOTES_PATH):
+        for path in U.get_all_files_path(Config.FILES_PATH):
             backlinks = _update(path, backlinks)
     U.json_dump(backlinks, U.path_join(Config.CONFIG_DIR, "backlinks.json"))
 

@@ -77,12 +77,12 @@ elif option == "show_configs":
 
     Display.show(
         {
-            "title": "Configurate",
+            "title": "Configure",
             "subtitle": "Go next and see the details",
             "arg": f"show_editable_configs|"
         },
         {
-            "title": "Update the Lookups",
+            "title": "Update Lookups",
             "subtitle": "'synonyms', 'backlinks',  ...",
             "arg": f'update|'
         },

@@ -46,7 +46,7 @@ if [ "$1" = "Start" ]; then
                 notify "${event}" Moved
                 ;;
             *Updated*)
-                python3 -c "from action_fast import update_synonyms_lookup; update_synonyms_lookup(\"$active_file\")"
+                python3 -c "from action_fast import update_synonyms_lookup, update_backlinks_lookup; update_synonyms_lookup(\"$active_file\"); update_backlinks_lookup(\"$active_file\")"
                 notify "${event}" Updated
                 ;;
             *)

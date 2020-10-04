@@ -13,48 +13,50 @@ realpath() {
 }
 
 notify() {
-    osascript -e "display notification \"$1\" with title \"$2\""
+    local event=$1
+    local title=$2
+    time=$(date +"%Y-%m-%d %H:%M:%S")
+    osascript -e "display notification \"${event}\" with title \"${title}\""
+    echo "$time ${event}" >> "${logfile}"
 }
 
 data_dir="$alfred_workflow_data"
 logfile="${data_dir}/log.txt"
-date=$(date +"%Y-%m-%d %H:%M:%S")
 # Convert `files_path` to realpath and romove quotation mark of it
 monitor_path=$(realpath $(eval echo $files_path))
 
 
 if [ "$1" = "Start" ]; then
-    echo "$date Start to monitor ..." >> "${logfile}"
+    notify "Start to monitor modification." "PKManger"
     fswatch -rxv0 "${monitor_path}" | while read -d "" event; do
-        active_file=$(grep -o "/Users.*md" <<< "$event")
-        # Escape Typora's renaming process
-        [[ $active_file == *~.md* ]] && exit 0
+        # Escape .DS_Store and Typora's renaming process
+        event=$(echo "$event"|grep -v "DS_Store"|grep -v "~.md")
+        active_file=$(echo "$event"|grep -o "/Users.*md")
         case ${event} in
-            *"Renamed Updated IsFile"*)
-                notify "${event}" Updated
-                echo "$date ${event}" >> "${logfile}"
-                ;;
             *Created*)
+                python3 -c "from action_fast import update_paths_lookup; update_paths_lookup(\"$active_file\")"
                 notify "${event}" Created
-                echo "$date ${event}" >> "${logfile}"
                 ;;
             *Removed*)
+                python3 -c "from action_fast import update_paths_lookup; update_paths_lookup(\"$active_file\", type=\"Removed\")"
                 notify "${event}" Removed
-                echo "$date ${event}" >> "${logfile}"
                 ;;
             *MovedTo*)
+                # TODO: Handle file's moving
                 notify "${event}" Moved
-                echo "$date ${event}" >> "${logfile}"
-                # Update path's lookup of current note
+                ;;
+            *Updated*)
+                python3 -c "from action_fast import update_synonyms_lookup; update_synonyms_lookup(\"$active_file\")"
+                notify "${event}" Updated
                 ;;
             *)
-                echo "$date ${event}" >> "${logfile}"
+                echo "$(date +"%Y-%m-%d %H:%M:%S") ${event}" >> "${logfile}"
                 ;;
         esac
     done &
 elif [ "$1" = "Stop" ]; then
-    echo "$date Stop monitoring ..." >> "${logfile}"
+    notify "Stop monitoring modification." "PKManger"
     kill $(ps -ef | grep -v "grep" | grep fswatch | grep "${monitor_path}" | awk '{print $2}')
 else
-    echo "$date Error: $1" >> "${logfile}"
+    notify "Error! $1" "PKManger"
 fi

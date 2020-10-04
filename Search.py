@@ -67,7 +67,7 @@ class File():
             'ctime': ctime_float,
             'mtime': mtime_float,
             'size': size,
-            'synonyms': cls.get_yaml_item('synonyms', cls.content)
+            'synonyms': cls.get_yaml_item('synonyms', cls.yaml)
         }
         return file_infos
 
@@ -77,13 +77,13 @@ class Search():
 
     @classmethod
     def get_sorted_files(cls, paths, reverse=True):
-        """ Get all files sorted by modification time in reserve """
-        all_files = U.get_all_files_path(paths)
-        if not all_files:
+        """Get info_list of all files sorted by modification time in reserve """
+        all_paths = U.get_all_files_path(paths)
+        if not all_paths:
             return None
         else:
             matched_list = list()
-            for path in all_files:
+            for path in all_paths:
                 matched_list.append(File.get_file_info(path))
             sorted_files = sorted(
                 matched_list, key=lambda k: k['mtime'], reverse=reverse)

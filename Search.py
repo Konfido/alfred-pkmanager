@@ -31,8 +31,8 @@ class File():
     def get_file_title(self, path):
         """ yaml_title > level_one_title > file_name """
         self.path = path
-        self.file_name = U.get_file_name(self.path).lower()
-        all_text = U.get_file_content(self.path).lower()
+        self.file_name = U.get_file_name(self.path)
+        all_text = U.get_file_content(self.path)
         match = re.search(r'(---.*?---)([\s\S]+)', all_text, re.I | re.S)
         if match and len(match.groups()) == 2:
             self.yaml = match.group(1)
@@ -91,11 +91,22 @@ class Search():
 
     @classmethod
     def title_search(cls, search_terms, dicted_files):
+        """Only refer to the first word of search terms"""
+        def _synonyms_search(search_terms):
+            # Return a list of matched notes' title
+            synonyms = U.json_load(U.path_join(Config.CONFIG_DIR, 'synonyms.json'))
+            key = []
+            for k in list(synonyms.keys()):
+                for s in synonyms[k]:
+                    if search_terms[0].lower() in s.lower():
+                        key.append(k)
+            return key
+
         matched_list = []
         for f in dicted_files:
-            if f['title'] in cls.synonyms_search(search_terms):
+            if f['title'].lower() in [t.lower() for t in _synonyms_search(search_terms)]:
                 matched_list.append(f)
-            elif search_terms[0] in f['title']:
+            elif search_terms[0].lower() in f['title'].lower():
                 matched_list.append(f)
         return matched_list
 
@@ -151,17 +162,6 @@ class Search():
                         matched_notes.append(f)
         return matched_notes
 
-    @classmethod
-    def synonyms_search(cls, search_terms):
-        # Or_Search, TODO: match whole phrase
-        synonyms = U.json_load(U.path_join(Config.CONFIG_DIR, 'synonyms.json'))
-        out = []
-        for k in list(synonyms.keys()):
-            for s in synonyms[k]:
-                if search_terms[0] in s:
-                    out.append(k)
-        return out
-
     @staticmethod
     def markdown_links_search(path, filename=False):
         "Get a list of Markdown links which contained in the file (by given path/filename)"
@@ -176,8 +176,6 @@ class Search():
     @staticmethod
     def backlinks_search(filename):
         "Query dict with path/filename to get a backlink list"
-        # TODO: decouple with synonyms_search()
-        # Only query the dict with filename
         filename = U.get_file_name(filename, with_ext=True)
         backlinks = U.json_load(U.path_join(Config.CONFIG_DIR, 'backlinks.json'))
         matched_list = backlinks[filename] if backlinks.__contains__(filename) else []

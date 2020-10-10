@@ -30,7 +30,7 @@ elif option == "show_actions":
     # Get relative path to selected note from current opened note
     filename = U.get_typora_filename()
     if filename:
-        start_path = U.get_abspath(filename, query_dict=True)
+        start_path = os.path.dirname(U.get_abspath(filename, query_dict=True))
         rel_path = U.get_relpath(path, start_path)
     else:
         rel_path = "Failed. Not found opened note in Typora."

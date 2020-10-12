@@ -67,7 +67,8 @@ class File():
             'ctime': ctime_float,
             'mtime': mtime_float,
             'size': size,
-            'synonyms': cls.get_yaml_item('synonyms', cls.yaml)
+            'synonyms': cls.get_yaml_item('synonyms', cls.yaml),
+            'hidden': cls.get_yaml_item('hidden', cls.yaml)
         }
         return file_infos
 
@@ -84,7 +85,9 @@ class Search():
         else:
             matched_list = list()
             for path in all_paths:
-                matched_list.append(File.get_file_info(path))
+                info = File.get_file_info(path)
+                if not info["hidden"] == 'True':
+                    matched_list.append(info)
             sorted_files = sorted(
                 matched_list, key=lambda k: k['mtime'], reverse=reverse)
             return sorted_files
@@ -151,7 +154,7 @@ class Search():
             # Check content to get note's specific metrics
             if metric in ["tag","tags"] and not C["search_tag_yaml_only"]:
                 has_keys.extend(re.findall(r'\b#(.*?)\b', f['content'], re.I))
-            elif metric is "language" and not C["search_snippet_yaml_only"]:
+            elif metric == "language" and not C["search_snippet_yaml_only"]:
                 has_keys.extend(re.findall(r'```(\S+)', f['content'], re.I))
 
             if not has_keys:

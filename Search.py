@@ -74,7 +74,7 @@ class File():
 
 
 class Search():
-    """ handle all search procblems"""
+    """ Handle all search problems"""
 
     @classmethod
     def get_sorted_files(cls, paths, reverse=True):

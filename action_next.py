@@ -57,11 +57,6 @@ elif option == "show_actions":
             # "icon": "icons/link.png",
         },
         {
-            "title": "Refresh YAML",
-            "subtitle": "updated: ...",
-            "arg": f'refresh|'
-        },
-        {
             "title": "Reveal in Finder",
             "subtitle": f"{path}",
             "arg": f"reveal|{path}",

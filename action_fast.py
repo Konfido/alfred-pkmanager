@@ -136,7 +136,7 @@ if __name__ == "__main__":
     elif option in ["open_config_file", "open_template"]:
         U.open(arg)
         target = option.split("_")[1]
-        U.notify(f"Edit the {target} with care! Do not break it!")
+        U.notify(f"Edit the {target} with care!")
 
     elif option == "swap_config":
         key = arg

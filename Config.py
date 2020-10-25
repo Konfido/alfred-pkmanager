@@ -117,8 +117,8 @@ class Config():
             U.mkdir(TEMPLATE_DIR)
         # Create default templates if it's inexistent/deleted
         for source in TEMPLATES_PATH_DEFAULT:
-            name = U.get_file_name(source, with_ext=True)
-            target = U.path_join(TEMPLATE_DIR, name)
+            name = U.get_file_name(source)
+            target = U.path_join(TEMPLATE_DIR, name+".md")
             if not U.path_exists(target):
                 # User-defined templates created
                 U.copy(source, target)

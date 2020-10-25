@@ -47,7 +47,7 @@ if [ "$1" = "Start" ]; then
                 ;;
             *Updated*)
                 python3 -c "from action_fast import update_synonyms_lookup, update_backlinks_lookup; update_synonyms_lookup(\"$active_file\"); update_backlinks_lookup(\"$active_file\")"
-                notify "${event}" Updated
+                # notify "${event}" Updated
                 ;;
             *)
                 echo "$(date +"%Y-%m-%d %H:%M:%S") ${event}" >> "${logfile}"

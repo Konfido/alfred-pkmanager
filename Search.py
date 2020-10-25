@@ -31,8 +31,8 @@ class File():
     def get_file_title(self, path):
         """ yaml_title > level_one_title > file_name """
         self.path = path
-        self.file_name = U.get_file_name(self.path).lower()
-        all_text = U.get_file_content(self.path).lower()
+        self.file_name = U.get_file_name(self.path)
+        all_text = U.get_file_content(self.path)
         match = re.search(r'(---.*?---)([\s\S]+)', all_text, re.I | re.S)
         if match and len(match.groups()) == 2:
             self.yaml = match.group(1)
@@ -67,13 +67,14 @@ class File():
             'ctime': ctime_float,
             'mtime': mtime_float,
             'size': size,
-            'synonyms': cls.get_yaml_item('synonyms', cls.yaml)
+            'synonyms': cls.get_yaml_item('synonyms', cls.yaml),
+            'hidden': cls.get_yaml_item('hidden', cls.yaml)
         }
         return file_infos
 
 
 class Search():
-    """ handle all search procblems"""
+    """ Handle all search problems"""
 
     @classmethod
     def get_sorted_files(cls, paths, reverse=True):
@@ -84,18 +85,31 @@ class Search():
         else:
             matched_list = list()
             for path in all_paths:
-                matched_list.append(File.get_file_info(path))
+                info = File.get_file_info(path)
+                if not info["hidden"] == 'True':
+                    matched_list.append(info)
             sorted_files = sorted(
                 matched_list, key=lambda k: k['mtime'], reverse=reverse)
             return sorted_files
 
     @classmethod
     def title_search(cls, search_terms, dicted_files):
+        """Only refer to the first word of search terms"""
+        def _synonyms_search(search_terms):
+            # Return a list of matched notes' title
+            synonyms = U.json_load(U.path_join(Config.CONFIG_DIR, 'synonyms.json'))
+            key = []
+            for k in list(synonyms.keys()):
+                for s in synonyms[k]:
+                    if search_terms[0].lower() in s.lower():
+                        key.append(k)
+            return key
+
         matched_list = []
         for f in dicted_files:
-            if f['title'] in cls.synonyms_search(search_terms):
+            if f['title'].lower() in [t.lower() for t in _synonyms_search(search_terms)]:
                 matched_list.append(f)
-            elif search_terms[0] in f['title']:
+            elif search_terms[0].lower() in f['title'].lower():
                 matched_list.append(f)
         return matched_list
 
@@ -140,7 +154,7 @@ class Search():
             # Check content to get note's specific metrics
             if metric in ["tag","tags"] and not C["search_tag_yaml_only"]:
                 has_keys.extend(re.findall(r'\b#(.*?)\b', f['content'], re.I))
-            elif metric is "language" and not C["search_snippet_yaml_only"]:
+            elif metric == "language" and not C["search_snippet_yaml_only"]:
                 has_keys.extend(re.findall(r'```(\S+)', f['content'], re.I))
 
             if not has_keys:
@@ -150,17 +164,6 @@ class Search():
                     if k in has_keys:
                         matched_notes.append(f)
         return matched_notes
-
-    @classmethod
-    def synonyms_search(cls, search_terms):
-        # Or_Search, TODO: match whole phrase
-        synonyms = U.json_load(U.path_join(Config.CONFIG_DIR, 'synonyms.json'))
-        out = []
-        for k in list(synonyms.keys()):
-            for s in synonyms[k]:
-                if search_terms[0] in s:
-                    out.append(k)
-        return out
 
     @staticmethod
     def markdown_links_search(path, filename=False):
@@ -176,8 +179,6 @@ class Search():
     @staticmethod
     def backlinks_search(filename):
         "Query dict with path/filename to get a backlink list"
-        # TODO: decouple with synonyms_search()
-        # Only query the dict with filename
         filename = U.get_file_name(filename, with_ext=True)
         backlinks = U.json_load(U.path_join(Config.CONFIG_DIR, 'backlinks.json'))
         matched_list = backlinks[filename] if backlinks.__contains__(filename) else []

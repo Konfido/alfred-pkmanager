@@ -242,12 +242,17 @@ class Utils():
         sys.stderr.write('LOG: {0}\n'.format(message))
 
     @classmethod
-    def notify(cls, text, title="PKManger", log=False):
+    def notify(cls, message, title="PKManger", log=False):
         """ Send Notification to mac Notification Center """
-        os.system("""osascript -e 'display notification "{}" with title "{}"'
-                  """.format(text, title))
+        # os.system("""osascript -e 'display notification "{}" with title "{}"'
+        #           """.format(message, title))
+        os.system("""./terminal-notifier.app/Contents/MacOS/terminal-notifier \
+            -title "{}" -message "{}" \
+            -appIcon icon.png \
+            -sender com.runningwithcrayons.Alfred \
+            -group com.runningwithcrayons.Alfred""".format(title, message))
         if log:
-            cls.log(text)
+            cls.log(message)
 
     @staticmethod
     def to_clipboard(content):

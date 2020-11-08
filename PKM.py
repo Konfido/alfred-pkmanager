@@ -27,6 +27,7 @@ def varibles_checked():
                           f"Please check: \"{env}\"."))
             all_set = False
     for path in U.get_env("files_path").split(","):
+        path = path.strip()
         if not(U.path_exists(U.get_abspath(path))):
             Display.show(("ERROR: Find invalid directory!",
                           f"Please check \"files_path\": {path}"))
@@ -249,7 +250,7 @@ def display_matched_result(query, matched_list):
     Display.show(items)
 
 if __name__ == "__main__":
-    query = U.get_query(lower=True)
+    query = U.get_query()
     search_type = U.get_search_type()
 
     if search_type == 'normal':

@@ -89,7 +89,7 @@ def create_new_file(title, genre='Note', language=''):
 
     return new_file_path
 
-def show_templates():
+def show_templates_list():
     """ Show available templates.
 
     If your input content (env $query) does not contain semicolon (',' or '，'), it will be taken as the name of new file.
@@ -98,20 +98,20 @@ def show_templates():
     """
     query = U.get_query()
     arg = query if query else U.get_now()
-    (language, title) = arg.split(',') if ',' in arg else ("<blank>", arg)
+    (title, language) = arg.split(',') if ',' in arg else (arg, "<blank>")
     items = []
     for genre in C["templates"]:
         if genre == "Snippet":
             items.append({
-                "title": 'Create a new Snippet: Use "," to seperate "language" and "title"',
-                "subtitle": f"Language: {language}, Name: {title.strip()}",
+                "title": 'Create a new Snippet: <Title>, <Language>',
+                "subtitle": f"Title: {title.strip()}, Language: {language}",
                 "arg": f"new|[Snippet>{arg}]"
             })
         elif ',' not in arg:
             subtitle = query if query else U.get_now()+" (Default)"
             items.append({
                 "title": f"Create a new {genre}",
-                "subtitle": f'Name: {subtitle}',
+                "subtitle": f'Title: {subtitle}',
                 "arg": f"new|[{genre}>{arg}]"
             })
 
@@ -120,4 +120,4 @@ def show_templates():
 
 if __name__ == "__main__":
     Config.Config().templates_checked()
-    show_templates()
+    show_templates_list()

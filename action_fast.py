@@ -83,10 +83,7 @@ if __name__ == "__main__":
         U.open(arg, finder=True)
     elif option == "new":
         genre, arg = arg.strip('[]').split(">")
-        if genre == "Snippet":
-            language, title = arg.split(", ")
-        else:
-            language, title = "", arg
+        (title, language) = arg.split(",") if "," in arg else (arg, "")
         path = New.create_new_file(title, genre, language)
         # U.output(path)
         U.open(path)

@@ -142,6 +142,7 @@ class Utils():
     def get_query(lower=False):
         try:
             query = sys.argv[1].lower() if lower else sys.argv[1]
+            query = query.replace('，', ',')
         except:
             query = ""
         return query

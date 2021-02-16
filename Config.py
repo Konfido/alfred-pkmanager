@@ -34,8 +34,8 @@ DEFAULTS = {
     'search_tag_yaml_only': True,
     # search snippets by languages specified in yaml only or including code fences: True/False
     'search_snippet_yaml_only': True,
-    # snippet searching result will be combined and returned same when language appears in a synonyms tuple.
-    'language_synonyms': [('sh','bash','shell'), ('python','py')],
+    # snippet searching result will be combined and returned same when language appears in a alias tuple.
+    'language_alias': [('sh','bash','shell'), ('python','py')],
     # present which todo in the top: newest/oldest
     'todo_order': 'newest',
     # quantity of results: Int

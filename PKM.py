@@ -245,7 +245,7 @@ def display_matched_result(query, matched_list):
                     "arg": f'show_actions|[{m["path"]}, {query}]',
                     "subtitle": "Press <Enter> to select your next action"
                 }},
-            "quicklookurl": m["path"]
+            # "quicklookurl": m["path"]
         })
     Display.show(items)
 

@@ -67,7 +67,7 @@ class File():
             'ctime': ctime_float,
             'mtime': mtime_float,
             'size': size,
-            'synonyms': cls.get_yaml_item('synonyms', cls.yaml),
+            'alias': cls.get_yaml_item('alias', cls.yaml),
             'hidden': cls.get_yaml_item('hidden', cls.yaml)
         }
         return file_infos
@@ -95,19 +95,19 @@ class Search():
     @classmethod
     def title_search(cls, search_terms, dicted_files):
         """Only refer to the first word of search terms"""
-        def _synonyms_search(search_terms):
+        def _alias_search(search_terms):
             # Return a list of matched notes' title
-            synonyms = U.json_load(U.path_join(Config.CONFIG_DIR, 'synonyms.json'))
+            alias = U.json_load(U.path_join(Config.CONFIG_DIR, 'alias.json'))
             key = []
-            for k in list(synonyms.keys()):
-                for s in synonyms[k]:
+            for k in list(alias.keys()):
+                for s in alias[k]:
                     if search_terms[0].lower() in s.lower():
                         key.append(k)
             return key
 
         matched_list = []
         for f in dicted_files:
-            if f['title'].lower() in [t.lower() for t in _synonyms_search(search_terms)]:
+            if f['title'].lower() in [t.lower() for t in _alias_search(search_terms)]:
                 matched_list.append(f)
             elif search_terms[0].lower() in f['title'].lower():
                 matched_list.append(f)

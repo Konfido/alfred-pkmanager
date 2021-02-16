@@ -1,6 +1,6 @@
 ---
 title: {title}
-synonyms: []
+alias: []
 tags: {tags}
 categories: []
 typora-copy-images-to: ../images

@@ -15,25 +15,25 @@ from Search import Search as S
 from Utils import Utils as U
 
 
-def update_synonyms_lookup(path="", all=False):
-    """ Update the stored lookup of synonyms """
-    def _update(path, synonyms={}):
+def update_alias_lookup(path="", all=False):
+    """ Update the stored lookup of alias """
+    def _update(path, alias={}):
         info = File.get_file_info(path)
-        match = info['synonyms']
+        match = info['alias']
         if match and match != '[]':
-            synonyms.update({info['title']: match.strip('[]').split(',')})
-        elif info['title'] in synonyms:
-            synonyms.pop(info['title'])
-        return synonyms
+            alias.update({info['title']: match.strip('[]').split(',')})
+        elif info['title'] in alias:
+            alias.pop(info['title'])
+        return alias
 
     if all == False:
-        synonyms = U.json_load(U.path_join(Config.CONFIG_DIR, 'synonyms.json'))
-        synonyms = _update(path, synonyms)
+        alias = U.json_load(U.path_join(Config.CONFIG_DIR, 'alias.json'))
+        alias = _update(path, alias)
     else:
-        synonyms = {}
+        alias = {}
         for path in U.get_all_files_path(Config.FILES_PATH):
-            synonyms = _update(path, synonyms)
-    U.json_dump(synonyms, U.path_join(Config.CONFIG_DIR, "synonyms.json"))
+            alias = _update(path, alias)
+    U.json_dump(alias, U.path_join(Config.CONFIG_DIR, "alias.json"))
 
 def update_paths_lookup(path="", type="Created", all=False):
     """ Update the stored lookups of note's paths """
@@ -108,8 +108,8 @@ if __name__ == "__main__":
 
     # config's submenu
     elif option == "update":
-        update_synonyms_lookup(all=True)
-        U.notify("synonyms.json updated.")
+        update_alias_lookup(all=True)
+        U.notify("alias.json updated.")
 
         update_paths_lookup(all=True)
         U.notify("paths.json updated.")

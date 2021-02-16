@@ -78,7 +78,7 @@ elif option == "show_configs":
         },
         {
             "title": "Update Lookups",
-            "subtitle": "'synonyms', 'backlinks',  ...",
+            "subtitle": "'alias', 'backlinks',  ...",
             "arg": f'update|'
         },
         {

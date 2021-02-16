@@ -1,6 +1,6 @@
 ---
 title: {title}
-synonyms: []
+alias: []
 id: {id}
 date: {date_time}
 updated: {date_time}

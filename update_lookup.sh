@@ -16,7 +16,12 @@ notify() {
     local event=$1
     local title=$2
     time=$(date +"%Y-%m-%d %H:%M:%S")
-    osascript -e "display notification \"${event}\" with title \"${title}\""
+    # osascript -e "display notification \"${event}\" with title \"${title}\""
+    ./terminal-notifier.app/Contents/MacOS/terminal-notifier \
+        -title "$title" -message "$event" \
+        -appIcon icon.png \
+        -sender com.runningwithcrayons.Alfred \
+        -group com.runningwithcrayons.Alfred
     echo "$time ${event}" >> "${logfile}"
 }
 
@@ -39,14 +44,14 @@ if [ "$1" = "Start" ]; then
                 ;;
             *Removed*)
                 python3 -c "from action_fast import update_paths_lookup; update_paths_lookup(\"$active_file\", type=\"Removed\")"
-                notify "${event}" Removed
+                # notify "${event}" Removed
                 ;;
             *MovedTo*)
                 # TODO: Handle file's moving
                 notify "${event}" Moved
                 ;;
             *Updated*)
-                python3 -c "from action_fast import update_synonyms_lookup, update_backlinks_lookup; update_synonyms_lookup(\"$active_file\"); update_backlinks_lookup(\"$active_file\")"
+                python3 -c "from action_fast import update_alias_lookup, update_backlinks_lookup; update_alias_lookup(\"$active_file\"); update_backlinks_lookup(\"$active_file\")"
                 # notify "${event}" Updated
                 ;;
             *)

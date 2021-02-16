@@ -41,7 +41,8 @@ class File():
             U.log(self.file_name)
             self.yaml, self.content = "", all_text
         yaml_title = self.get_yaml_item("title", self.yaml)
-        level_one_title = re.search(r'^# (\s+)', self.content)
+        level_one_title = re.search(r'^# (\s+)', self.content) if not yaml_title else None
+        level_one_title = level_one_title.group(0) if level_one_title else None
         self.title = yaml_title or level_one_title or self.file_name or ""
         return self.title
 

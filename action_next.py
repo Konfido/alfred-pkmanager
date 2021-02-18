@@ -104,6 +104,7 @@ elif option == "show_editable_configs":
     _tag = "by the hash(#) mark" if C["search_tag_yaml_only"] else "in YAML frontier"
     _language = "code fences" if C["search_snippet_yaml_only"] else "YAML frontier"
     _scope = "its exclusive folder" if C["search_all_folders"] else "all folders"
+    _zettelkasten = "zettelkasten style (YYYYMMDDHHmmss.md)" if C["zettelkasten"] else "input content"
 
     fswatch = os.popen(
         'if [ "$(pgrep fswatch| wc -l)" -eq 0 ] \
@@ -114,6 +115,11 @@ elif option == "show_editable_configs":
     items = []
     items.extend([
         # configs - just toggle
+        {
+            "title": "Toggle Style of New File's Name",
+            "subtitle": f"Name the new note by the \"{_zettelkasten}\"",
+            "arg": "swap_config|zettelkasten"
+        },
         {
             "title": "Toggle Modification Monitoring",
             "subtitle": f"\"{_monitor}\" auto-updating notes\' lookups in the background?",

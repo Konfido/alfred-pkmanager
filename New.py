@@ -23,15 +23,22 @@ def create_new_file(title, genre='Note', language=''):
         '，': '-',
         '.': '_',
         '/': '-',
+        '|': '-',
         ':': '-',
         '#': '-'
     }
-    name_dict = {
+    special_names = {
         "Journal": U.get_now("%Y-%m-%d"),
-        "Topic": U.str_replace(title.strip(), name_replace_map)
+        # "Topic": U.str_replace(title.strip(), name_replace_map)
     }
     _id = U.get_now("%Y%m%d%H%M%S")
-    file_name = name_dict[genre] if genre in name_dict else _id
+    if genre in special_names:
+        file_name = special_names[genre]
+    elif C["zettelkasten"]:
+        file_name = _id
+    else:
+        file_name = U.str_replace(title.strip(), name_replace_map)
+
     # get date
     date = U.get_now("%Y-%m-%d")
     time = U.get_now("%H:%M:%S")
@@ -46,6 +53,8 @@ def create_new_file(title, genre='Note', language=''):
         '{language}': language,
         '{id}': _id,
     }
+
+    file_dir = C[f'path_to_new_{genre}']
 
     if genre == "Journal":
         # Create the month's subfolder for Journal
@@ -72,8 +81,6 @@ def create_new_file(title, genre='Note', language=''):
             '{location}': location,
             '{weather}': weather,
         })
-    else:
-        file_dir = C[f'path_to_new_{genre}']
 
     new_file_path = U.path_join(file_dir, file_name+'.md')
     if U.path_exists(new_file_path):

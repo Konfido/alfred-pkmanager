@@ -44,6 +44,9 @@ DEFAULTS = {
     'search_all_folders': False,
     # template list: ['wiki', 'note', 'todo', 'journal', 'snippet', ...]
     'templates': TEMPLATES_NAME_DEFAULT,
+    # New file's name: "True" for Zettelkasten style (YYYYMMDDHHmmss),
+    #                  "Flase" for normal file name.
+    'zettelkasten': False,
     # open weather api
     'weather_api': "",
     # language of auto-completed text in templates
@@ -84,7 +87,7 @@ class Config():
         U.json_dump(self.configs, CONFIG_PATH)
 
     def swap(self, key):
-        if key in ["search_tag_yaml_only", "search_snippet_yaml_only", "search_all_folders"]:
+        if key in ["search_tag_yaml_only", "search_snippet_yaml_only", "search_all_folders", "zettelkasten"]:
             value = not self.get(key)
         elif key == "todo_order":
             value = "nearest" if self.get(key) == "oldest" else "oldest"

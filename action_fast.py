@@ -93,6 +93,8 @@ if __name__ == "__main__":
         U.notify(f"{file_title} has been successfully deleted!")
     elif option == "link":
         link = arg
+        if Config.Config().configs["replace_space"]:
+            link =  link.replace(" ", "20%")
         U.to_clipboard(link)
     elif option == "back":
         input_str = arg

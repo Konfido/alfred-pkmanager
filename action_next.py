@@ -105,6 +105,7 @@ elif option == "show_editable_configs":
     _language = "code fences" if C["search_snippet_yaml_only"] else "YAML frontier"
     _scope = "its exclusive folder" if C["search_all_folders"] else "all folders"
     _zettelkasten = "zettelkasten style (YYYYMMDDHHmmss.md)" if C["zettelkasten"] else "input content"
+    _replace_space = "keep untouched" if C["replace_space"] else "replace space by 20%"
 
     fswatch = os.popen(
         'if [ "$(pgrep fswatch| wc -l)" -eq 0 ] \
@@ -116,14 +117,19 @@ elif option == "show_editable_configs":
     items.extend([
         # configs - just toggle
         {
-            "title": "Toggle Style of New File's Name",
-            "subtitle": f"Name the new note by the \"{_zettelkasten}\"",
-            "arg": "swap_config|zettelkasten"
-        },
-        {
             "title": "Toggle Modification Monitoring",
             "subtitle": f"\"{_monitor}\" auto-updating notes\' lookups in the background?",
             "arg": f'auto_update|{_monitor}'
+        },
+        {
+            "title": "Toggle Style of New File's Name",
+            "subtitle": f"New note should be named by the \"{_zettelkasten}\"",
+            "arg": "swap_config|zettelkasten"
+        },
+        {
+            "title": "Toggle Style of Clipboard Result",
+            "subtitle": f"The Clipborad result should \"{_replace_space}\"",
+            "arg": "swap_config|replace_space"
         },
         {
             "title": "Toggle Tags Searching Mode",
